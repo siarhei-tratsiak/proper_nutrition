@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    let T = [
+        [0, 1],
+        [2, 3]
+    ]
+
+    function minNonzeroIndex(arr) {
+        let lowest = undefined;
+        let i = 0
+        while (typeof lowest === 'undefined') {
+            const arri = arr[i]
+            if (arri !== 0 && arri !== '-') lowest = i
+            i++
+        }
+        const arrLenght = arr.length
+        for (let i = 1; i < arrLenght; i++) {
+            const ai = arr[i]
+            if (ai !== 0 && ai !== '-' && ai < arr[lowest]) lowest = i;
+        }
+        return lowest;
+    }
+
+    function first(T) {
+        T = T.map((row) => {
+            return row.map(value => value + 1)
+        })
+        return T
+    }
+    T = first(T)
+    console.log(minNonzeroIndex([3, 0, '-', 1, 9]))
+</script>
+
+</html>
