@@ -17,7 +17,8 @@ import {mapActions, mapState} from 'vuex';
 // import ProductsList from '@/components/ProductsList.vue'
 import ResultProductsList from
   '@/components/content/result/ResultProductsList.vue';
-import NutrientsBalance from '@/components/content/result/NutrientsBalance.vue';
+import NutrientsBalance from
+  '@/components/content/result/NutrientsBalance.vue';
 
 export default {
   components: {

@@ -1,52 +1,43 @@
 <template lang="html">
-
   <v-list-group>
 
     <template v-slot:activator>
 
-      <v-list-item-action>
-        <!--<v-checkbox
-          class="header-checkbox"
-          v-model="enabled"
-          :indeterminate="indeterminate"
-          @click.stop="updateCheckbox"
+        <v-list-item-action @click.stop="updateCheckbox">
+          <v-checkbox
+            indeterminate
+            readonly
+            v-show="indeterminate && !isCategorySelected"
           >
-        </v-checkbox>-->
-        <!--<v-checkbox
-          class="header-checkbox"
-          v-model="enabled"
-          :indeterminate="indeterminate"
+          </v-checkbox>
+          <v-checkbox
+            :input-value="isCategorySelected"
+            readonly
+            v-show="!indeterminate"
           >
-        </v-checkbox>-->
-        <v-icon v-show="!enabled">check_box</v-icon>
-        <v-icon v-show="enabled">check_box_outline_blank</v-icon>
-      </v-list-item-action>
+          </v-checkbox>
+        </v-list-item-action>
 
-      <v-list-item-content>
-        <v-list-item-title>
-          {{ categoryListItem.category.name }}
-        </v-list-item-title>
-      </v-list-item-content>
+        <v-list-item-content>
+          <v-list-item-title v-text="categoryListItem.category.name">
+          </v-list-item-title>
+        </v-list-item-content>
 
     </template>
 
-    <div @click="listGroupClick">
-      <Product
-        v-for="product in categoryListItem.products"
-        :key="product.id"
-        :product="product"
-        :favored="favored"
-        :selected="selected"
-        :status="status"
-      />
-    </div>
+    <Product
+      v-for="product in categoryListItem.products"
+      :key="product.id"
+      :product="product"
+      :isProductSelected="isProductSelected(product.id)"
+    />
 
   </v-list-group>
 </template>
 
 <script>
 import Product from '@/components/content/products_list/Product';
-import {mapActions, mapState} from 'vuex';
+import {mapActions} from 'vuex';
 
 export default {
 
@@ -54,31 +45,20 @@ export default {
     Product,
   },
 
-  data: () => ({
-    enabled: false,
-  }),
-
-  props: ['categoryListItem'],
+  props: ['categoryListItem', 'selectedProducts'],
 
   computed: {
 
-    ...mapState(['favored', 'selected', 'status']),
-
-    categoryId() {
-      return this.categoryListItem.category.id;
+    indeterminate() {
+      return this.selectedProducts.some(
+          (product) =>
+            product.selected !== this._isFirstProductSelected(),
+      );
     },
 
-    indeterminate() {
-      const selectedCategory = this.selected
-          .filter((curVal) => curVal.category_id === this.categoryId);
-      const productsAreInDifferentStates = selectedCategory.some(
-          (curVal, index, array) => curVal.selected !== array[0].selected,
-      );
-      if (!productsAreInDifferentStates) {
-        this._setEnabled(selectedCategory);
-      }
-      const indeterminate = productsAreInDifferentStates;
-      return indeterminate;
+    isCategorySelected() {
+      return this.selectedProducts
+          .every((product) => !!product.selected);
     },
 
   },
@@ -87,30 +67,77 @@ export default {
 
     ...mapActions(['toggleSelected']),
 
+    _isFirstProductSelected() {
+      return this.selectedProducts[0].selected;
+    },
+
+    isProductSelected(productID) {
+      const selectedProduct = this.selectedProducts
+          .find((product) => product.id === productID);
+      return !!selectedProduct.selected;
+    },
+
+    updateCheckbox() {
+      const payload = {
+        category_id: this.categoryListItem.category.id,
+        selected: +!this.isCategorySelected,
+      };
+      this.toggleSelected(payload);
+    },
+
+    /* _getClickedItemCSSid(DOMElem) {
+      return DOMElem.id;
+    },
+
+    _getDOMElem(eventTarget) {
+      return eventTarget.closest('.product-selected') ||
+        eventTarget.closest('.product-favored');
+    },
+
+    _getPayload(DOMElem) {
+      const productId = this._getProductId(DOMElem);
+      console.log(productId);
+      const isProductSelected = this.selected
+          .find(({id}) => id === productId)
+          .selected;
+      const payload = {id: productId, selected: !isProductSelected};
+      return payload;
+    },
+
+    _getProductId(DOMElem) {
+      const cssId = this._getClickedItemCSSid(DOMElem);
+      return +cssId.match(/\d+/g)[0];
+    },
+
     _setEnabled(selectedCategory) {
       const everyProductIsSelected = selectedCategory
           .every((curVal) => curVal.selected);
       this.enabled = everyProductIsSelected;
     },
 
-    /* panelClick: function(event) {
-      if (event) {
-        alert(event.target.tagName);
-      }
-    },*/
-
-    listGroupClick(event) {
-      const clickedElem = event.target.closest('.product-selected') ||
-        event.target.closest('.product-favored');
-      const id = clickedElem.id;
-      console.log(id);
-    },
-
-    updateCheckbox() {
-      const enabled = this.indeterminate ? 1 : +!this.enabled;
-      const payload = {category_id: this.categoryId, selected: enabled};
+    _setSelectedProduct(DOMElem) {
+      this. _switchCheckbox(DOMElem);
+      const payload = this._getPayload(DOMElem);
       this.toggleSelected(payload);
     },
+
+    _switchCheckbox(DOMElem) {
+      const iconsList = DOMElem.firstElementChild.children;
+      for (const node of iconsList) {
+        node.style.display = node.style.display === 'none' ? '' : 'none';
+      }
+    },
+
+    checkForCheckbox(event) {
+      if (!event.target.closest('.products-category')) {
+        this.expanded = !this.expanded;
+      }
+    },
+
+    listGroupClick(event) {
+      const DOMElem = this._getDOMElem(event.target);
+      this._setSelectedProduct(DOMElem);
+    },*/
 
   },
 

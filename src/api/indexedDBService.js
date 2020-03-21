@@ -49,7 +49,8 @@ async function initDatabase() {
   const changesColumnsNames = ['++id', 'user_id', 'parameter',
     'date_time', 'value'];
   const filtersColumnsNames = ['++id', 'product_id', 'user_id',
-    'selected', 'favored'];
+    'selected', 'favored', '[user_id+favored]', '[user_id+product_id]',
+    '[user_id+category_id]'];
   const usersColumnsNames = ['++id'].concat(trackingChanges);
   const products = [...products0, ...products1, ...products2, ...products3,
     ...products4, ...products5, ...products6, ...products7, ...products8,

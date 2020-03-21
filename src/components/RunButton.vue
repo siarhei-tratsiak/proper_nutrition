@@ -13,23 +13,31 @@
 </template>
 
 <script>
+
 import {mapActions, mapMutations} from 'vuex';
+
 export default {
   methods: {
+
     ...mapActions(['getSolution']),
+
     ...mapMutations(['setPanel']),
+
     getResult: function() {
       this.getSolution();
-      this.wrapResultPanel();
+      // this.wrapResultPanel();
     },
-    wrapResultPanel: function() {
+
+    /* wrapResultPanel: function() {
       const panel = this.$store.state.panel;
       if (panel.indexOf(1) === -1) {
         this.setPanel(panel.push(1));
       }
-    },
+    },*/
+
   },
 };
+
 </script>
 
 <style scoped>

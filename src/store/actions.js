@@ -1,3 +1,8 @@
+import {
+  clauseForSelectedAll,
+  clauseForSelectedCategory,
+  clauseForSelectedProduct,
+} from '@/store/store_service.js';
 import {initDatabase} from '@/api/indexedDBService';
 import {conditions} from '@/data/DBSettings';
 import {simplex} from '@/api/simplex';
@@ -19,7 +24,7 @@ const actions = {
 
   async getSolution({state, getters, commit, dispatch}) {
     commit('setCounting', 'started');
-    const {A, b, c} = await getters.getConditions;
+    const {A, b, c, indices} = await getters.getConditions();
     const test = false;
     let result = [];
     result = [
@@ -214,10 +219,12 @@ const actions = {
     ];
     if (!test) {
       result = simplex(A, b, c);
+      console.log(result);
       result = result.x
           .map((curVal, index) => {
+            const id = indices[index];
             return {
-              index,
+              id,
               value: curVal,
             };
           })
@@ -226,15 +233,20 @@ const actions = {
     const db = state.db;
     const products = await db.products.toArray();
     result = result.map((curVal) => {
+      const id = curVal.id;
+      const name = products.find((product) => product.id === id).name;
       return {
-        index: curVal.index,
-        name: products[curVal.index].name,
+        id,
+        name,
         value: curVal.value * 100,
       };
     });
     commit('setProducts', result);
     dispatch('setNutrients');
     commit('setCounting', 'finished');
+    commit('setStatus', {
+      resultIsOpened: true,
+    });
   },
 
   async initData({dispatch}) {
@@ -275,7 +287,7 @@ const actions = {
       return {
         id: row.product_id,
         category_id: row.category_id,
-        selected: !!row.selected,
+        selected: row.selected,
       };
     });
     commit('setSelected', selected);
@@ -305,17 +317,18 @@ const actions = {
     const dbProducts = await db.products.toArray();
     const products = state.products;
     const nutrients = conditions.constraints.map((constraint) => {
+      const count = products
+          .map((product) => {
+            const dbProduct = dbProducts
+                .find((dbProduct) => dbProduct.id === product.id);
+            return (product.value / 100) * dbProduct[constraint.namedVector];
+          })
+          .reduce((acc, curVal) => acc + curVal);
       return {
         name: constraint.namedVector,
         constraint: constraint.constraint,
         constant: constraint.constant,
-        count: products
-            .map(
-                (curVal) =>
-                  (curVal.value / 100) *
-              dbProducts[curVal.index][constraint.namedVector],
-            )
-            .reduce((acc, curVal) => acc + curVal),
+        count,
       };
     });
     commit('setNutrients', nutrients);
@@ -372,24 +385,28 @@ const actions = {
   },
 
   async toggleSelected({state, commit}, payload) {
+    commit('setStatus', {
+      recordingToDB: true,
+    });
     const userId = state.settings.userId;
     const filters = state.db.filters;
     let whereClause = filters;
     if (payload.all) {
       commit('setSelectedAll', payload);
-      whereClause = filters.where('user_id').equals(userId);
+      whereClause = clauseForSelectedAll(filters, userId);
     } else if (payload.category_id) {
       commit('setSelectedCategory', payload);
-      const categoryProductsIds = await state.db.products
-          .where('category_id').equals(payload.category_id).toArray();
-      whereClause = filters.where(['user_id', 'category_id'])
-          .anyOf([userId, categoryProductsIds]);
+      whereClause = await clauseForSelectedCategory(
+          state, payload, filters, userId);
     } else {
       commit('setSelectedProduct', payload);
-      whereClause = filters.where({user_id: userId, product_id: payload.id});
+      whereClause = clauseForSelectedProduct(filters, userId, payload);
     }
-    whereClause.modify({
+    await whereClause.modify({
       selected: payload.selected,
+    });
+    commit('setStatus', {
+      recordingToDB: false,
     });
   },
 };

@@ -1,5 +1,7 @@
+import {deepCopy} from './deepCopy.js';
+
 function shape(array) {
-  let arr = array;
+  let arr = deepCopy(array);
   const dimensions = [];
 
   while (Array.isArray(arr)) {
@@ -36,15 +38,6 @@ function _checkLessArguments(array, value) {
 }
 
 function less(array, value) {
-  /* if (!Array.isArray(array)) {
-    throw new TypeError('First function argument should be an Array.')
-  }
-  if (array.some(!isNumeric)) {
-    throw new TypeError('Array must contain only numbers.')
-  }
-  if (!isNumeric(value)) {
-    throw new TypeError('Second function argument should be an Array.')
-  }*/
   _checkLessArguments(array, value);
   return array.map((curVal) => curVal < value);
 }
@@ -107,7 +100,6 @@ function nonzero(arr) {
 
 function minNonzeroIndices(arr) {
   let indices = [];
-  /* const res = */
   arr.reduce((acc, curVal, index) => {
     if (curVal !== 0 && curVal !== '-') {
       if (acc > curVal) {

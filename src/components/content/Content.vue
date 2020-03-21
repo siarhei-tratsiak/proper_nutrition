@@ -1,8 +1,8 @@
 <template lang="html">
-  <v-expansion-panels multiple v-model="panel">
+  <v-card>
       <ProductsListPanel/>
       <ResultPanel/>
-  </v-expansion-panels>
+  </v-card>
 </template>
 
 <script>
@@ -12,10 +12,12 @@ import ResultPanel from '@/components/content/result/ResultPanel';
 import {mapMutations} from 'vuex';
 
 export default {
+
   components: {
     ProductsListPanel,
     ResultPanel,
   },
+
   computed: {
     panel: {
       get() {
@@ -25,11 +27,12 @@ export default {
         this.setPanel(value);
       },
     },
-    // ...mapState(['panel']),
   },
+
   methods: {
     ...mapMutations(['setPanel']),
   },
+
 };
 </script>
 

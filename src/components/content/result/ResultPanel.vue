@@ -1,25 +1,47 @@
 <template lang="html">
-    <v-expansion-panel>
+    <v-dialog
+      scrollable
+      v-model="status.resultIsOpened"
+    >
+      <v-card>
 
-      <v-expansion-panel-header>
-        <h3>РЕЗУЛЬТАТ</h3>
-      </v-expansion-panel-header>
+        <v-card-title>РЕЗУЛЬТАТ</v-card-title>
 
+        <v-card-text>
+          <Result />
+        </v-card-text>
 
-      <v-expansion-panel-content>
-        <Result />
-      </v-expansion-panel-content>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            @click="setStatus({resultIsOpened: false})"
+          >
+            Close
+          </v-btn>
+        </v-card-actions>
 
-    </v-expansion-panel>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script>
 import Result from '@/components/content/result/Result';
+import {mapState, mapMutations} from 'vuex';
 
 export default {
 
   components: {
     Result,
+  },
+
+  computed: {
+    ...mapState(['status']),
+  },
+
+  methods: {
+
+    ...mapMutations(['setStatus']),
+
   },
 
 };

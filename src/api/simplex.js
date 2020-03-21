@@ -4,15 +4,11 @@ import {
   arange,
   eye,
   zeros,
-  maCount, // MAcount1,
-  // MAmask,
-  // nonzero,
-  // minNonzeroIndices,
+  maCount,
   minNonzeroIndex,
-  // take,
-  // argmin,
   isclose,
 } from './np.js';
+import {deepCopy} from './deepCopy.js';
 
 let benchmark = {b1: 0, b2: 0};
 
@@ -26,12 +22,7 @@ function endBench(bench) {
   return bench;
 }*/
 
-function _pivotCol(T, tol = 1e-9/* , bland = false*/) {
-  /* benchmark.ma = startBench(benchmark.ma)
-  const ma = T.slice(-1)[0].slice(0, -1)
-    .map(curVal => curVal >= -tol ? '-' : curVal)
-  benchmark.ma = endBench(benchmark.ma)*/
-
+function _pivotCol(T, tol = 1e-9) {
   const TLength = T.length;
   const ma = T[TLength - 1].slice(0, -1)
       .map((curVal) => curVal >= -tol ? '-' : curVal);
@@ -42,28 +33,15 @@ function _pivotCol(T, tol = 1e-9/* , bland = false*/) {
       pivcol: NaN,
     };
   }
-  /* if (bland) {
-    // ma.mask is sometimes 0d
-    return {
-      pivcol_found: true,
-      pivcol: nonzero(MAmask(ma)
-        .map(curVal => !curVal))[0] // first not 0 element in last column
-    }
-  }*/
 
   return {
     pivcol_found: true,
-    pivcol: /* minNonzeroIndices(ma)[0]*/ minNonzeroIndex(ma),
+    pivcol: minNonzeroIndex(ma),
   };
 }
 
-function _pivotRow(T, basis, pivcol, phase, tol = 1e-9/* , bland = false*/) {
-  let k;
-  if (phase === 1) {
-    k = 2;
-  } else {
-    k = 1;
-  }
+function _pivotRow(T, pivcol, phase, tol = 1e-9) {
+  const k = phase === 1 ? 2 : 1;
   const ma = T.slice(0, -k)
       .map((row) => row[pivcol] <= tol ? '-' : row[pivcol]);
   if (maCount(ma) === 0) {
@@ -77,22 +55,9 @@ function _pivotRow(T, basis, pivcol, phase, tol = 1e-9/* , bland = false*/) {
   const q = mb.map(
       (curVal, index) => curVal !== '-' ? curVal / ma[index] : curVal,
   );
-  /* const minRows = minNonzeroIndices(q)
-  if (bland) {
-    return {
-      pivrow_found: true,
-      pivrow: minRows[argmin(take(basis, minRows))]
-    }
-  }*/
-  /* benchmark.b1 = startBench(benchmark.b1);
-  const MAcount_0 = minNonzeroIndices(q)[0];
-  benchmark.b1 = endBench(benchmark.b1);
-  benchmark.b2 = startBench(benchmark.b2);
-  const MAcount_1 = minNonzeroIndex(q);
-  benchmark.b2 = endBench(benchmark.b2);*/
   return {
     pivrow_found: true,
-    pivrow: /* minRows[0]*/ minNonzeroIndex(q),
+    pivrow: minNonzeroIndex(q),
   };
 }
 
@@ -127,17 +92,14 @@ function _applyPivot(T, basis, pivrow, pivcol, tol = 1e-9) {
   return T*/
 }
 
-function _solveSimplex(T, n, basis, maxiter = 1000, phase = 2,
-    /* callback = undefined,*/
-    tol = 1e-9, bland = false,
-    /* _T_o = undefined,*/
-    status = 0, /* message = '',*/ nit0 = 0) {
+function _solveSimplex(T, basis, maxiter = 1000, phase = 2,
+    tol = 1e-9, status = 0, nit0 = 0) {
   let nit = nit0;
   let complete = false;
 
   while (!complete) {
     // Find the pivot column
-    const pivcolResult = _pivotCol(T, tol, bland);
+    const pivcolResult = _pivotCol(T, tol);
     let pivrowResult = {};
     if (!pivcolResult.pivcol_found) {
       pivcolResult.pivcol = NaN;
@@ -146,9 +108,7 @@ function _solveSimplex(T, n, basis, maxiter = 1000, phase = 2,
       complete = true;
     } else {
       // Find the pivot row
-      pivrowResult = _pivotRow(
-          T, basis, pivcolResult.pivcol, phase, tol, bland,
-      );
+      pivrowResult = _pivotRow(T, pivcolResult.pivcol, phase, tol);
       if (!pivrowResult.pivrow_found) {
         status = 3;
         complete = true;
@@ -173,7 +133,7 @@ function _solveSimplex(T, n, basis, maxiter = 1000, phase = 2,
   };
 }
 
-function simplex(A, b, c, c0 = 0, maxiter = 1000,
+function simplex(initA, initb, initc, c0 = 0, maxiter = 1000,
     /* disp = false,*/ callback = undefined,
     tol = 1e-9, bland = false, _T_o = undefined) {
   /* A = [
@@ -194,9 +154,15 @@ function simplex(A, b, c, c0 = 0, maxiter = 1000,
     4: 'Optimization failed. Singular matrix encountered.',
   };
 
+  let A = deepCopy(initA);
+  const b = deepCopy(initb);
+  let c = deepCopy(initc);
+  // console.log(A[0][0]);
   const n = shape(A)[0];
   const diagM = eye(n);
+  // console.log(A);
   A = A.map((curRow, index) => [...curRow, ...diagM[index]]);
+  // console.log(A);
   c = [...c, ...zeros(n)];
   const m = shape(A)[1];
 
@@ -216,9 +182,10 @@ function simplex(A, b, c, c0 = 0, maxiter = 1000,
 
   // Format the phase one tableau by adding artificial variables and stacking
   // the constraints, the objective row and pseudo-objective row.
-  const rowConstraints = A.map(
+  // console.log(A[0][0]);
+  const rowConstraints = deepCopy(A.map(
       (curRow, index) => [...curRow, ...diagM[index], b[index]],
-  );
+  ));
   const rowObjective = [...c, ...zeros(n), c0];
   const rowPseudoObjective = rowConstraints.reduce(
       (acc, row) => row.map(
@@ -230,11 +197,10 @@ function simplex(A, b, c, c0 = 0, maxiter = 1000,
     rowPseudoObjective[curVal] = 0;
   });
   let T = [...rowConstraints, rowObjective, rowPseudoObjective];
+  // console.log(T);
   const phase = 1;
 
-  let solveSimplexResult = _solveSimplex(
-      T, n, basis, maxiter, phase, callback, tol, bland, _T_o,
-  );
+  let solveSimplexResult = _solveSimplex(T, basis, maxiter, phase, tol);
 
   const nit1 = solveSimplexResult.nit;
   status = solveSimplexResult.status;
@@ -260,9 +226,7 @@ function simplex(A, b, c, c0 = 0, maxiter = 1000,
 
   if (status === 0) {
     // Phase 2
-    solveSimplexResult = _solveSimplex(
-        T, n, basis, maxiter, 2, callback, tol, bland, _T_o, nit1,
-    );
+    solveSimplexResult = _solveSimplex(T, basis, maxiter, 2, tol);
   }
 
   const solution = zeros(n + m);
@@ -279,7 +243,7 @@ function simplex(A, b, c, c0 = 0, maxiter = 1000,
   benchmark = Object.keys(benchmark).map(
       (key) => benchmark[key] = benchmark[key] / nit2,
   );
-  console.log(benchmark, nit2);
+  // console.log(nit2);
 
   return {
     x,

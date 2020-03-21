@@ -7,6 +7,7 @@
     <v-content>
       <Content />
       <RunButton />
+      <Snackbar />
     </v-content>
 
     <v-navigation-drawer app right>menu</v-navigation-drawer>
@@ -14,16 +15,19 @@
 </template>
 
 <script>
-import Settings from '@/components/settings/Settings.vue';
 import Content from '@/components/content/Content.vue';
 import RunButton from '@/components/RunButton.vue';
+import Settings from '@/components/settings/Settings.vue';
+import Snackbar from '@/components/Snackbar.vue';
+
 import {mapActions} from 'vuex';
 
 export default {
   components: {
-    Settings,
     Content,
     RunButton,
+    Settings,
+    Snackbar,
   },
   created: async function() {
     this.initData();

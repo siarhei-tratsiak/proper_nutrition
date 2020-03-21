@@ -3,7 +3,7 @@ const state = {
   favored: [],
   isFilterOn: false,
   products: [],
-  counting: 'not started',
+  counting: 'not started', // 'started', 'finished'
   nutrients: [],
   panel: [],
   productsList: [],
@@ -19,6 +19,8 @@ const state = {
     userId: undefined,
   },
   status: {
+    recordingToDB: false,
+    resultIsOpened: false,
     selected: false,
   },
 };

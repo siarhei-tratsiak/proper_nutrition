@@ -1,16 +1,33 @@
 <template lang="html">
-    <v-expansion-panel>
+  <v-card
+    v-if="selected.length > 0"
+    width="100%"
+  >
 
-      <v-expansion-panel-header>
+    <v-toolbar>
+
+      <div @click.stop="updateCheckbox">
         <v-checkbox
-          class="header-checkbox"
-          :disabled="disabled"
-          :indeterminate="indeterminate"
-          @click.stop="updateCheckbox"
-          v-model="enabled">
+          hide-details
+          indeterminate
+          readonly
+          v-show="indeterminate && !isAllSelected"
+        >
         </v-checkbox>
-        <h3>СПИСОК ПРОДУКТОВ</h3>
-        <v-btn
+        <v-checkbox
+          hide-details
+          :input-value="isAllSelected"
+          readonly
+          v-show="!indeterminate"
+        >
+        </v-checkbox>
+      </div>
+
+      <v-toolbar-title>СПИСОК ПРОДУКТОВ</v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
           icon
           x-small
           right
@@ -19,15 +36,13 @@
         >
           <v-icon color="yellow accent-2" v-if="isFilterOn">star</v-icon>
           <v-icon v-else>star_border</v-icon>
-        </v-btn>
-      </v-expansion-panel-header>
+      </v-btn>
 
+    </v-toolbar>
 
-      <v-expansion-panel-content>
-        <ProductsList />
-      </v-expansion-panel-content>
+    <ProductsList />
 
-    </v-expansion-panel>
+  </v-card>
 </template>
 
 <script>
@@ -40,10 +55,6 @@ export default {
     ProductsList,
   },
 
-  data: () => ({
-    enabled: false,
-  }),
-
   computed: {
 
     ...mapState(['isFilterOn', 'selected', 'status']),
@@ -53,15 +64,15 @@ export default {
     },
 
     indeterminate() {
-      const ProductsAreInDifferentStates = this.selected.some(
-          (curVal, index, array) => curVal.selected !== array[0].selected,
+      return this.selected.some(
+          (product) =>
+            product.selected !== this._isFirstProductSelected(),
       );
-      const indeterminate =
-        this.disabled ? false : ProductsAreInDifferentStates;
-      if (!indeterminate) {
-        this._setEnabled();
-      }
-      return indeterminate;
+    },
+
+    isAllSelected() {
+      return this.selected
+          .every((product) => !!product.selected);
     },
   },
 
@@ -69,17 +80,21 @@ export default {
 
     ...mapActions(['toggleSelected', 'toggleFilter']),
 
+    _isFirstProductSelected() {
+      return this.selected[0].selected;
+    },
+
     _setEnabled() {
       const everyProductIsSelected = this.selected.every(
           (curVal) => curVal.selected,
       );
-      const enabled = this.disabled ? false : everyProductIsSelected;
-      this.enabled = enabled;
+      const isAllSelected = this.disabled ? false : everyProductIsSelected;
+      this.isAllSelected = isAllSelected;
     },
 
     updateCheckbox() {
-      const enabled = this.indeterminate ? true : !this.enabled;
-      const payload = {all: true, selected: +enabled};
+      const isAllSelected = this.indeterminate ? true : !this.isAllSelected;
+      const payload = {all: true, selected: +isAllSelected};
       this.toggleSelected(payload);
     },
 

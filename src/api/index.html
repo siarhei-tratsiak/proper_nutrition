@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+
+<body>
+
+</body>
+<script type="module">
+  import { simplex } from "./simplex.js"
+  const A = [
+    [1, -2],
+    [-1, -1],
+    [1, -1],
+    [0, 1]
+  ]
+  const b = [-2, -4, 2, 6]
+  const c = [-1, -2]
+  const result1 = simplex(A, b, c)
+  console.log(result1)
+  const result2 = simplex(A, b, c)
+  console.log(result2)
+</script>
+
+</html>
