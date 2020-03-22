@@ -1,9 +1,5 @@
 const mutations = {
 
-  setCounting(state, condition) {
-    state.counting = condition;
-  },
-
   setDB(state, db) {
     state.db = db;
   },
@@ -18,14 +14,6 @@ const mutations = {
 
   setNutrients(state, nutrients) {
     state.nutrients = nutrients;
-  },
-
-  setPanel(state, panel) {
-    /* const panel = state.panel;
-    if (!panel.includes(index)) {
-      panel.push(index);
-    }*/
-    state.panel = panel;
   },
 
   setProducts(state, products) {

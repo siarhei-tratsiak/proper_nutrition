@@ -23,7 +23,7 @@ const actions = {
   },
 
   async getSolution({state, getters, commit, dispatch}) {
-    commit('setCounting', 'started');
+    commit('setStatus', {counting: true});
     const {A, b, c, indices} = await getters.getConditions();
     const test = false;
     let result = [];
@@ -232,18 +232,22 @@ const actions = {
     }
     const db = state.db;
     const products = await db.products.toArray();
+    const categories = await db.categories.toArray();
     result = result.map((curVal) => {
       const id = curVal.id;
-      const name = products.find((product) => product.id === id).name;
+      const product = products.find((product) => product.id === id);
+      const category = categories
+          .find((category) => category.id === product.category_id);
       return {
         id,
-        name,
+        category: category.category,
+        name: product.name,
         value: curVal.value * 100,
       };
     });
     commit('setProducts', result);
     dispatch('setNutrients');
-    commit('setCounting', 'finished');
+    commit('setStatus', {counting: false});
     commit('setStatus', {
       resultIsOpened: true,
     });
