@@ -5,7 +5,9 @@ const state = {
   products: [],
   nutrients: [],
   productsList: [],
+  ration: [],
   selected: [],
+  selectedDate: new Date().toISOString().substr(0, 10),
   settings: {
     sex: '',
     age: undefined,
@@ -18,6 +20,7 @@ const state = {
   },
   status: {
     counting: false,
+    dbIsReady: false,
     recordingToDB: false,
     resultIsOpened: false,
     selected: false,

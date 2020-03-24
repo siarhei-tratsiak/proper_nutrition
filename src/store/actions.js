@@ -3,7 +3,10 @@ import {
   clauseForSelectedCategory,
   clauseForSelectedProduct,
 } from '@/store/store_service.js';
-import {initDatabase} from '@/api/indexedDBService';
+import {
+  getRation,
+  initDatabase,
+} from '@/api/indexedDBService';
 import {conditions} from '@/data/DBSettings';
 import {simplex} from '@/api/simplex';
 import {defaultSettings, trackingChanges} from '@/data/defaultSettings';
@@ -265,6 +268,7 @@ const actions = {
     const db = await initDatabase();
     commit('setDB', db);
     if (db) {
+      commit('setStatus', {dbIsReady: true});
       return true;
     }
   },
@@ -356,6 +360,11 @@ const actions = {
           })),
     }));
     commit('setProductsList', productsList);
+  },
+
+  async setRation({state, commit}, date) {
+    const ration = await getRation(state.db, state.settings.userId, date);
+    commit('setRation', ration);
   },
 
   settingChange({state, commit}, payload) {

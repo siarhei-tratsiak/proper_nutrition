@@ -1,8 +1,7 @@
 <template lang="html">
   <v-card
     v-if="selected.length > 0"
-    width="100%"
-  >
+    width="100%">
 
     <v-toolbar>
 

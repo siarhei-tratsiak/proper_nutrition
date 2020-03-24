@@ -24,6 +24,10 @@ const mutations = {
     state.productsList = productsList;
   },
 
+  setRation(state, ration) {
+    state.ration = ration;
+  },
+
   setSelected(state, selected) {
     state.selected = selected;
   },
@@ -40,6 +44,10 @@ const mutations = {
         .forEach(function(curVal) {
           curVal.selected = payload.selected;
         });
+  },
+
+  setSelectedDate(state, date) {
+    state.selectedDate = date;
   },
 
   setSelectedProduct(state, payload) {

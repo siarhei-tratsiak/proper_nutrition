@@ -51,6 +51,8 @@ async function initDatabase() {
   const filtersColumnsNames = ['++id', 'product_id', 'user_id',
     'selected', 'favored', '[user_id+favored]', '[user_id+product_id]',
     '[user_id+category_id]'];
+  const rationsColumnsNames = ['++id', 'user_id', 'date',
+    'product_id', 'mass', '[user_id+date]'];
   const usersColumnsNames = ['++id'].concat(trackingChanges);
   const products = [...products0, ...products1, ...products2, ...products3,
     ...products4, ...products5, ...products6, ...products7, ...products8,
@@ -75,6 +77,11 @@ async function initDatabase() {
     name: 'filters',
     data: [],
     columns: filtersColumnsNames,
+  },
+  {
+    name: 'rations',
+    data: [],
+    columns: rationsColumnsNames,
   },
   {
     name: 'users',
@@ -129,6 +136,11 @@ async function fillDB(db, table) {
   return true;
 }
 
+async function getRation(db, userID, date) {
+  return await db.rations
+      .where({user_id: userID, date: date}).toArray();
+}
+
 function prepareData(table) {
   let valuesList = table.data;
   let columns = table.columns;
@@ -164,5 +176,6 @@ async function userIdsFromFilters(db) {
 }
 
 export {
+  getRation,
   initDatabase,
 };
