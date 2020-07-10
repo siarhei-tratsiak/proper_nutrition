@@ -43,6 +43,7 @@ const actions = {
 
   async getSolution({ getters, commit, dispatch }) {
     commit("setStatus", { counting: true });
+    commit("setDays");
     const { A, b, c, indices } = await getters.getConditions();
     const test = false;
     let result = [];

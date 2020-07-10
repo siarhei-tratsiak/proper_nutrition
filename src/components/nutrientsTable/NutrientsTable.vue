@@ -25,7 +25,7 @@ export default {
   components: { ProgressBarCell },
 
   computed: {
-    ...mapState(["products"]),
+    ...mapState(["days", "products"]),
 
     nutrients: function() {
       const usedNutrients = this._getUsedNutrients();
@@ -97,8 +97,8 @@ export default {
     },
 
     _getBase(comparison) {
-      const max = Math.max(...comparison);
-      const base = max === 0 ? 0 : 100 / max;
+      const maxAbs = Math.max(...comparison);
+      const base = maxAbs === 0 ? 0 : 100 / maxAbs;
       return base;
     },
 
@@ -155,19 +155,20 @@ export default {
         this._findConstraintWithID(reducedConstraints, nutrientID) ||
         mockNutrientConstraints;
       const nutrientValue = nutrientValues[rowIndex];
-      const min = nutrientConstraints[1];
-      const max = nutrientConstraints[2];
-      const comparison = [min, nutrientValue, max || null];
+      const days = this.isResult ? this.days : 1;
+      const minAbs = nutrientConstraints[1] * days;
+      const maxAbs = nutrientConstraints[2] * days;
+      const comparison = [minAbs, nutrientValue, maxAbs || null];
       const base = this._getBase(comparison);
-      const value = min + max === 0 ? 0 : base * nutrientValue;
+      const value = minAbs + maxAbs === 0 ? 0 : base * nutrientValue;
       return {
         base,
-        minAbs: min,
+        minAbs,
         valueAbs: nutrientValue,
-        maxAbs: max,
-        min: base * min,
+        maxAbs: maxAbs,
+        min: base * minAbs,
         value,
-        max: base * max,
+        max: base * maxAbs,
         name: usedNutrient[1],
         units: usedNutrient[2]
       };
@@ -198,7 +199,7 @@ export default {
     }
   },
 
-  props: ["productIDs"]
+  props: ["isResult", "productIDs"]
 };
 </script>
 

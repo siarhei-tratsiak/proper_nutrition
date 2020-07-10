@@ -59,7 +59,7 @@ export default {
     allowedDates(date) {
       if (this.isFrom) {
         const to = this.period.end;
-        return Date.parse(date) <= to;
+        return Date.parse(date) < to;
       } else {
         const from = this.period.start;
         return Date.parse(date) >= from;
@@ -73,7 +73,8 @@ export default {
       if (this.isFrom) {
         period.start = formattedDate;
       } else {
-        period.end = formattedDate;
+        const msInDay = 24 * 60 * 60 * 1000;
+        period.end = formattedDate + msInDay;
       }
       this.setPeriod(period);
     }

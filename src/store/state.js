@@ -1,4 +1,5 @@
 const state = {
+  days: 1,
   db: {},
   editedProduct: {
     date: null,

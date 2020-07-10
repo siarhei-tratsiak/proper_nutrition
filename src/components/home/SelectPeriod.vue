@@ -21,6 +21,13 @@ export default {
     }
   },
 
+  created: function() {
+    const dates = this._getDates();
+    const start = dates.today;
+    const end = dates.end;
+    this.setPeriod({ start, end });
+  },
+
   data: function() {
     return {
       items: ["Сегодня", "Неделя", "7 дней", "Месяц", "30 дней", "Другое"],
@@ -31,22 +38,25 @@ export default {
   methods: {
     ...mapMutations(["setPeriod"]),
 
-    input: function(value) {
-      this.value = value;
+    _getDates: function() {
       const msInDay = 24 * 60 * 60 * 1000;
       const now = new Date();
       const today = now - (now % msInDay);
+      const end = today + msInDay;
+      return { msInDay, now, today, end };
+    },
+
+    input: function(value) {
+      this.value = value;
+      const { msInDay, now, today, end } = this._getDates();
       const dayOfWeek = now.getDay();
       const monday = today - (dayOfWeek - 1) * msInDay;
-      const weekAgo = today - 7 * msInDay;
+      const weekAgo = today - 6 * msInDay;
       const dayOfMonth = now.getDate();
       const firstDayOfMonth = today - (dayOfMonth - 1) * msInDay;
-      const monthAgo = today - 30 * msInDay;
-      let start = null;
+      const monthAgo = today - 29 * msInDay;
+      let start = today;
       switch (value) {
-        case "Сегодня":
-          start = today;
-          break;
         case "Неделя":
           start = monday;
           break;
@@ -60,7 +70,7 @@ export default {
           start = monthAgo;
           break;
       }
-      this.setPeriod({ start });
+      this.setPeriod({ start, end });
     }
   }
 };

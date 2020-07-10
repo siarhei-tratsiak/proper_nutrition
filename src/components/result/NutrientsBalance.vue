@@ -1,5 +1,5 @@
 <template lang="html">
-  <NutrientsTable :productIDs="productIDs"></NutrientsTable>
+  <NutrientsTable :productIDs="productIDs" :isResult="true"></NutrientsTable>
 </template>
 
 <script>

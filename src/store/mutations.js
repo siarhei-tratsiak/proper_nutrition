@@ -1,4 +1,11 @@
 const mutations = {
+  setDays(state) {
+    const start = state.period.start;
+    const end = state.period.end;
+    const msInDay = 24 * 60 * 60 * 1000;
+    state.days = (end - start) / msInDay;
+  },
+
   setDB(state, db) {
     state.db = db;
   },

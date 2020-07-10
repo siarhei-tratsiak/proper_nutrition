@@ -13,6 +13,9 @@ const getters = {
   getConditions: state =>
     async function () {
       const simplexConditions = deepCopy(conditions);
+      simplexConditions.constraints.forEach(constraint => {
+        constraint[2] *= state.days;
+      });
       const multipliers = simplexConditions.constraints.map(constraint =>
         constraint[1] === ">=" ? -1 : 1
       );
