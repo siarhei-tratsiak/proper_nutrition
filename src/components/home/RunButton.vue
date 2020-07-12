@@ -1,22 +1,21 @@
 <template>
-  <div class="flex-grow-1 d-flex justify-center align-center">
-    <v-btn
-      @click="getSolution()"
-      color="primary"
-      fab
-      id="run_button"
-      :loading="this.status.counting"
-    >
-      <v-icon :size="size">mdi-room-service</v-icon>
-      <template v-slot:loader>
-        <v-progress-circular indeterminate :size="progressSize"></v-progress-circular>
-      </template>
-    </v-btn>
-  </div>
+  <v-btn
+    @click="getSolution(nutrients)"
+    color="primary"
+    fab
+    id="run_button"
+    :loading="this.status.counting"
+  >
+    <v-icon :size="size">mdi-room-service</v-icon>
+    <template v-slot:loader>
+      <v-progress-circular indeterminate :size="progressSize"></v-progress-circular>
+    </template>
+  </v-btn>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
+import GetNutrientsBalance from "@/mixins/GetNutrientsBalance.vue";
 
 export default {
   data: () => ({
@@ -25,12 +24,15 @@ export default {
 
   computed: {
     ...mapState(["status"]),
+
     progressSize: () => Math.min(window.innerHeight, window.innerWidth) * 0.12
   },
 
   methods: {
     ...mapActions(["getSolution"])
-  }
+  },
+
+  mixins: [GetNutrientsBalance]
 };
 </script>
 

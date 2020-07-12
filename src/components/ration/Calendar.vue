@@ -11,14 +11,19 @@ export default {
 
     picker: {
       get: function() {
-        return this.selectedDate;
+        const date = new Date(this.selectedDate).toISOString().substr(0, 10);
+        return date;
       },
 
       set: function(date) {
         this.setSelectedDate(date);
-        this.setRation(date);
+        this.setRation(this.selectedDate);
       }
     }
+  },
+
+  created: function() {
+    this.setSelectedDate(new Date());
   },
 
   methods: {

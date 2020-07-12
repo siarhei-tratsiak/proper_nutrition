@@ -47,8 +47,8 @@ function deleteRation(db, id) {
   db.rations.delete(id);
 }
 
-function editRations(db, ration, id = undefined) {
-  db.rations.put(ration, id);
+function editRations(db, ration) {
+  db.rations.put(ration);
 }
 
 async function _fillDB(db, table) {
@@ -66,10 +66,18 @@ async function _fillDB(db, table) {
   return true;
 }
 
-async function getRation(db, userID, date) {
-  const rations = await db.rations
-    .where({ user_id: userID, date: date })
-    .toArray();
+async function getRation(db, userID, start, end = undefined) {
+  let rations = [];
+  if (end) {
+    rations = await db.rations
+      .where(["user_id", "date"])
+      .between([userID, start], [userID, end], true, true)
+      .toArray();
+  } else {
+    rations = await db.rations
+      .where({ user_id: userID, date: start })
+      .toArray();
+  }
   const rationProductIDs = rations.map(ration => ration.product_id);
   const filteredProducts = products.filter(product =>
     rationProductIDs.includes(product[0])

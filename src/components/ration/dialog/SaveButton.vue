@@ -17,16 +17,16 @@ export default {
     ...mapActions(["editRation", "setRation"]),
 
     save() {
-      const payload = {
-        ration: {
-          id: this.editedProduct.id,
-          product_id: this.editedProduct.product_id,
-          user_id: this.settings.userID,
-          date: this.selectedDate,
-          mass: this.editedProduct.mass
-        }
+      const ration = {
+        product_id: this.editedProduct.product_id,
+        user_id: this.settings.userID,
+        date: this.selectedDate,
+        mass: +this.editedProduct.mass
       };
-      this.editRation(payload);
+      if (this.editedProduct.id) {
+        ration.id = this.editedProduct.id;
+      }
+      this.editRation(ration);
       this.close();
       this.setRation(this.selectedDate);
     }

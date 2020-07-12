@@ -25,10 +25,7 @@ export default {
         month: "long",
         day: "numeric"
       };
-      return new Date(Date.parse(this.selectedDate)).toLocaleDateString(
-        undefined,
-        options
-      );
+      return new Date(this.selectedDate).toLocaleDateString(undefined, options);
     }
   }
 };

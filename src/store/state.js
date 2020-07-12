@@ -1,17 +1,17 @@
 const state = {
-  days: 1,
   db: {},
   editedProduct: {
-    date: null,
-    id: null,
-    mass: null,
-    product_id: null,
-    user_id: null
+    date: undefined,
+    id: undefined,
+    mass: undefined,
+    product_id: undefined,
+    user_id: undefined
   },
   favored: [],
   isFilterOn: false,
   isHorizontal: false,
-  nutrients: [
+  nutrients: [],
+  /*[
     {
       name: "Energy",
       constraint: ">=",
@@ -318,12 +318,14 @@ const state = {
       constant: 3000,
       count: 3000.000000000021
     }
-  ],
+  ],*/
   period: {
     start: null,
+    name: "Сегодня",
     end: null
   },
-  products: [
+  products: [],
+  /*[
     {
       id: 1126,
       category: null,
@@ -467,11 +469,12 @@ const state = {
       name: "Nutritional powder mix, whey based, NFS",
       value: 2.563895323298709
     }
-  ],
+  ],*/
   productsList: [],
   ration: [],
+  rationForPeriod: [],
   selected: [],
-  selectedDate: new Date().toISOString().substr(0, 10),
+  selectedDate: null,
   settings: {
     sex: "",
     age: undefined,
@@ -487,7 +490,6 @@ const state = {
     dbIsReady: false,
     productDialogIsOpened: false,
     recordingToDB: false,
-    resultIsOpened: false,
     selected: false
   }
 };

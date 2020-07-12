@@ -1,12 +1,14 @@
 <template>
   <div :class="color" id="background" class="d-flex flex-column align-center">
-    <RunButton />
-
+    <div class="flex-grow-1 d-flex justify-center align-center">
+      <RunButton v-if="ready" />
+    </div>
     <SelectPeriod />
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import RunButton from "@/components/home/RunButton.vue";
 import SelectPeriod from "@/components/home/SelectPeriod.vue";
 
@@ -16,6 +18,14 @@ export default {
   components: {
     RunButton,
     SelectPeriod
+  },
+
+  computed: {
+    ...mapState(["settings"]),
+
+    ready: function() {
+      return !!this.settings.userID;
+    }
   },
 
   data: () => ({

@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 
 export default {
   computed: {
@@ -54,6 +54,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(["setRationForPeriod"]),
     ...mapMutations(["setPeriod"]),
 
     allowedDates(date) {

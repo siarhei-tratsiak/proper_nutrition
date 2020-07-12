@@ -9,47 +9,45 @@
 </template>
 
 <script>
+import GetDates from "@/mixins/GetDates";
 import DatePicker from "@/components/home/DatePicker";
-import { mapMutations } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 
 export default {
   components: { DatePicker },
 
   computed: {
+    ...mapState(["period"]),
+
     showDatePicker: function() {
       return this.value === "Другое";
-    }
-  },
+    },
 
-  created: function() {
-    const dates = this._getDates();
-    const start = dates.today;
-    const end = dates.end;
-    this.setPeriod({ start, end });
+    value: {
+      get: function() {
+        return this.period.name;
+      },
+
+      set: function(name) {
+        this.setPeriod({ name });
+      }
+    }
   },
 
   data: function() {
     return {
-      items: ["Сегодня", "Неделя", "7 дней", "Месяц", "30 дней", "Другое"],
-      value: "Сегодня"
+      items: ["Сегодня", "Неделя", "7 дней", "Месяц", "30 дней", "Другое"]
     };
   },
 
   methods: {
-    ...mapMutations(["setPeriod"]),
-
-    _getDates: function() {
-      const msInDay = 24 * 60 * 60 * 1000;
-      const now = new Date();
-      const today = now - (now % msInDay);
-      const end = today + msInDay;
-      return { msInDay, now, today, end };
-    },
+    ...mapActions(["setRationForPeriod"]),
+    ...mapMutations(["setPeriod", "set"]),
 
     input: function(value) {
       this.value = value;
-      const { msInDay, now, today, end } = this._getDates();
-      const dayOfWeek = now.getDay();
+      const { msInDay, now, today, end } = this.getDates();
+      const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay();
       const monday = today - (dayOfWeek - 1) * msInDay;
       const weekAgo = today - 6 * msInDay;
       const dayOfMonth = now.getDate();
@@ -72,7 +70,9 @@ export default {
       }
       this.setPeriod({ start, end });
     }
-  }
+  },
+
+  mixins: [GetDates]
 };
 </script>
 

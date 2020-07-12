@@ -1,9 +1,7 @@
 <template>
   <v-card>
     <v-card-title>{{ productName }}</v-card-title>
-    <v-card-text>
-      <NutrientsTable :productIDs="productID"></NutrientsTable>
-    </v-card-text>
+    <NutrientsTable :productID="productID"></NutrientsTable>
   </v-card>
 </template>
 

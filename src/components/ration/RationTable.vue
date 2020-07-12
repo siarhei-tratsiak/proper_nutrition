@@ -4,6 +4,14 @@
       <TableTop />
     </template>
 
+    <template v-slot:item.product_name="{ item }">
+      <router-link :to="{ name: 'Product', params: { id: item.product_id } }">
+        {{
+        item.product_name
+        }}
+      </router-link>
+    </template>
+
     <template v-slot:item.actions="{ item }">
       <v-icon @click="editItem(item)">mdi-pencil</v-icon>
       <v-icon @click="deleteItem(item)">mdi-delete</v-icon>

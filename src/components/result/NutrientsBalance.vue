@@ -1,21 +1,29 @@
 <template lang="html">
-  <NutrientsTable :productIDs="productIDs" :isResult="true"></NutrientsTable>
+  <v-card>
+    <v-card-title>
+      Баланс нутриентов в рационе с учетом рекомендаций:
+    </v-card-title>
+
+    <v-data-table
+      disable-pagination
+      :headers="headers"
+      hide-default-footer
+      item-key="name"
+      :items="nutrients"
+      mobile-breakpoint="600"
+    >
+      <template v-slot:item.value="{ item }">
+        <ProgressBarCell :nutrient="item"></ProgressBarCell>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import NutrientsTable from "@/components/nutrientsTable/NutrientsTable";
+import GetNutrientsBalance from "@/mixins/GetNutrientsBalance.vue";
 
 export default {
-  components: { NutrientsTable },
-
-  computed: {
-    ...mapState(["products"]),
-
-    productIDs: function() {
-      return this.products.map(product => product.id);
-    }
-  }
+  mixins: [GetNutrientsBalance]
 };
 </script>
 

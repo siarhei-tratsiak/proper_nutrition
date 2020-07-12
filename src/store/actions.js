@@ -1,8 +1,4 @@
-import {
-  arraysDifference,
-  getNutrientPosition,
-  modifySelected
-} from "@/store/store_service.js";
+import { arraysDifference, modifySelected } from "@/store/store_service.js";
 import {
   deleteRation,
   editRations,
@@ -10,12 +6,9 @@ import {
   initDatabase,
   searchProduct
 } from "@/api/indexedDBService";
-import { conditions } from "@/data/DBSettings";
 import { simplex } from "@/api/simplex";
 import { defaultSettings, trackingChanges } from "@/data/defaultSettings";
 import { food as products } from "@/data/food.js";
-import { foodNutrient } from "@/data/foodNutrient.js";
-import { nutrient } from "@/data/nutrient.js";
 import router from "@/router/index.js";
 
 const actions = {
@@ -24,9 +17,9 @@ const actions = {
     deleteRation(db, id);
   },
 
-  editRation({ state }, payload) {
+  editRation({ state }, ration) {
     const db = state.db;
-    editRations(db, payload.ration, payload.id);
+    editRations(db, ration);
   },
 
   enableSettings({ commit }) {
@@ -41,10 +34,10 @@ const actions = {
     commit("setCategoryIsExpanded", categoryIsExpanded);
   },
 
-  async getSolution({ getters, commit, dispatch }) {
+  async getSolution({ getters, commit }, nutrients) {
     commit("setStatus", { counting: true });
     commit("setDays");
-    const { A, b, c, indices } = await getters.getConditions();
+    const { A, b, c, indices } = await getters.getConditions(nutrients);
     const test = false;
     let result = [];
     result = [
@@ -261,11 +254,8 @@ const actions = {
       };
     });
     commit("setProducts", result);
-    dispatch("setNutrients");
+    // dispatch("setNutrients");
     commit("setStatus", { counting: false });
-    commit("setStatus", {
-      resultIsOpened: true
-    });
     router.push("Result");
   },
 
@@ -332,28 +322,6 @@ const actions = {
     return searchProduct(state.db, productName);
   },
 
-  async setNutrients({ state, commit }) {
-    const products = state.products;
-    const nutrients = conditions.constraints.map(constraint => {
-      const nutrientPosition = getNutrientPosition(constraint[0]);
-      const count = products
-        .map(product => {
-          const dbProduct = foodNutrient.find(
-            nutrients => nutrients[0] === product.id
-          );
-          return (product.value / 100) * dbProduct[1][nutrientPosition];
-        })
-        .reduce((acc, curVal) => acc + curVal);
-      return {
-        name: nutrient.find(nutientItem => nutientItem[0] === constraint[0])[1],
-        constraint: constraint[1],
-        constant: constraint[2],
-        count
-      };
-    });
-    commit("setNutrients", nutrients);
-  },
-
   setProductsList({ commit }) {
     const productsList = products.map(product => ({
       id: product[0],
@@ -366,6 +334,20 @@ const actions = {
   async setRation({ state, commit }, date) {
     const ration = await getRation(state.db, state.settings.userID, date);
     commit("setRation", ration);
+  },
+
+  async setRationForPeriod({ state, commit }) {
+    let ration = await getRation(
+      state.db,
+      state.settings.userID,
+      state.period.start,
+      state.period.end
+    );
+    ration = ration.map(product => ({
+      id: product.product_id,
+      value: product.mass
+    }));
+    commit("setRationForPeriod", ration);
   },
 
   settingChange({ state, commit }, payload) {

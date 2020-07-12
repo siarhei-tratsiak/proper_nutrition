@@ -40,6 +40,20 @@ function getC(groupedNutrients, objective) {
   return groupedNutrients.map(food => -food[1][objectivetPosition]);
 }
 
+function getConstraintWithRation(nutrients, constraint, days) {
+  const nutrientID = constraint[0];
+  const nutrientIndex = nutrientIndices.findIndex(
+    nutrientIndex => nutrientIndex === nutrientID
+  );
+  const nutrientValue = nutrients[nutrientIndex].valueAbs;
+  const border = constraint[2];
+  let result = border * days - nutrientValue;
+  if (result <= 0) {
+    result = constraint[1] === ">=" ? 0 : Infinity;
+  }
+  return result;
+}
+
 function getFilteredNutrients(selectedProducts) {
   const selectedProductsIndices = selectedProducts.map(product => product[0]);
   return foodNutrient.filter(product =>
@@ -83,9 +97,9 @@ export {
   getA,
   getB,
   getC,
+  getConstraintWithRation,
   getFilteredNutrients,
   getIndices,
-  getNutrientPosition,
   getSelectedProducts,
   modifySelected
 };

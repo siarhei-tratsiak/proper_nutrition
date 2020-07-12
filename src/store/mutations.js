@@ -17,7 +17,7 @@ const mutations = {
       );
     } else {
       Object.keys(state.editedProduct).forEach(
-        key => (state.editedProduct[key] = null)
+        key => (state.editedProduct[key] = undefined)
       );
     }
   },
@@ -34,10 +34,6 @@ const mutations = {
     state.isHorizontal = isHorizontal;
   },
 
-  setNutrients(state, nutrients) {
-    state.nutrients = nutrients;
-  },
-
   setPeriod(state, period) {
     Object.keys(period).forEach(key => (state.period[key] = period[key]));
   },
@@ -52,6 +48,10 @@ const mutations = {
 
   setRation(state, ration) {
     state.ration = ration;
+  },
+
+  setRationForPeriod(state, ration) {
+    state.rationForPeriod = ration;
   },
 
   setSelected(state, selected) {
@@ -73,7 +73,9 @@ const mutations = {
   },
 
   setSelectedDate(state, date) {
-    state.selectedDate = date;
+    const msInDay = 24 * 60 * 60 * 1000;
+    const ms = Date.parse(date);
+    state.selectedDate = ms - (ms % msInDay);
   },
 
   setSelectedProduct(state, payload) {

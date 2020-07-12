@@ -1,17 +1,20 @@
 <template lang="html">
-  <v-data-table
-    :headers="headers"
-    hideDefaultFooter
-    id="result-products-list"
-    :items="items"
-    :itemsPerPage="itemsPerPage"
-  >
-    <template v-slot:item.name="{ item }">
-      <router-link :to="{ name: 'Product', params: { id: item.id } }">{{
-        item.name
-      }}</router-link>
-    </template>
-  </v-data-table>
+  <v-card>
+    <v-card-title>Продукты к употреблению за выбранный период:</v-card-title>
+    <v-data-table
+      :headers="headers"
+      hideDefaultFooter
+      id="result-products-list"
+      :items="items"
+      :itemsPerPage="itemsPerPage"
+    >
+      <template v-slot:item.name="{ item }">
+        <router-link :to="{ name: 'Product', params: { id: item.id } }">{{
+          item.name
+        }}</router-link>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script>
