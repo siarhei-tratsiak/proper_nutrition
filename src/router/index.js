@@ -5,6 +5,7 @@ import Result from "@/views/Result.vue";
 import List from "@/views/List.vue";
 import Product from "@/views/Product.vue";
 import Ration from "@/views/Ration.vue";
+import Settings from "@/views/Settings.vue";
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,11 @@ const routes = [
     path: "/ration",
     name: "Ration",
     component: Ration
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings
   }
 ];
 

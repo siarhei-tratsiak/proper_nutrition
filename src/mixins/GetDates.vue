@@ -1,12 +1,30 @@
 <script>
 export default {
   methods: {
-    getDates: function() {
-      const msInDay = 24 * 60 * 60 * 1000;
-      const now = new Date();
-      const today = now - (now % msInDay);
+    forDatePicker(date = 0) {
+      return new Date(date).toISOString().substr(0, 10);
+    },
+
+    getEnd() {
+      const msInDay = this.getMsInDay();
+      const today = this.getToday();
       const end = today + msInDay;
-      return { msInDay, now, today, end };
+      return end;
+    },
+
+    getMsInDay() {
+      return 24 * 60 * 60 * 1000;
+    },
+
+    getNow() {
+      return new Date();
+    },
+
+    getToday() {
+      const msInDay = this.getMsInDay();
+      const now = this.getNow();
+      const today = now - (now % msInDay);
+      return today;
     }
   }
 };

@@ -477,7 +477,7 @@ const state = {
   selectedDate: null,
   settings: {
     sex: "",
-    age: undefined,
+    birthdate: undefined,
     weight: undefined,
     height: undefined,
     activity: undefined,

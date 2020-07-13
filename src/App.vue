@@ -19,9 +19,8 @@ export default {
 
   created: function() {
     this.initData();
-    const dates = this.getDates();
-    const start = dates.today;
-    const end = dates.end;
+    const start = this.getToday();
+    const end = this.getEnd();
     this.setPeriod({ start, end });
   },
 

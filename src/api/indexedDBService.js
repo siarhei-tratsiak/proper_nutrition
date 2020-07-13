@@ -1,6 +1,6 @@
 import Dexie from "dexie";
 import { DBName } from "@/data/DBSettings";
-import { trackingChanges, defaultSettings } from "@/data/defaultSettings";
+import { defaultSettings } from "@/data/defaultSettings";
 import { food as products } from "@/data/food.js";
 
 async function _checkNewUsers(db, products, filtersTable) {
@@ -93,13 +93,6 @@ async function getRation(db, userID, start, end = undefined) {
 }
 
 async function initDatabase() {
-  const changesColumnsNames = [
-    "++id",
-    "user_id",
-    "parameter",
-    "date_time",
-    "value"
-  ];
   const filtersColumnsNames = [
     "++id",
     "product_id",
@@ -117,13 +110,8 @@ async function initDatabase() {
     "mass",
     "[user_id+date]"
   ];
-  const usersColumnsNames = ["++id"].concat(trackingChanges);
+  const usersColumnsNames = ["++id"].concat(Object.keys(defaultSettings));
   const tables = [
-    {
-      name: "changes",
-      data: [],
-      columns: changesColumnsNames
-    },
     {
       name: "filters",
       data: [],

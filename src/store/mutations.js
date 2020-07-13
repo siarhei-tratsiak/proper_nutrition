@@ -93,7 +93,7 @@ const mutations = {
   },
 
   setSettings(state, payload) {
-    state.settings[payload.setting] = payload.value;
+    Object.keys(payload).forEach(key => (state.settings[key] = payload[key]));
   },
 
   setStatus(state, status) {

@@ -1,11 +1,10 @@
 const defaultSettings = {
   sex: "male",
-  age: 31,
+  birthdate: 585014400000,
   weight: 68,
   height: 174,
-  activity: "средняя"
+  activity: 1,
+  goal: 1
 };
 
-const trackingChanges = ["sex", "age", "weight", "height", "activity", "goal"];
-
-export { defaultSettings, trackingChanges };
+export { defaultSettings };

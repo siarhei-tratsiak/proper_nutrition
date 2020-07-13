@@ -46,7 +46,10 @@ export default {
 
     input: function(value) {
       this.value = value;
-      const { msInDay, now, today, end } = this.getDates();
+      const msInDay = this.getMsInDay();
+      const now = this.getNow();
+      const today = this.getToday();
+      const end = this.getEnd();
       const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay();
       const monday = today - (dayOfWeek - 1) * msInDay;
       const weekAgo = today - 6 * msInDay;

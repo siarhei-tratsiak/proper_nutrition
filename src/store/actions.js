@@ -7,7 +7,6 @@ import {
   searchProduct
 } from "@/api/indexedDBService";
 import { simplex } from "@/api/simplex";
-import { defaultSettings, trackingChanges } from "@/data/defaultSettings";
 import { food as products } from "@/data/food.js";
 import router from "@/router/index.js";
 
@@ -264,7 +263,7 @@ const actions = {
     dispatch("setProductsList");
     await dispatch("initSettings");
     dispatch("initSelected");
-    dispatch("initFavored");
+    //dispatch("initFavored");
   },
 
   async initDB({ commit }) {
@@ -303,19 +302,12 @@ const actions = {
   },
 
   async initSettings({ state, commit, dispatch }) {
-    trackingChanges.forEach(async setting => {
-      const lastValue = await state.db.changes
-        .where("parameter")
-        .equals(setting)
-        .last();
-      const value = lastValue ? lastValue.value : defaultSettings[setting];
-      commit("setSettings", {
-        setting,
-        value
-      });
-    });
+    const payload = await state.db.users.toCollection().last();
+    payload.userID = payload.id;
+    delete payload.id;
+    commit("setSettings", payload);
     dispatch("enableSettings");
-    await dispatch("setuserID");
+    // await dispatch('setUserId')
   },
 
   searchProduct({ state }, productName) {
@@ -350,14 +342,9 @@ const actions = {
     commit("setRationForPeriod", ration);
   },
 
-  settingChange({ state, commit }, payload) {
+  setSettings({ state, commit }, payload) {
     commit("setSettings", payload);
-    const dateTime = new Date().toLocaleString();
-    state.db.changes.add({
-      date_time: dateTime,
-      parameter: payload.setting,
-      value: payload.value
-    });
+    state.db.users.update(state.settings.userID, payload);
   },
 
   async setuserID({ state, commit }) {
