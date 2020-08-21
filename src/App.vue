@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import GetDates from "@/mixins/GetDates";
+import { getToday, getEnd } from "@/api/getDates.js";
 import Navigation from "@/components/navigation/Navigation.vue";
 import { mapActions, mapMutations } from "vuex";
 
@@ -19,8 +19,8 @@ export default {
 
   created: function() {
     this.initData();
-    const start = this.getToday();
-    const end = this.getEnd();
+    const start = getToday();
+    const end = getEnd();
     this.setPeriod({ start, end });
   },
 
@@ -28,8 +28,6 @@ export default {
     ...mapActions(["initData"]),
     ...mapMutations(["setPeriod"])
   },
-
-  mixins: [GetDates],
 
   name: "App"
 };

@@ -26,10 +26,12 @@ export default {
   }),
 
   methods: {
-    ...mapActions(["setSettings"]),
+    ...mapActions(["setConstraints", "setSettings"]),
 
     setHeight(height) {
-      this.setSettings({ height });
+      this.setSettings({ height: +height });
+      const payload = { nutrientIDs: [1008] };
+      this.setConstraints(payload);
     }
   }
 };

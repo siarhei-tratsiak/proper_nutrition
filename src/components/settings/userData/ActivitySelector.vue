@@ -2,7 +2,7 @@
   <v-layout align-center justify-space-between fill-height>
     <v-select
       filled
-      @change="setActivity"
+      @change="update"
       :items="items"
       label="Активность:"
       :value="items[settings.activity]"
@@ -44,10 +44,12 @@ export default {
   }),
 
   methods: {
-    ...mapActions(["setSettings"]),
+    ...mapActions(["setConstraints", "setSettings"]),
 
-    setActivity(activity) {
+    update(activity) {
       this.setSettings({ activity });
+      const payload = { nutrientIDs: [1008] };
+      this.setConstraints(payload);
     }
   }
 };

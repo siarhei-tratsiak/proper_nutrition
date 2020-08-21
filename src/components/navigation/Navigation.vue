@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import debounce from "lodash.debounce";
+import debounce from "lodash";
 import NavigationList from "@/components/navigation/NavigationList.vue";
 import { mapMutations, mapState } from "vuex";
 

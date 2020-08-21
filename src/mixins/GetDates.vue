@@ -25,6 +25,12 @@ export default {
       const now = this.getNow();
       const today = now - (now % msInDay);
       return today;
+    },
+
+    getYear() {
+      const msInDay = this.getMsInDay();
+      const year = msInDay * 365.25;
+      return year;
     }
   }
 };

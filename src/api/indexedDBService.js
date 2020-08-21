@@ -39,7 +39,7 @@ async function _createDB(tables) {
     schemaDefinition[table.name] = table.columns.join(", ");
   });
   const db = new Dexie(DBName);
-  db.version(1).stores(schemaDefinition);
+  db.version(6).stores(schemaDefinition);
   return db;
 }
 
@@ -93,6 +93,17 @@ async function getRation(db, userID, start, end = undefined) {
 }
 
 async function initDatabase() {
+  const constraintsColumnsNames = [
+    "++id",
+    "user_id",
+    "nutrient_id",
+    "min",
+    "min_mutable",
+    "max",
+    "max_mutable",
+    "target",
+    "[user_id+nutrient_id]"
+  ];
   const filtersColumnsNames = [
     "++id",
     "product_id",
@@ -112,6 +123,7 @@ async function initDatabase() {
   ];
   const usersColumnsNames = ["++id"].concat(Object.keys(defaultSettings));
   const tables = [
+    { name: "constraints", data: [], columns: constraintsColumnsNames },
     {
       name: "filters",
       data: [],

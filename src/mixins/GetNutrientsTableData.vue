@@ -1,5 +1,6 @@
 <script>
 import { conditions } from "@/data/DBSettings.js";
+import { mapGetters } from "vuex";
 import { nutrient as nutrients } from "@/data/nutrient.js";
 import { nutrientIndices } from "@/data/nutrientIndices.js";
 import ProgressBarCell from "@/components/nutrientsTable/ProgressBarCell";
@@ -8,10 +9,12 @@ export default {
   components: { ProgressBarCell },
 
   computed: {
+    ...mapGetters(["getReducedConstraints"]),
+
     nutrients: function() {
       const usedNutrients = this._getUsedNutrients();
       const nutrientValues = this._getNutrientValues();
-      const reducedConstraints = this._getReducedConstraints();
+      const reducedConstraints = this.getReducedConstraints();
       const nutrients = this._getNutrients(
         usedNutrients,
         reducedConstraints,

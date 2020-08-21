@@ -1,6 +1,6 @@
 <template>
   <div class="progress-bar-cell">
-    <BorderMarker :nutrient="nutrient" :isMin="true"></BorderMarker>
+    <BorderMarker v-if="nutrient.minAbs" :nutrient="nutrient" :isMin="true"></BorderMarker>
     <BorderMarker v-if="nutrient.maxAbs" :nutrient="nutrient" :isMin="false"></BorderMarker>
     <ProgressBar :nutrient="nutrient"></ProgressBar>
   </div>

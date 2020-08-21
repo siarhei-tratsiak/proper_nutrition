@@ -1,4 +1,8 @@
 const mutations = {
+  setConstraints(state, constraints) {
+    state.constraints = constraints;
+  },
+
   setDays(state) {
     const start = state.period.start;
     const end = state.period.end;
@@ -98,6 +102,21 @@ const mutations = {
 
   setStatus(state, status) {
     Object.keys(status).forEach(key => (state.status[key] = status[key]));
+  },
+
+  updateConstraint(state, payload) {
+    const constraintIndex = state.constraints.findIndex(
+      constraint => constraint.id === payload.id
+    );
+    Object.keys(payload.value).forEach(
+      key => (state.constraints[constraintIndex][key] = payload.value[key])
+    );
+  },
+
+  updateConstraints(state, payload) {
+    state.constraints.forEach(constraint =>
+      Object.keys(payload).forEach(key => (constraint[key] = payload[key]))
+    );
   }
 };
 

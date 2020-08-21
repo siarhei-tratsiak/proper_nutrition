@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import GetDates from "@/mixins/GetDates";
+import { getEnd, getMsInDay, getNow, getToday } from "@/api/getDates.js";
 import DatePicker from "@/components/home/DatePicker";
 import { mapActions, mapMutations, mapState } from "vuex";
 
@@ -46,10 +46,10 @@ export default {
 
     input: function(value) {
       this.value = value;
-      const msInDay = this.getMsInDay();
-      const now = this.getNow();
-      const today = this.getToday();
-      const end = this.getEnd();
+      const msInDay = getMsInDay();
+      const now = getNow();
+      const today = getToday();
+      const end = getEnd();
       const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay();
       const monday = today - (dayOfWeek - 1) * msInDay;
       const weekAgo = today - 6 * msInDay;
@@ -73,9 +73,7 @@ export default {
       }
       this.setPeriod({ start, end });
     }
-  },
-
-  mixins: [GetDates]
+  }
 };
 </script>
 

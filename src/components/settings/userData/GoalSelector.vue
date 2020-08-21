@@ -28,10 +28,12 @@ export default {
   }),
 
   methods: {
-    ...mapActions(["setSettings"]),
+    ...mapActions(["setConstraints", "setSettings"]),
 
     setGoal(goal) {
       this.setSettings({ goal });
+      const payload = { nutrientIDs: [1008] };
+      this.setConstraints(payload);
     }
   }
 };

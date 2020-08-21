@@ -1,5 +1,3 @@
-import { conditions } from "@/data/DBSettings";
-import { deepCopy } from "@/api/deepCopy.js";
 import {
   getA,
   getB,
@@ -13,23 +11,27 @@ import {
 const getters = {
   getConditions: state =>
     async function (nutrients) {
-      const simplexConditions = deepCopy(conditions);
       const msInDay = 24 * 60 * 60 * 1000;
       const days = Math.round(
         (state.period.end - state.period.start) / msInDay
       );
-      simplexConditions.constraints.forEach(constraint => {
-        constraint[2] = getConstraintWithRation(nutrients, constraint, days);
+      const simplexConstraints = state.constraints.map(constraint => {
+        [constraint.min, constraint.max] = getConstraintWithRation(
+          nutrients,
+          constraint,
+          days
+        );
+        return constraint;
       });
-      const multipliers = simplexConditions.constraints.map(constraint =>
-        constraint[1] === ">=" ? -1 : 1
-      );
       const db = await state.db;
       const selectedProducts = await getSelectedProducts(db);
       const groupedNutrients = getFilteredNutrients(selectedProducts);
-      const A = getA(multipliers, groupedNutrients, simplexConditions);
-      const b = getB(simplexConditions, multipliers);
-      const c = getC(groupedNutrients, simplexConditions.objective);
+      const objective = simplexConstraints.find(
+        constraint => constraint.target !== 2
+      );
+      const A = getA(groupedNutrients, simplexConstraints);
+      const b = getB(simplexConstraints, objective);
+      const c = getC(groupedNutrients, objective);
       const indices = getIndices(groupedNutrients);
       return {
         A,
@@ -37,7 +39,15 @@ const getters = {
         c,
         indices
       };
-    }
+    },
+
+  getReducedConstraints: state => () => {
+    return state.constraints.map(constraint => [
+      constraint.nutrient_id,
+      constraint.min,
+      constraint.max
+    ]);
+  }
 };
 
 export { getters };

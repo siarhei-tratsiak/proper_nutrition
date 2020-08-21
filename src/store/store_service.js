@@ -15,42 +15,84 @@ function clauseForSelectedProducts(filters, userID, payload) {
   return filters.where(["user_id", "product_id"]).anyOf(payloadIDs);
 }
 
-function getA(multipliers, groupedNutrients, simplexConditions) {
-  const constraintsIndices = simplexConditions.constraints.map(
-    constraint => constraint[0]
+function getA(groupedNutrients, simplexConstraints) {
+  let constraintsIndices = simplexConstraints.map(
+    constraint => constraint.nutrient_id
   );
-  const A = constraintsIndices.map((nutrientID, index) => {
-    const nutrientPosition = getNutrientPosition(nutrientID);
-    const row = groupedNutrients.map(
-      product => product[1][nutrientPosition] * multipliers[index]
-    );
-    return row;
-  });
+  const AMin = _getA(constraintsIndices, groupedNutrients, false);
+  constraintsIndices = simplexConstraints
+    .filter(constraint => constraint.max !== null)
+    .map(constraint => constraint.nutrient_id);
+  const AMax = _getA(constraintsIndices, groupedNutrients, true);
+  const A = AMin.concat(AMax);
   return A;
 }
 
-function getB(simplexConditions, multipliers) {
-  return simplexConditions.constraints.map(
-    (constraint, index) => constraint[2] * multipliers[index]
+function _getA(constraintsIndices, groupedNutrients, isPositive) {
+  return constraintsIndices.map(nutrientID => {
+    const nutrientPosition = getNutrientPosition(nutrientID);
+    const row = groupedNutrients.map(
+      product => product[1][nutrientPosition] * (isPositive ? 1 : -1)
+    );
+    return row;
+  });
+}
+
+function getB(simplexConstraints, objective) {
+  const BMin = _getBMin(simplexConstraints, objective);
+  const BMax = _getBMax(simplexConstraints, objective);
+  const B = BMin.concat(BMax);
+  return B;
+}
+
+function _getBMin(simplexConstraints, objective) {
+  const nutrientID = objective.nutrient_id;
+  const target = objective.target;
+  if (target === 0) {
+    return simplexConstraints.map(constraint =>
+      nutrientID === constraint.nutrient_id ? 0 : -constraint.min
+    );
+  }
+  return simplexConstraints.map(constraint => -constraint.min);
+}
+
+function _getBMax(simplexConstraints, objective) {
+  const filteredConstraints = simplexConstraints.filter(
+    constraint => constraint.max !== null
   );
+  const nutrientID = objective.nutrient_id;
+  const target = objective.target;
+  if (target === 0) {
+    return filteredConstraints.map(constraint =>
+      nutrientID === constraint.nutrient_id ? constraint.min : constraint.max
+    );
+  }
+  return filteredConstraints.map(constraint => constraint.max);
 }
 
 function getC(groupedNutrients, objective) {
-  const objectivetPosition = getNutrientPosition(objective);
+  const objectivetPosition = getNutrientPosition(objective.nutrient_id);
   return groupedNutrients.map(food => -food[1][objectivetPosition]);
 }
 
 function getConstraintWithRation(nutrients, constraint, days) {
-  const nutrientID = constraint[0];
+  const nutrientID = constraint.nutrient_id;
   const nutrientIndex = nutrientIndices.findIndex(
     nutrientIndex => nutrientIndex === nutrientID
   );
   const nutrientValue = nutrients[nutrientIndex].valueAbs;
-  const border = constraint[2];
-  let result = border * days - nutrientValue;
-  if (result <= 0) {
-    result = constraint[1] === ">=" ? 0 : Infinity;
-  }
+  const borders = [constraint.min, constraint.max];
+  const result = borders.map(border => {
+    if (border === null) {
+      return null;
+    } else {
+      let result = border * days - nutrientValue;
+      if (result < 0) {
+        result = 0;
+      }
+      return result;
+    }
+  });
   return result;
 }
 

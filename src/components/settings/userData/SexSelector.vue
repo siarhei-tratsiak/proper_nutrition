@@ -18,10 +18,29 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setSettings"]),
+    ...mapActions(["setConstraints", "setSettings"]),
 
     switchSex: function(sex) {
       this.setSettings({ sex });
+      const payload = {
+        nutrientIDs: [
+          1008,
+          1004,
+          1003,
+          1092,
+          1095,
+          1098,
+          1106,
+          1162,
+          1165,
+          1175,
+          1180,
+          1185,
+          1089,
+          1090
+        ]
+      };
+      this.setConstraints(payload);
     }
   }
 };

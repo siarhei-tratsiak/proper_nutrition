@@ -21,8 +21,13 @@
 
 <script>
 import GetNutrientsBalance from "@/mixins/GetNutrientsBalance.vue";
+import ProgressBarCell from "@/components/nutrientsTable/ProgressBarCell.vue";
 
 export default {
+  components: {
+    ProgressBarCell
+  },
+
   mixins: [GetNutrientsBalance]
 };
 </script>

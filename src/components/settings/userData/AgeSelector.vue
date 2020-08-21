@@ -32,7 +32,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import GetDates from "@/mixins/GetDates";
+import { forDatePicker, getToday, getYear } from "@/api/getDates.js";
 
 export default {
   computed: {
@@ -40,11 +40,13 @@ export default {
 
     date: {
       get: function() {
-        return this.forDatePicker(this.settings.birthdate);
+        return forDatePicker(this.settings.birthdate);
       },
       set: function(value) {
         const birthdate = Date.parse(value);
         this.setSettings({ birthdate });
+        const payload = { nutrientIDs: [1008, 1087, 1089, 1114, 1090] };
+        this.setConstraints(payload);
       }
     }
   },
@@ -60,22 +62,19 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setSettings"]),
+    ...mapActions(["setConstraints", "setSettings"]),
 
     maxDate() {
-      const msInDay = this.getMsInDay();
-      const today = this.getToday();
-      const year = msInDay * 365.25;
+      const today = getToday();
+      const year = getYear();
       const maxDate = today - 17 * year;
-      return this.forDatePicker(maxDate);
+      return forDatePicker(maxDate);
     },
 
     save(date) {
       this.$refs.menu.save(date);
     }
-  },
-
-  mixins: [GetDates]
+  }
 };
 </script>
 

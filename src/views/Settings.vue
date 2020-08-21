@@ -1,35 +1,18 @@
 <template>
-  <v-card class="mx-auto" max-width="500">
-    <v-card-title>
-      <h2>НАСТРОЙКИ</h2>
-    </v-card-title>
-    <v-card-text>
-      <SexSelector />
-      <AgeSelector />
-      <WeightSelector />
-      <HeightSelector />
-      <ActivitySelector />
-      <GoalSelector />
-    </v-card-text>
-  </v-card>
+  <div class="align-start d-flex flex-lg-nowrap flex-wrap justify-center">
+    <UserData />
+    <DailyIntake />
+  </div>
 </template>
 
 <script>
-import ActivitySelector from "@/components/settings/ActivitySelector";
-import AgeSelector from "@/components/settings/AgeSelector";
-import GoalSelector from "@/components/settings/GoalSelector";
-import HeightSelector from "@/components/settings/HeightSelector";
-import SexSelector from "@/components/settings/SexSelector";
-import WeightSelector from "@/components/settings/WeightSelector";
+import UserData from "@/components/settings/userData/UserData";
+import DailyIntake from "@/components/settings/dailyIntake/DailyIntake";
 
 export default {
   components: {
-    ActivitySelector,
-    AgeSelector,
-    GoalSelector,
-    HeightSelector,
-    SexSelector,
-    WeightSelector
+    UserData,
+    DailyIntake
   }
 };
 </script>

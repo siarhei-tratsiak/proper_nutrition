@@ -26,10 +26,12 @@ export default {
   }),
 
   methods: {
-    ...mapActions(["setSettings"]),
+    ...mapActions(["setConstraints", "setSettings"]),
 
     setWeight(weight) {
-      this.setSettings({ weight });
+      this.setSettings({ weight: +weight });
+      const payload = { nutrientIDs: [1008] };
+      this.setConstraints(payload);
     }
   }
 };

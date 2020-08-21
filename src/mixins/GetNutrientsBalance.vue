@@ -25,13 +25,16 @@ export default {
     ...mapActions(["setRationForPeriod"]),
 
     _forMultipleProducts() {
-      const usedfoodNutrients = foodNutrient.filter(this._usedfoodNutrients);
+      const isHome = this.$route.name === "Home";
+      const usedfoodNutrients = foodNutrient.filter(foodNutrientRecord =>
+        this._usedfoodNutrients(foodNutrientRecord, isHome)
+      );
       const nutrientValuesTotal = usedfoodNutrients.map(
         this._getNutrientValuesTotal
       );
       const summedNutrientValues = nutrientValuesTotal.length
         ? nutrientValuesTotal.reduce(this._rowsSum)
-        : [];
+        : zeros(65);
       return summedNutrientValues;
     },
 
@@ -89,10 +92,10 @@ export default {
       );
     },
 
-    _usedfoodNutrients(foodNutrientRecord) {
+    _usedfoodNutrients(foodNutrientRecord, isHome) {
       const productID = foodNutrientRecord[0];
       const isUsed =
-        this.productIDs.includes(productID) ||
+        (isHome ? false : this.productIDs.includes(productID)) ||
         this.rationProductIDs.includes(productID);
       return isUsed;
     }

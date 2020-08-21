@@ -5,11 +5,9 @@
     </template>
 
     <template v-slot:item.product_name="{ item }">
-      <router-link :to="{ name: 'Product', params: { id: item.product_id } }">
-        {{
-        item.product_name
-        }}
-      </router-link>
+      <router-link
+        :to="{ name: 'Product', params: { id: item.product_id } }"
+      >{{ item.product_name }}</router-link>
     </template>
 
     <template v-slot:item.actions="{ item }">

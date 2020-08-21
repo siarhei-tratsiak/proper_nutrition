@@ -16,7 +16,7 @@
 <script>
 import { food as products } from "@/data/food.js";
 import { mapMutations, mapState } from "vuex";
-import debounce from "lodash.debounce";
+import debounce from "lodash";
 
 export default {
   computed: {

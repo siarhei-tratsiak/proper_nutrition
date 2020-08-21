@@ -1,4 +1,5 @@
 const state = {
+  constraints: [],
   db: {},
   editedProduct: {
     date: undefined,
