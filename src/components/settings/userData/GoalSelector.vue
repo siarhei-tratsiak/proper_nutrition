@@ -12,31 +12,31 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(["settings"])
+    ...mapState(['settings'])
   },
 
   data: () => ({
     items: [
-      { text: "сбросить вес", value: 0 },
-      { text: "сохранить вес", value: 1 },
-      { text: "набрать вес", value: 2 }
+      { text: 'сбросить вес', value: 0 },
+      { text: 'сохранить вес', value: 1 },
+      { text: 'набрать вес', value: 2 }
     ]
   }),
 
   methods: {
-    ...mapActions(["setConstraints", "setSettings"]),
+    ...mapActions(['setConstraints', 'setSettings']),
 
-    setGoal(goal) {
-      this.setSettings({ goal });
-      const payload = { nutrientIDs: [1008] };
-      this.setConstraints(payload);
+    setGoal (goal) {
+      this.setSettings({ goal })
+      const payload = { nutrientIDs: [1008] }
+      this.setConstraints(payload)
     }
   }
-};
+}
 </script>
 
 <style lang="css" scoped></style>

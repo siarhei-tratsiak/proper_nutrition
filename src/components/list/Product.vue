@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import { mapActions /* , mapState*/ } from "vuex";
+import { mapActions /* , mapState */ } from 'vuex'
 
 export default {
-  props: ["product", "isProductSelected"],
+  props: ['product', 'isProductSelected'],
 
   computed: {
     /* ...mapState(['favored', 'selected']),
@@ -34,27 +34,27 @@ export default {
 
     isFavored() {
       return this.favored.includes(this.product.id);
-    },*/
+    }, */
   },
 
   methods: {
-    ...mapActions(["toggleSelected"]),
+    ...mapActions(['toggleSelected']),
 
     /* updateFavored() {
       const payload = {id: this.product.id, favored: +!this.isFavored};
       this.isFavored = !this.isFavored;
       this.toggleFavored(payload);
-    },*/
+    }, */
 
-    updateCheckbox() {
+    updateCheckbox () {
       const payload = {
         id: this.product.id,
         selected: +!this.isProductSelected
-      };
-      this.toggleSelected(payload);
+      }
+      this.toggleSelected(payload)
     }
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

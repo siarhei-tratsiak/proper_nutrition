@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import CloseProductDialog from "@/mixins/CloseProductDialog";
+import CloseProductDialog from '@/mixins/CloseProductDialog'
 
 export default {
   mixins: [CloseProductDialog]
-};
+}
 </script>

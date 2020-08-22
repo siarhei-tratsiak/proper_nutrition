@@ -18,17 +18,17 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 
 export default {
-  data() {
+  data () {
     return {
       headers: [
-        { text: "Название", value: "name" },
-        { text: "Масса, г", value: "mass" }
+        { text: 'Название', value: 'name' },
+        { text: 'Масса, г', value: 'mass' }
       ],
       itemsPerPage: -1
-    };
+    }
   },
   computed: mapState({
     items: state =>
@@ -38,7 +38,7 @@ export default {
         mass: Math.round(product.value * 10) / 10
       }))
   })
-};
+}
 </script>
 
 <style lang="css" scoped></style>

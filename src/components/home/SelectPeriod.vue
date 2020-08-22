@@ -9,72 +9,72 @@
 </template>
 
 <script>
-import { getEnd, getMsInDay, getNow, getToday } from "@/api/getDates.js";
-import DatePicker from "@/components/home/DatePicker";
-import { mapActions, mapMutations, mapState } from "vuex";
+import { getTomorrow, getMsInDay, getToday } from '@/api/dates.js'
+import DatePicker from '@/components/home/DatePicker'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   components: { DatePicker },
 
   computed: {
-    ...mapState(["period"]),
+    ...mapState(['period']),
 
-    showDatePicker: function() {
-      return this.value === "Другое";
+    showDatePicker: function () {
+      return this.value === 'Другое'
     },
 
     value: {
-      get: function() {
-        return this.period.name;
+      get: function () {
+        return this.period.name
       },
 
-      set: function(name) {
-        this.setPeriod({ name });
+      set: function (name) {
+        this.setPeriod({ name })
       }
     }
   },
 
-  data: function() {
+  data: function () {
     return {
-      items: ["Сегодня", "Неделя", "7 дней", "Месяц", "30 дней", "Другое"]
-    };
+      items: ['Сегодня', 'Неделя', '7 дней', 'Месяц', '30 дней', 'Другое']
+    }
   },
 
   methods: {
-    ...mapActions(["setRationForPeriod"]),
-    ...mapMutations(["setPeriod", "set"]),
+    ...mapActions(['setRationForPeriod']),
+    ...mapMutations(['setPeriod', 'set']),
 
-    input: function(value) {
-      this.value = value;
-      const msInDay = getMsInDay();
-      const now = getNow();
-      const today = getToday();
-      const end = getEnd();
-      const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay();
-      const monday = today - (dayOfWeek - 1) * msInDay;
-      const weekAgo = today - 6 * msInDay;
-      const dayOfMonth = now.getDate();
-      const firstDayOfMonth = today - (dayOfMonth - 1) * msInDay;
-      const monthAgo = today - 29 * msInDay;
-      let start = today;
+    input: function (value) {
+      this.value = value
+      const msInDay = getMsInDay()
+      const now = new Date()
+      const today = getToday()
+      const end = getTomorrow()
+      const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay()
+      const monday = today - (dayOfWeek - 1) * msInDay
+      const weekAgo = today - 6 * msInDay
+      const dayOfMonth = now.getDate()
+      const firstDayOfMonth = today - (dayOfMonth - 1) * msInDay
+      const monthAgo = today - 29 * msInDay
+      let start = today
       switch (value) {
-        case "Неделя":
-          start = monday;
-          break;
-        case "7 дней":
-          start = weekAgo;
-          break;
-        case "Месяц":
-          start = firstDayOfMonth;
-          break;
-        case "30 дней":
-          start = monthAgo;
-          break;
+        case 'Неделя':
+          start = monday
+          break
+        case '7 дней':
+          start = weekAgo
+          break
+        case 'Месяц':
+          start = firstDayOfMonth
+          break
+        case '30 дней':
+          start = monthAgo
+          break
       }
-      this.setPeriod({ start, end });
+      this.setPeriod({ start, end })
     }
   }
-};
+}
 </script>
 
 <style>

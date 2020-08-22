@@ -14,57 +14,57 @@
 </template>
 
 <script>
-import { food as products } from "@/data/food.js";
-import { mapMutations, mapState } from "vuex";
-import debounce from "lodash";
+import { products } from '@/data/products.js'
+import { mapMutations, mapState } from 'vuex'
+import debounce from 'lodash'
 
 export default {
   computed: {
-    ...mapState(["editedProduct"]),
+    ...mapState(['editedProduct']),
 
     select: {
-      get: function() {
-        return this.editedProduct.product_id;
+      get: function () {
+        return this.editedProduct.product_id
       },
 
-      set: function(productID) {
-        this.setEditedProduct({ product_id: productID });
+      set: function (productID) {
+        this.setEditedProduct({ product_id: productID })
       }
     }
   },
 
-  data: function() {
+  data: function () {
     return {
       debouncedGetAnswer: debounce(this._querySelections, this.debounceTime),
       debounceTime: 500,
       items: [],
-      search: ""
-    };
+      search: ''
+    }
   },
 
   methods: {
-    ...mapMutations(["setEditedProduct"]),
+    ...mapMutations(['setEditedProduct']),
 
-    _querySelections() {
-      const searchResult = this._searchProduct(this.search || "");
+    _querySelections () {
+      const searchResult = this._searchProduct(this.search || '')
       this.items = searchResult.map(product => ({
         text: product[1],
         value: product[0]
-      }));
+      }))
     },
 
-    _searchProduct(productName) {
-      const re = new RegExp(productName.toLowerCase(), "g");
-      return products.filter(product => re.test(product[1].toLowerCase()));
+    _searchProduct (productName) {
+      const re = new RegExp(productName.toLowerCase(), 'g')
+      return products.filter(product => re.test(product[1].toLowerCase()))
     }
   },
 
-  props: ["rules"],
+  props: ['rules'],
 
   watch: {
-    search: function() {
-      this.debouncedGetAnswer();
+    search: function () {
+      this.debouncedGetAnswer()
     }
   }
-};
+}
 </script>

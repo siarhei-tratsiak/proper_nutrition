@@ -10,18 +10,18 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(["settings"])
+    ...mapState(['settings'])
   },
 
   methods: {
-    ...mapActions(["setConstraints", "setSettings"]),
+    ...mapActions(['setConstraints', 'setSettings']),
 
-    switchSex: function(sex) {
-      this.setSettings({ sex });
+    switchSex: function (sex) {
+      this.setSettings({ sex })
       const payload = {
         nutrientIDs: [
           1008,
@@ -39,11 +39,11 @@ export default {
           1089,
           1090
         ]
-      };
-      this.setConstraints(payload);
+      }
+      this.setConstraints(payload)
     }
   }
-};
+}
 </script>
 
 <style lang="css" scoped></style>

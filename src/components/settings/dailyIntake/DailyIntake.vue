@@ -16,11 +16,11 @@
         :items-per-page="itemsPerPage"
         sort-by="name"
       >
-        <template v-slot:item.name="{ item }">
+        <template v-slot:[`item.name`]="{ item }">
           <span class="block">{{ item.name }}:</span>
         </template>
 
-        <template v-slot:item.minData="{ item }">
+        <template v-slot:[`item.minData`]="{ item }">
           <TextField class="inline-flex" :extremum="item.minData" :isMin="true" />
           <FieldCheckbox
             class="inline-flex margin-left"
@@ -29,7 +29,7 @@
           />
         </template>
 
-        <template v-slot:item.maxData="{ item }">
+        <template v-slot:[`item.maxData`]="{ item }">
           <TextField class="inline-flex" :extremum="item.maxData" :isMin="false" />
           <FieldCheckbox
             class="inline-flex margin-left"
@@ -38,11 +38,11 @@
           />
         </template>
 
-        <template v-slot:item.unit="{ item }">
+        <template v-slot:[`item.unit`]="{ item }">
           <span class="block">{{ item.unit }}</span>
         </template>
 
-        <template v-slot:item.targetData="{ item }">
+        <template v-slot:[`item.targetData`]="{ item }">
           <TargetButton class="full-width" :targetData="item.targetData" />
         </template>
       </v-data-table>
@@ -51,13 +51,13 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-import { nutrient as nutrients } from "@/data/nutrient_ru.js";
-import DefaultButton from "@/components/settings/dailyIntake/DefaultButton";
-import FieldCheckbox from "@/components/settings/dailyIntake/FieldCheckbox";
-import SwitchLock from "@/components/settings/dailyIntake/SwitchLock";
-import TargetButton from "@/components/settings/dailyIntake/TargetButton";
-import TextField from "@/components/settings/dailyIntake/TextField";
+import { mapActions, mapState } from 'vuex'
+import { nutrient as nutrients } from '@/data/nutrient_ru.js'
+import DefaultButton from '@/components/settings/dailyIntake/DefaultButton'
+import FieldCheckbox from '@/components/settings/dailyIntake/FieldCheckbox'
+import SwitchLock from '@/components/settings/dailyIntake/SwitchLock'
+import TargetButton from '@/components/settings/dailyIntake/TargetButton'
+import TextField from '@/components/settings/dailyIntake/TextField'
 
 export default {
   components: {
@@ -69,13 +69,13 @@ export default {
   },
 
   computed: {
-    ...mapState(["constraints"]),
+    ...mapState(['constraints']),
 
-    formattedConstraints: function() {
+    formattedConstraints: function () {
       return this.constraints.map(constraint => {
         const nutrient = nutrients.find(
           nutrient => nutrient[0] === constraint.nutrient_id
-        );
+        )
         return {
           name: nutrient[1],
           minData: {
@@ -91,32 +91,32 @@ export default {
           },
           unit: nutrient[2],
           targetData: { id: constraint.id, target: constraint.target }
-        };
-      });
+        }
+      })
     }
   },
 
   data: () => ({
     headers: [
-      { value: "name" },
-      { value: "minData" },
-      { value: "maxData" },
-      { value: "unit" },
-      { value: "targetData" }
+      { value: 'name' },
+      { value: 'minData' },
+      { value: 'maxData' },
+      { value: 'unit' },
+      { value: 'targetData' }
     ],
     itemsPerPage: -1
   }),
 
   methods: {
-    ...mapActions(["updateConstraint"]),
+    ...mapActions(['updateConstraint']),
 
-    update(value, id, type) {
-      const payload = { id };
-      payload.value = type === "min" ? { min: +value } : { max: +value };
-      this.updateConstraint(payload);
+    update (value, id, type) {
+      const payload = { id }
+      payload.value = type === 'min' ? { min: +value } : { max: +value }
+      this.updateConstraint(payload)
     }
   }
-};
+}
 </script>
 
 <style scope>

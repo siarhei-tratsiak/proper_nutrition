@@ -64,6 +64,6 @@ const nutrientIndices = [
   1280,
   1292,
   1293
-];
+]
 
-export { nutrientIndices };
+export { nutrientIndices }

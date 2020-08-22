@@ -4,7 +4,7 @@ module.exports = {
   chainWebpack: function (config) {
     config.module
       .rule("js")
-      .exclude.add(path.resolve("src/data/food.js"))
+      .exclude.add(path.resolve("src/data/products.js"))
       .add(path.resolve("src/data/foodNutrient.js"));
   }
 };

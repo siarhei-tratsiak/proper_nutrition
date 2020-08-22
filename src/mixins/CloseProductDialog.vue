@@ -1,14 +1,14 @@
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations } from 'vuex'
 
 export default {
   methods: {
-    ...mapMutations(["setEditedProduct", "setStatus"]),
+    ...mapMutations(['setEditedProduct', 'setStatus']),
 
-    close() {
-      this.setEditedProduct();
-      this.setStatus({ productDialogIsOpened: false });
+    close () {
+      this.setEditedProduct()
+      this.setStatus({ productDialogIsOpened: false })
     }
   }
-};
+}
 </script>

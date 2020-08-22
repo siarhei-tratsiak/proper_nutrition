@@ -6,24 +6,24 @@
 </template>
 
 <script>
-import { food as products } from "@/data/food.js";
-import NutrientsTable from "@/components/nutrientsTable/NutrientsTable";
+import { products } from '@/data/products.js'
+import NutrientsTable from '@/components/nutrientsTable/NutrientsTable'
 
 export default {
   components: { NutrientsTable },
 
   computed: {
-    productName: function() {
-      return products.find(product => product[0] === this.productID)[1];
+    productName: function () {
+      return products.find(product => product[0] === this.productID)[1]
     }
   },
 
-  data: function() {
+  data: function () {
     return {
       productID: +this.$route.params.id
-    };
+    }
   }
-};
+}
 </script>
 
 <style></style>

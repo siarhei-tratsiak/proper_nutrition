@@ -3,26 +3,26 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex'
 
 export default {
   computed: {
     isChecked: {
-      get: function() {
-        return !!this.mutableData[this.mutableFieldName];
+      get: function () {
+        return !!this.mutableData[this.mutableFieldName]
       },
-      set: function(value) {
-        const payload = { id: this.mutableData.id, value: {} };
-        payload.value[this.mutableFieldName] = +value;
-        this.updateConstraint(payload);
+      set: function (value) {
+        const payload = { id: this.mutableData.id, value: {} }
+        payload.value[this.mutableFieldName] = +value
+        this.updateConstraint(payload)
       }
     }
   },
 
   methods: {
-    ...mapActions(["updateConstraint"])
+    ...mapActions(['updateConstraint'])
   },
 
-  props: ["mutableData", "mutableFieldName"]
-};
+  props: ['mutableData', 'mutableFieldName']
+}
 </script>

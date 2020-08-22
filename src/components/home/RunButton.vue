@@ -14,26 +14,26 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-import GetNutrientsBalance from "@/mixins/GetNutrientsBalance.vue";
+import { mapActions, mapState } from 'vuex'
+import GetNutrientsBalance from '@/mixins/GetNutrientsBalance.vue'
 
 export default {
   data: () => ({
-    size: "12vmin"
+    size: '12vmin'
   }),
 
   computed: {
-    ...mapState(["status"]),
+    ...mapState(['status']),
 
     progressSize: () => Math.min(window.innerHeight, window.innerWidth) * 0.12
   },
 
   methods: {
-    ...mapActions(["getSolution"])
+    ...mapActions(['getSolution'])
   },
 
   mixins: [GetNutrientsBalance]
-};
+}
 </script>
 
 <style scoped>

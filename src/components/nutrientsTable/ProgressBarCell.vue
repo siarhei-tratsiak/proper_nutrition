@@ -7,14 +7,14 @@
 </template>
 
 <script>
-import BorderMarker from "@/components/nutrientsTable/BorderMarker";
-import ProgressBar from "@/components/nutrientsTable/ProgressBar";
+import BorderMarker from '@/components/nutrientsTable/BorderMarker'
+import ProgressBar from '@/components/nutrientsTable/ProgressBar'
 
 export default {
   components: { BorderMarker, ProgressBar },
 
-  props: ["nutrient"]
-};
+  props: ['nutrient']
+}
 </script>
 
 <style scoped>

@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import AddProductButton from "@/components/ration/AddProductButton";
-import { mapState } from "vuex";
+import AddProductButton from '@/components/ration/AddProductButton'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -16,17 +16,17 @@ export default {
   },
 
   computed: {
-    ...mapState(["selectedDate"]),
+    ...mapState(['selectedDate']),
 
-    date: function() {
+    date: function () {
       const options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      };
-      return new Date(this.selectedDate).toLocaleDateString(undefined, options);
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }
+      return new Date(this.selectedDate).toLocaleDateString(undefined, options)
     }
   }
-};
+}
 </script>

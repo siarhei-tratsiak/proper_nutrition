@@ -3,32 +3,32 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex'
 
 export default {
   computed: {
-    text: function() {
-      let text = "нет";
+    text: function () {
+      let text = 'нет'
       if (this.targetData.target === 0) {
-        text = "мин";
+        text = 'мин'
       } else if (this.targetData.target === 1) {
-        text = "макс";
+        text = 'макс'
       }
-      return text;
+      return text
     }
   },
 
   methods: {
-    ...mapActions(["updateConstraint", "updateTarget"]),
+    ...mapActions(['updateConstraint', 'updateTarget']),
 
-    click() {
-      const payload = { id: this.targetData.id };
-      let target = this.targetData.target;
-      payload.value = { target: +(target === 0) };
-      this.updateTarget(payload);
+    click () {
+      const payload = { id: this.targetData.id }
+      const target = this.targetData.target
+      payload.value = { target: +(target === 0) }
+      this.updateTarget(payload)
     }
   },
 
-  props: ["targetData"]
-};
+  props: ['targetData']
+}
 </script>

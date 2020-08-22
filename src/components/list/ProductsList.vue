@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import Category from "@/components/list/Category";
-import { mapState } from "vuex";
+import Category from '@/components/list/Category'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -19,28 +19,28 @@ export default {
   },
 
   computed: {
-    ...mapState(["favored", "isFilterOn", "productsList", "selected"]),
+    ...mapState(['favored', 'isFilterOn', 'productsList', 'selected']),
 
-    favoredProductsList() {
+    favoredProductsList () {
       if (this.isFilterOn) {
         const favoredProductsList = this.productsList.filter(categoryListItem =>
           categoryListItem.products.filter(product => product.favored === 1)
-        );
-        return favoredProductsList;
+        )
+        return favoredProductsList
       }
-      return this.productsList;
+      return this.productsList
     }
   },
 
   methods: {
-    categoryID(categoryListItem) {
-      return categoryListItem.category.id;
+    categoryID (categoryListItem) {
+      return categoryListItem.category.id
     },
 
-    selectedProducts(categoryListItem) {
+    selectedProducts (categoryListItem) {
       return this.selected.filter(
         product => product.category_id === this.categoryID(categoryListItem)
-      );
+      )
     }
 
     /* _classCheck(DOMElem) {
@@ -118,9 +118,9 @@ export default {
         this._classCheck(DOMElem);
       }
       // this._setSelectedProduct(DOMElem);
-    },*/
+    }, */
   }
-};
+}
 </script>
 
 <style lang="css" scoped></style>

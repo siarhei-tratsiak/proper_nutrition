@@ -1,3 +1,4 @@
+/* eslint-disable */
 const food = [
   [1083, "Milk, NFS"],
   [1084, "Milk, whole"],

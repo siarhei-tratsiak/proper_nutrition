@@ -9,8 +9,8 @@
 
 <script>
 export default {
-  props: ["nutrient"]
-};
+  props: ['nutrient']
+}
 </script>
 
 <style>

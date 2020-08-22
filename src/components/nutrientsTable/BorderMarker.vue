@@ -8,14 +8,14 @@
 
 <script>
 export default {
-  data: function() {
+  data: function () {
     return {
       abs: this.isMin ? this.nutrient.minAbs : this.nutrient.maxAbs,
       width: this.isMin ? this.nutrient.min : this.nutrient.max
-    };
+    }
   },
-  props: ["nutrient", "isMin"]
-};
+  props: ['nutrient', 'isMin']
+}
 </script>
 
 <style>

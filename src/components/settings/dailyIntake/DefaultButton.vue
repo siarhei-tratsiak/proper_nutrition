@@ -3,13 +3,13 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex'
 
 export default {
   methods: {
-    ...mapActions(["setAllConstraints"])
+    ...mapActions(['setAllConstraints'])
   }
-};
+}
 </script>
 
 <style></style>

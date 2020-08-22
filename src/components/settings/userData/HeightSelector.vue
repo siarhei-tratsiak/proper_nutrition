@@ -10,29 +10,29 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(["settings"])
+    ...mapState(['settings'])
   },
 
   data: () => ({
     rules: [
-      value => !!value || "Обязательное поле",
-      value => (!isNaN(parseFloat(+value)) && isFinite(+value)) || "Не число",
-      value => +value > 0 || "Не больше нуля"
+      value => !!value || 'Обязательное поле',
+      value => (!isNaN(parseFloat(+value)) && isFinite(+value)) || 'Не число',
+      value => +value > 0 || 'Не больше нуля'
     ]
   }),
 
   methods: {
-    ...mapActions(["setConstraints", "setSettings"]),
+    ...mapActions(['setConstraints', 'setSettings']),
 
-    setHeight(height) {
-      this.setSettings({ height: +height });
-      const payload = { nutrientIDs: [1008] };
-      this.setConstraints(payload);
+    setHeight (height) {
+      this.setSettings({ height: +height })
+      const payload = { nutrientIDs: [1008] }
+      this.setConstraints(payload)
     }
   }
-};
+}
 </script>

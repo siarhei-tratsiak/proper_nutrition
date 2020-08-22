@@ -17,50 +17,50 @@
 </template>
 
 <script>
-import debounce from "lodash";
-import NavigationList from "@/components/navigation/NavigationList.vue";
-import { mapMutations, mapState } from "vuex";
+import debounce from 'lodash'
+import NavigationList from '@/components/navigation/NavigationList.vue'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
-  beforeDestroy: function() {
-    window.removeEventListener("resize", debounce(this.onResize, this.delayMS));
+  beforeDestroy: function () {
+    window.removeEventListener('resize', debounce(this.onResize, this.delayMS))
   },
 
   computed: {
-    ...mapState(["isHorizontal"])
+    ...mapState(['isHorizontal'])
   },
 
-  data: function() {
+  data: function () {
     return {
       delayMS: 300,
       menuItems: [
-        { path: "Home", icon: "mdi-home", title: "На главную" },
-        { path: "Result", icon: "mdi-hamburger", title: "Результат" }
+        { path: 'Home', icon: 'mdi-home', title: 'На главную' },
+        { path: 'Result', icon: 'mdi-hamburger', title: 'Результат' }
       ],
       miniVariant: false,
       viewportBreakpoint: 960
-    };
-  },
-
-  methods: {
-    ...mapMutations(["setHorizontal"]),
-
-    onResize() {
-      const windowInnerWidth = window.innerWidth;
-      this.miniVariant = windowInnerWidth < this.viewportBreakpoint;
-      this.setHorizontal(windowInnerWidth > window.innerHeight);
     }
   },
 
-  mounted: function() {
-    this.onResize();
-    window.addEventListener("resize", debounce(this.onResize, this.delayMS));
+  methods: {
+    ...mapMutations(['setHorizontal']),
+
+    onResize () {
+      const windowInnerWidth = window.innerWidth
+      this.miniVariant = windowInnerWidth < this.viewportBreakpoint
+      this.setHorizontal(windowInnerWidth > window.innerHeight)
+    }
+  },
+
+  mounted: function () {
+    this.onResize()
+    window.addEventListener('resize', debounce(this.onResize, this.delayMS))
   },
 
   components: {
     NavigationList
   }
-};
+}
 </script>
 
 <style></style>

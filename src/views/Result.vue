@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import ResultProductsList from "@/components/result/ResultProductsList.vue";
-import NutrientsBalance from "@/components/result/NutrientsBalance.vue";
+import { mapState } from 'vuex'
+import ResultProductsList from '@/components/result/ResultProductsList.vue'
+import NutrientsBalance from '@/components/result/NutrientsBalance.vue'
 
 export default {
   components: {
@@ -18,11 +18,11 @@ export default {
   },
 
   computed: {
-    ...mapState(["settings"]),
+    ...mapState(['settings']),
 
-    ready: function() {
-      return !!this.settings.userID;
+    ready: function () {
+      return !!this.settings.userID
     }
   }
-};
+}
 </script>

@@ -8,27 +8,27 @@
 </template>
 
 <script>
-import { getToday, getEnd } from "@/api/getDates.js";
-import Navigation from "@/components/navigation/Navigation.vue";
-import { mapActions, mapMutations } from "vuex";
+import { getToday, getTomorrow } from '@/api/dates.js'
+import Navigation from '@/components/navigation/Navigation.vue'
+import { mapActions, mapMutations } from 'vuex'
 
 export default {
   components: {
     Navigation
   },
 
-  created: function() {
-    this.initData();
-    const start = getToday();
-    const end = getEnd();
-    this.setPeriod({ start, end });
+  created: function () {
+    this.initData()
+    const start = getToday()
+    const end = getTomorrow()
+    this.setPeriod({ start, end })
   },
 
   methods: {
-    ...mapActions(["initData"]),
-    ...mapMutations(["setPeriod"])
+    ...mapActions(['initData']),
+    ...mapMutations(['setPeriod'])
   },
 
-  name: "App"
-};
+  name: 'App'
+}
 </script>

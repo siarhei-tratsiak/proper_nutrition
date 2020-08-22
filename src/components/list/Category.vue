@@ -32,48 +32,48 @@
 </template>
 
 <script>
-import Product from "@/components/list/Product";
-import { mapActions } from "vuex";
+import Product from '@/components/list/Product'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
     Product
   },
 
-  props: ["categoryListItem", "selectedProducts"],
+  props: ['categoryListItem', 'selectedProducts'],
 
   computed: {
-    indeterminate() {
+    indeterminate () {
       return this.selectedProducts.some(
         product => product.selected !== this._isFirstProductSelected()
-      );
+      )
     },
 
-    isCategorySelected() {
-      return this.selectedProducts.every(product => !!product.selected);
+    isCategorySelected () {
+      return this.selectedProducts.every(product => !!product.selected)
     }
   },
 
   methods: {
-    ...mapActions(["toggleSelected"]),
+    ...mapActions(['toggleSelected']),
 
-    _isFirstProductSelected() {
-      return this.selectedProducts[0].selected;
+    _isFirstProductSelected () {
+      return this.selectedProducts[0].selected
     },
 
-    isProductSelected(productID) {
+    isProductSelected (productID) {
       const selectedProduct = this.selectedProducts.find(
         product => product.id === productID
-      );
-      return !!selectedProduct.selected;
+      )
+      return !!selectedProduct.selected
     },
 
-    updateCheckbox() {
+    updateCheckbox () {
       const payload = {
         category_id: this.categoryListItem.category.id,
         selected: +!this.isCategorySelected
-      };
-      this.toggleSelected(payload);
+      }
+      this.toggleSelected(payload)
     }
 
     /* _getClickedItemCSSid(DOMElem) {
@@ -128,9 +128,9 @@ export default {
     listGroupClick(event) {
       const DOMElem = this._getDOMElem(event.target);
       this._setSelectedProduct(DOMElem);
-    },*/
+    }, */
   }
-};
+}
 </script>
 
 <style lang="css"></style>

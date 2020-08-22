@@ -1,18 +1,17 @@
-const results = {};
+const results = {}
 
-function perfStart(functionName) {
-  if (!([functionName] in results))
-    results[functionName] = { time: null, perfomance: null };
-  results[functionName].time = performance.now();
+function perfStart (functionName) {
+  if (!([functionName] in results)) { results[functionName] = { time: null, perfomance: null } }
+  results[functionName].time = performance.now()
 }
 
-function perfEnd(functionName) {
+function perfEnd (functionName) {
   results[functionName].perfomance +=
-    performance.now() - results[functionName].time;
+    performance.now() - results[functionName].time
 }
 
-function perfResults() {
-  console.log(results);
+function perfResults () {
+  console.log(results)
 }
 
-export { perfStart, perfEnd, perfResults };
+export { perfStart, perfEnd, perfResults }

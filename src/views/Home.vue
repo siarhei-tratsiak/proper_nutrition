@@ -8,12 +8,12 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import RunButton from "@/components/home/RunButton.vue";
-import SelectPeriod from "@/components/home/SelectPeriod.vue";
+import { mapState } from 'vuex'
+import RunButton from '@/components/home/RunButton.vue'
+import SelectPeriod from '@/components/home/SelectPeriod.vue'
 
 export default {
-  name: "Home",
+  name: 'Home',
 
   components: {
     RunButton,
@@ -21,17 +21,17 @@ export default {
   },
 
   computed: {
-    ...mapState(["settings"]),
+    ...mapState(['settings']),
 
-    ready: function() {
-      return !!this.settings.userID;
+    ready: function () {
+      return !!this.settings.userID
     }
   },
 
   data: () => ({
-    color: "green accent-2"
+    color: 'green accent-2'
   })
-};
+}
 </script>
 
 <style scoped>

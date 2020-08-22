@@ -31,22 +31,22 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-import { forDatePicker, getToday, getYear } from "@/api/getDates.js";
+import { mapActions, mapState } from 'vuex'
+import { formatDateForPicker, getToday, getMsInYear } from '@/api/dates.js'
 
 export default {
   computed: {
-    ...mapState(["settings"]),
+    ...mapState(['settings']),
 
     date: {
-      get: function() {
-        return forDatePicker(this.settings.birthdate);
+      get: function () {
+        return formatDateForPicker(this.settings.birthdate)
       },
-      set: function(value) {
-        const birthdate = Date.parse(value);
-        this.setSettings({ birthdate });
-        const payload = { nutrientIDs: [1008, 1087, 1089, 1114, 1090] };
-        this.setConstraints(payload);
+      set: function (value) {
+        const birthdate = Date.parse(value)
+        this.setSettings({ birthdate })
+        const payload = { nutrientIDs: [1008, 1087, 1089, 1114, 1090] }
+        this.setConstraints(payload)
       }
     }
   },
@@ -56,26 +56,26 @@ export default {
   }),
 
   watch: {
-    menu(val) {
-      val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"));
+    menu (val) {
+      val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
     }
   },
 
   methods: {
-    ...mapActions(["setConstraints", "setSettings"]),
+    ...mapActions(['setConstraints', 'setSettings']),
 
-    maxDate() {
-      const today = getToday();
-      const year = getYear();
-      const maxDate = today - 17 * year;
-      return forDatePicker(maxDate);
+    maxDate () {
+      const today = getToday()
+      const year = getMsInYear()
+      const maxDate = today - 17 * year
+      return formatDateForPicker(maxDate)
     },
 
-    save(date) {
-      this.$refs.menu.save(date);
+    save (date) {
+      this.$refs.menu.save(date)
     }
   }
-};
+}
 </script>
 
 <style lang="css" scoped></style>

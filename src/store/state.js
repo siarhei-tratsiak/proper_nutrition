@@ -12,7 +12,7 @@ const state = {
   isFilterOn: false,
   isHorizontal: false,
   nutrients: [],
-  /*[
+  /* [
     {
       name: "Energy",
       constraint: ">=",
@@ -319,14 +319,14 @@ const state = {
       constant: 3000,
       count: 3000.000000000021
     }
-  ],*/
+  ], */
   period: {
     start: null,
-    name: "Сегодня",
+    name: 'Сегодня',
     end: null
   },
   products: [],
-  /*[
+  /* [
     {
       id: 1126,
       category: null,
@@ -470,19 +470,19 @@ const state = {
       name: "Nutritional powder mix, whey based, NFS",
       value: 2.563895323298709
     }
-  ],*/
+  ], */
   productsList: [],
   ration: [],
   rationForPeriod: [],
   selected: [],
   selectedDate: null,
   settings: {
-    sex: "",
+    sex: '',
     birthdate: undefined,
     weight: undefined,
     height: undefined,
     activity: undefined,
-    goal: "",
+    goal: '',
     disabled: true,
     userID: undefined
   },
@@ -493,6 +493,6 @@ const state = {
     recordingToDB: false,
     selected: false
   }
-};
+}
 
-export { state };
+export { state }

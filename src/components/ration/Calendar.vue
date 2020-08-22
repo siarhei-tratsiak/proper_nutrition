@@ -3,32 +3,32 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(["isHorizontal", "selectedDate"]),
+    ...mapState(['isHorizontal', 'selectedDate']),
 
     picker: {
-      get: function() {
-        const date = new Date(this.selectedDate).toISOString().substr(0, 10);
-        return date;
+      get: function () {
+        const date = new Date(this.selectedDate).toISOString().substr(0, 10)
+        return date
       },
 
-      set: function(date) {
-        this.setSelectedDate(date);
-        this.setRation(this.selectedDate);
+      set: function (date) {
+        this.setSelectedDate(date)
+        this.setRation(this.selectedDate)
       }
     }
   },
 
-  created: function() {
-    this.setSelectedDate(new Date());
+  created: function () {
+    this.setSelectedDate(new Date())
   },
 
   methods: {
-    ...mapActions(["setRation"]),
-    ...mapMutations(["setSelectedDate"])
+    ...mapActions(['setRation']),
+    ...mapMutations(['setSelectedDate'])
   }
-};
+}
 </script>

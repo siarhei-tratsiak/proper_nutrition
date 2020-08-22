@@ -32,43 +32,43 @@
 </template>
 
 <script>
-import { food as products } from "@/data/food.js";
-import { mapActions, mapState } from "vuex";
+import { products } from '@/data/products.js'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState({ stateSelected: "selected", status: "status" }),
+    ...mapState({ stateSelected: 'selected', status: 'status' }),
 
     selected: {
-      get: function() {
-        return this.status.selected ? this._getSelected() : [];
+      get: function () {
+        return this.status.selected ? this._getSelected() : []
       },
 
-      set: function(payload) {
-        return this.toggleSelected(payload);
+      set: function (payload) {
+        return this.toggleSelected(payload)
       }
     }
   },
 
   data: () => ({
-    headers: [{ text: "НАЗВАНИЕ", value: "name" }],
+    headers: [{ text: 'НАЗВАНИЕ', value: 'name' }],
     products: products.map(product => ({ id: product[0], name: product[1] })),
-    search: ""
+    search: ''
   }),
 
   methods: {
-    ...mapActions(["toggleSelected"]),
+    ...mapActions(['toggleSelected']),
 
-    _getSelected: function() {
+    _getSelected: function () {
       return this.stateSelected
         .filter(selectionItem => selectionItem.selected === 1)
         .map(selectionItem => ({
           id: selectionItem.id
-          //name: products.find(product => product[0] === selectionItem.id)[1]
-        }));
+          // name: products.find(product => product[0] === selectionItem.id)[1]
+        }))
     }
   }
-};
+}
 </script>
 
 <style lang="css">

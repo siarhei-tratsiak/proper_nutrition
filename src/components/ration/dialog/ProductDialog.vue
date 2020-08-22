@@ -33,10 +33,10 @@
 </template>
 
 <script>
-import CloseButton from "@/components/ration/dialog/CloseButton";
-import SaveButton from "@/components/ration/dialog/SaveButton";
-import SearchProduct from "@/components/ration/dialog/SearchProduct";
-import { mapMutations, mapState } from "vuex";
+import CloseButton from '@/components/ration/dialog/CloseButton'
+import SaveButton from '@/components/ration/dialog/SaveButton'
+import SearchProduct from '@/components/ration/dialog/SearchProduct'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
   components: {
@@ -46,47 +46,47 @@ export default {
   },
 
   computed: {
-    ...mapState(["editedProduct", "status"]),
+    ...mapState(['editedProduct', 'status']),
 
     dialog: {
-      get: function() {
-        return this.status.productDialogIsOpened;
+      get: function () {
+        return this.status.productDialogIsOpened
       },
-      set: function() {
-        this.close();
+      set: function () {
+        this.close()
       }
     },
 
-    headlineText: function() {
-      return (this._isNewProduct ? "Добавить" : "Редактировать") + " продукт";
+    headlineText: function () {
+      return (this._isNewProduct ? 'Добавить' : 'Редактировать') + ' продукт'
     },
 
-    _isNewProduct: function() {
-      return !this.editedProduct.id;
+    _isNewProduct: function () {
+      return !this.editedProduct.id
     },
 
     product: {
-      get: function() {
-        return this.editedProduct;
+      get: function () {
+        return this.editedProduct
       },
-      set: function(mass) {
-        this.setEditedProduct({ mass: mass });
+      set: function (mass) {
+        this.setEditedProduct({ mass: mass })
       }
     }
   },
 
-  data: function() {
+  data: function () {
     return {
       rules: {
-        required: value => !!value || "Обязательное",
-        min: value => value > 0 || "Больше 0"
+        required: value => !!value || 'Обязательное',
+        min: value => value > 0 || 'Больше 0'
       },
       valid: true
-    };
+    }
   },
 
   methods: {
-    ...mapMutations(["setEditedProduct"])
+    ...mapMutations(['setEditedProduct'])
   }
-};
+}
 </script>

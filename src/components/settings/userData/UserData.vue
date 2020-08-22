@@ -13,12 +13,12 @@
 </template>
 
 <script>
-import ActivitySelector from "@/components/settings/userData/ActivitySelector";
-import AgeSelector from "@/components/settings/userData/AgeSelector";
-import GoalSelector from "@/components/settings/userData/GoalSelector";
-import HeightSelector from "@/components/settings/userData/HeightSelector";
-import SexSelector from "@/components/settings/userData/SexSelector";
-import WeightSelector from "@/components/settings/userData/WeightSelector";
+import ActivitySelector from '@/components/settings/userData/ActivitySelector'
+import AgeSelector from '@/components/settings/userData/AgeSelector'
+import GoalSelector from '@/components/settings/userData/GoalSelector'
+import HeightSelector from '@/components/settings/userData/HeightSelector'
+import SexSelector from '@/components/settings/userData/SexSelector'
+import WeightSelector from '@/components/settings/userData/WeightSelector'
 
 export default {
   components: {
@@ -29,5 +29,5 @@ export default {
     SexSelector,
     WeightSelector
   }
-};
+}
 </script>

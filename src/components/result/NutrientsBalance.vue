@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import GetNutrientsBalance from "@/mixins/GetNutrientsBalance.vue";
-import ProgressBarCell from "@/components/nutrientsTable/ProgressBarCell.vue";
+import GetNutrientsBalance from '@/mixins/GetNutrientsBalance.vue'
+import ProgressBarCell from '@/components/nutrientsTable/ProgressBarCell.vue'
 
 export default {
   components: {
@@ -29,7 +29,7 @@ export default {
   },
 
   mixins: [GetNutrientsBalance]
-};
+}
 </script>
 
 <style></style>

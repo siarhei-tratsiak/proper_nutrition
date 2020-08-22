@@ -9,10 +9,10 @@
 </template>
 
 <script>
-import Calendar from "@/components/ration/Calendar";
-import ProductDialog from "@/components/ration/dialog/ProductDialog";
-import RationTable from "@/components/ration/RationTable";
-import { mapState } from "vuex";
+import Calendar from '@/components/ration/Calendar'
+import ProductDialog from '@/components/ration/dialog/ProductDialog'
+import RationTable from '@/components/ration/RationTable'
+import { mapState } from 'vuex'
 
 export default {
   components: {
@@ -21,18 +21,18 @@ export default {
     RationTable
   },
 
-  data() {
+  data () {
     return {
       headers: [
-        { text: "Продукт", value: "product" },
-        { text: "Масса, г", value: "mass" },
-        { text: "Действия", sortable: false, value: "actions" }
+        { text: 'Продукт', value: 'product' },
+        { text: 'Масса, г', value: 'mass' },
+        { text: 'Действия', sortable: false, value: 'actions' }
       ]
-    };
+    }
   },
 
   computed: {
-    ...mapState(["settings"])
+    ...mapState(['settings'])
   }
-};
+}
 </script>

@@ -6,15 +6,15 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex'
 
 export default {
   methods: {
-    ...mapActions(["switchLock"])
+    ...mapActions(['switchLock'])
   },
 
-  props: ["lock"]
-};
+  props: ['lock']
+}
 </script>
 
 <style></style>

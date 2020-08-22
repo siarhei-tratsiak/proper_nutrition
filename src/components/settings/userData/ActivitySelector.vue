@@ -28,31 +28,31 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(["settings"])
+    ...mapState(['settings'])
   },
 
   data: () => ({
     items: [
-      { text: "низкая", value: 0 },
-      { text: "средняя", value: 1 },
-      { text: "высокая", value: 2 }
+      { text: 'низкая', value: 0 },
+      { text: 'средняя', value: 1 },
+      { text: 'высокая', value: 2 }
     ]
   }),
 
   methods: {
-    ...mapActions(["setConstraints", "setSettings"]),
+    ...mapActions(['setConstraints', 'setSettings']),
 
-    update(activity) {
-      this.setSettings({ activity });
-      const payload = { nutrientIDs: [1008] };
-      this.setConstraints(payload);
+    update (activity) {
+      this.setSettings({ activity })
+      const payload = { nutrientIDs: [1008] }
+      this.setConstraints(payload)
     }
   }
-};
+}
 </script>
 
 <style lang="css" scoped></style>

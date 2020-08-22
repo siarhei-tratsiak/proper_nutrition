@@ -5,16 +5,16 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations } from 'vuex'
 
 export default {
   methods: {
-    ...mapMutations(["setStatus"]),
+    ...mapMutations(['setStatus']),
 
-    openProductDialog() {
-      const status = { productDialogIsOpened: true };
-      this.setStatus(status);
+    openProductDialog () {
+      const status = { productDialogIsOpened: true }
+      this.setStatus(status)
     }
   }
-};
+}
 </script>
