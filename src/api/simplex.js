@@ -1,161 +1,174 @@
 import {
-  shape,
-  less,
   arange,
-  identityMatrix,
-  zeros,
   countNonMaskedElements,
-  minNonZeroIndex,
-  isClose
-} from './np.js'
+  identityMatrix,
+  less,
+  minNonMaskedIndex,
+  shape,
+  zeros
+} from '@/api/np'
 import { cloneDeep } from 'lodash'
-import { perfStart, perfEnd, perfResults } from './perfomance.js'
 
-function _pivotCol (T, tol = 1e-9) {
-  perfStart('pivotCol')
-  const TLength = T.length
-  const ma = T[TLength - 1]
+function _allMasked (array) {
+  const allMasked = countNonMaskedElements(array) === 0
+  return allMasked
+}
+
+function _applyPivot ({ tableau, pivotRow, pivotColumn }) {
+  const pivotValue = tableau[pivotRow][pivotColumn]
+  const divisionByPivotValue = element => element / pivotValue
+  const pivotOperations = tableau[pivotRow].map(divisionByPivotValue)
+  tableau.forEach((row, rowIndex) => {
+    _pivotOperation({
+      pivotColumn,
+      pivotOperations,
+      row,
+      rowIndex,
+      tableau
+    })
+  })
+  tableau[pivotRow] = pivotOperations
+}
+
+function _changeBasis ({ basis, pivotColumn, pivotRow }) {
+  basis[pivotRow] = pivotColumn
+}
+
+function _constraintsReverseSum (rowConstraints) {
+  const initialValue = []
+  const reverseSum = (accumulator, row) =>
+    row.map((element, index) => (accumulator[index] || 0) - element)
+  const constraintsReverseSum = rowConstraints.reduce(reverseSum, initialValue)
+  return constraintsReverseSum
+}
+
+function _createTableau ({
+  A,
+  b,
+  c,
+  c0,
+  diagonalMatrix,
+  pseudoVariablesIndexes,
+  zerosOfHeightA
+}) {
+  const rowConstraints = _getRowConstraints({ A, b, diagonalMatrix })
+  const rowObjective = [...c, ...zerosOfHeightA, c0]
+  const rowPseudoObjective =
+    _getRowPseudoObjective(pseudoVariablesIndexes, rowConstraints)
+  const tableau = [...rowConstraints, rowObjective, rowPseudoObjective]
+  return tableau
+}
+
+function _findSolution ({ basis, heightA, tableau, widthA }) {
+  let solution = zeros(widthA + heightA)
+  const lastColumnIndex = shape(tableau)[1] - 1
+  const tableauLastColumn = tableau.slice(0, heightA).map(
+    row => row[lastColumnIndex]
+  )
+  const assignSolution = (element, index) => {
+    solution[element] = tableauLastColumn[index]
+  }
+  basis.slice(0, heightA).forEach(assignSolution)
+  solution = solution.slice(0, widthA).slice(0, widthA - heightA)
+  return solution
+}
+
+function _getRowConstraints ({ A, b, diagonalMatrix }) {
+  const rowConstraint = (curRow, index) =>
+    [...curRow, ...diagonalMatrix[index], b[index]]
+  const rowConstraints = A.map(rowConstraint)
+  return rowConstraints
+}
+
+function _getRowPseudoObjective (av, rowConstraints) {
+  const rowPseudoObjective = _constraintsReverseSum(rowConstraints)
+  av.forEach(element => { rowPseudoObjective[element] = 0 })
+  return rowPseudoObjective
+}
+
+function _lastItemByModulo (tableau) {
+  const tableauShape = shape(tableau)
+  const lastRowIndex = tableauShape[0] - 1
+  const lastColumnIndex = tableauShape[1] - 1
+  const lastItemByModulo = Math.abs(tableau[lastRowIndex][lastColumnIndex])
+  return lastItemByModulo
+}
+
+function _pivotColumn (tableau, tolerance = 1e-9) {
+  const tableauHeight = tableau.length
+  const mask = element => (element >= -tolerance ? '-' : element)
+  const maskedPseudoObjective = tableau[tableauHeight - 1]
     .slice(0, -1)
-    .map(curVal => (curVal >= -tol ? '-' : curVal))
-
-  if (countNonMaskedElements(ma) === 0) {
-    return {
-      pivcol_found: false,
-      pivcol: NaN
-    }
-  }
-  perfEnd('pivotCol')
-
-  return {
-    pivcol_found: true,
-    pivcol: minNonZeroIndex(ma)
-  }
+    .map(mask)
+  const pivotColumn = _allMasked(maskedPseudoObjective) ? NaN : minNonMaskedIndex(maskedPseudoObjective)
+  return pivotColumn
 }
 
-function _pivotRow (T, pivcol, phase, tol = 1e-9) {
-  perfStart('pivotRow')
-  const k = phase === 1 ? 2 : 1
-  const ma = T.slice(0, -k).map(row =>
-    row[pivcol] <= tol ? '-' : row[pivcol]
-  )
-  if (countNonMaskedElements(ma) === 0) {
-    return {
-      pivrow_found: false,
-      pivrow: NaN
-    }
-  }
-  const mb = T.slice(0, -k).map(row =>
-    row[pivcol] <= tol ? '-' : row[row.length - 1]
-  )
-  const q = mb.map((curVal, index) =>
-    curVal !== '-' ? curVal / ma[index] : curVal
-  )
-  perfEnd('pivotRow')
-  return {
-    pivrow_found: true,
-    pivrow: minNonZeroIndex(q)
-  }
+function _pivotOperation ({
+  pivotColumn,
+  pivotOperations,
+  row,
+  rowIndex,
+  tableau
+}) {
+  const pivotElement = row[pivotColumn]
+  const pivotOperation = (element, index) =>
+    element - pivotOperations[index] * pivotElement
+  const newRow = row.map(pivotOperation)
+  tableau[rowIndex] = newRow
 }
 
-function _applyPivot (T, basis, pivrow, pivcol, tol = 1e-9) {
-  perfStart('applyPivot')
-  basis[pivrow] = pivcol
-  const pivval = T[pivrow][pivcol]
-  const Tpivrow = T[pivrow].map(curVal => curVal / pivval)
+function _pivotRow ({ tableau, pivotColumn, phase, tolerance = 1e-9 }) {
+  const rowsToSlice = phase === 1 ? 2 : 1
+  const slicedTableau = tableau.slice(0, -rowsToSlice)
+  const maskPivotElement = row => {
+    const pivotElement = row[pivotColumn]
+    return pivotElement <= tolerance ? '-' : pivotElement
+  }
+  const maskedPivotColumn = slicedTableau.map(maskPivotElement)
+  let pivotRow = NaN
+  if (_allMasked(maskedPivotColumn)) {
+    return pivotRow
+  }
+  const maskConstraint = row =>
+    row[pivotColumn] <= tolerance ? '-' : row[row.length - 1]
+  const maskedConstraints = slicedTableau.map(maskConstraint)
+  const pivotOperation = (element, index) =>
+    element !== '-' ? element / maskedPivotColumn[index] : element
+  const pivotOperations = maskedConstraints.map(pivotOperation)
+  pivotRow = minNonMaskedIndex(pivotOperations)
+  return pivotRow
+}
 
-  perfStart('applyPivotT')
-  T.forEach(function (row, irow) {
-    perfStart('TIrowPivcol')
-    const TIrowPivcol = row[pivcol]
-    perfEnd('TIrowPivcol')
-    perfStart('rowMap')
-    const newRow = row.map(
-      (curVal, index) => curVal - Tpivrow[index] * TIrowPivcol
-    )
-    perfEnd('rowMap')
-    /* row.forEach((curVal, index) =>
-      newRow.push(curVal - Tpivrow[index] * TIrowPivcol)
-    ); */
-    perfStart('newRow')
-    T[irow] = newRow
-    perfEnd('newRow')
-    // T[irow] = row.map((curVal, index) => curVal - Tpivrow[index] * TIrowPivcol);
+function _revertNegativeConstraints (A, b) {
+  const isNegativeConstraints = less(b, 0)
+  isNegativeConstraints.forEach((isNegativeConstraint, index) => {
+    if (isNegativeConstraint) {
+      A[index] = A[index].map(element => -element)
+      b[index] = -b[index]
+    }
   })
-  perfEnd('applyPivotT')
-  T[pivrow] = Tpivrow
-
-  // The selected pivot should never lead to a pivot value less than the tol.
-  if (isClose(pivval, tol, 0, 1e4)) {
-    const message = `The pivot operation produces a pivot value of ${pivval},
-      which is only slightly greater than the specified
-      tolerance ${tol}. This may lead to issues regarding the
-      numerical stability of the simplex method.
-      Removing redundant constraints, changing the pivot strategy
-      via Bland's rule or increasing the tolerance may
-      help reduce the issue.`
-    console.warn(message)
-  }
-  perfEnd('applyPivot')
-  /* T = T.map(function (row) {
-    const TIrowPivcol = row[pivcol]
-    return row.map((curVal, index) => curVal - Tpivrow[index] * TIrowPivcol)
-  })
-  T[pivrow] = Tpivrow
-  return T */
 }
 
-function _solveSimplex (
-  T,
-  basis,
-  maxiter = 1000,
-  phase = 2,
-  tol = 1e-9,
-  status = 0,
-  nit0 = 0
-) {
-  perfStart('solveSimplex')
-  let nit = nit0
-  let complete = false
-
-  while (!complete) {
-    // Find the pivot column
-    const pivcolResult = _pivotCol(T, tol)
-    let pivrowResult = {}
-    if (!pivcolResult.pivcol_found) {
-      pivcolResult.pivcol = NaN
-      pivrowResult.pivrow = NaN
-      status = 0
-      complete = true
-    } else {
-      // Find the pivot row
-      pivrowResult = _pivotRow(T, pivcolResult.pivcol, phase, tol)
-      if (!pivrowResult.pivrow_found) {
-        status = 3
-        complete = true
-      }
-    }
-    if (!complete) {
-      if (nit >= maxiter) {
-        // Iteration limit exceeded
-        status = 1
-        complete = true
-      } else {
-        _applyPivot(T, basis, pivrowResult.pivrow, pivcolResult.pivcol, tol)
-        nit += 1
-      }
-    }
-  }
-  perfEnd('solveSimplex')
-
-  return {
-    nit,
-    status,
-    T
-  }
+function _shrink (tableau, pseudoVariablesIndexes) {
+  // Remove the pseudo-objective row from the tableau
+  tableau = tableau.slice(0, -1)
+  // Remove the artificial variable columns from the tableau
+  const nonArtificialVariableColumns = (element, index) =>
+    !pseudoVariablesIndexes.includes(index)
+  const filterRows = row => row.filter(nonArtificialVariableColumns)
+  tableau = tableau.map(filterRows)
+  return tableau
 }
 
-function simplex (initA, initb, initc, c0 = 0, maxiter = 1000, tol = 1e-9) {
-  perfStart('simplex')
+function simplex ({
+  initA,
+  initb,
+  initc,
+  c0 = 0,
+  maximumIterations = 1000,
+  tolerance = 1e-9
+}) {
   let status = 0
   const messages = {
     0: 'Optimization terminated successfully.',
@@ -168,88 +181,115 @@ function simplex (initA, initb, initc, c0 = 0, maxiter = 1000, tol = 1e-9) {
   let A = cloneDeep(initA)
   const b = cloneDeep(initb)
   let c = cloneDeep(initc)
-  const n = shape(A)[0]
-  const diagM = identityMatrix(n)
-  A = A.map((curRow, index) => [...curRow, ...diagM[index]])
-  c = [...c, ...zeros(n)]
-  const m = shape(A)[1]
-
+  const heightA = shape(A)[0]
+  const diagonalMatrix = identityMatrix(heightA)
+  const addSlackVariableToRow = (row, index) =>
+    [...row, ...diagonalMatrix[index]]
+  A = A.map(addSlackVariableToRow)
+  const zerosOfHeightA = zeros(heightA)
+  c = [...c, ...zerosOfHeightA]
+  const widthA = shape(A)[1]
   // All constraints must have b >= 0.
-  const isNegativeConstraint = less(b, 0)
-  isNegativeConstraint.forEach((curVal, index) => {
-    if (curVal) {
-      A[index] = A[index].map(element => -1 * element)
-      b[index] = -1 * b[index]
-    }
-  })
-
+  _revertNegativeConstraints(A, b)
   // As all constraints are equality constraints the artificial variables
   // will also be basic variables.
-  const av = arange(n, m)
-  const basis = av.slice() // copy
-
+  const pseudoVariablesIndexes = arange(heightA, widthA)
+  const basis = [...pseudoVariablesIndexes] // copy
   // Format the phase one tableau by adding artificial variables and stacking
   // the constraints, the objective row and pseudo-objective row.
-  const rowConstraints = cloneDeep(
-    A.map((curRow, index) => [...curRow, ...diagM[index], b[index]])
-  )
-  const rowObjective = [...c, ...zeros(n), c0]
-  const rowPseudoObjective = rowConstraints.reduce(
-    (acc, row) =>
-      row.map((curVal, index) => (acc[index] ? acc[index] : 0) - curVal),
-    []
-  )
-
-  av.forEach(function (curVal) {
-    rowPseudoObjective[curVal] = 0
+  let tableau = _createTableau({
+    A,
+    b,
+    c,
+    c0,
+    diagonalMatrix,
+    pseudoVariablesIndexes,
+    zerosOfHeightA
   })
-  let T = [...rowConstraints, rowObjective, rowPseudoObjective]
-  const phase = 1
+  let solveSimplexResult = _solveSimplex({
+    basis,
+    maximumIterations,
+    phase: 1,
+    tableau,
+    tolerance
+  })
 
-  let solveSimplexResult = _solveSimplex(T, basis, maxiter, phase, tol)
-
-  const nit1 = solveSimplexResult.nit
+  const tableauLastItemByModulo = _lastItemByModulo(tableau)
   status = solveSimplexResult.status
-  const nit2 = nit1
-  const lastItemInT = Math.abs(T[T.length - 1][T[0].length - 1])
-  if (lastItemInT < tol) {
-    // Remove the pseudo - objective row from the tableau
-    T = T.slice(0, -1)
-    // Remove the artificial variable columns from the tableau
-    T = T.filter((row, index) => av.indexOf(index) === -1)
+  if (tableauLastItemByModulo < tolerance) {
+    tableau = _shrink(tableau, pseudoVariablesIndexes)
   } else {
     // Failure to find a feasible starting point
     status = 2
-    messages[status] = `Phase 1 of the simplex method failed to find a feasible
-        solution. The pseudo-objective function evaluates to ${lastItemInT}
-        which exceeds the required tolerance of ${tol} for a solution to be
-        considered 'close enough' to zero to be a basic solution.
-        Consider increasing the tolerance to be greater than ${lastItemInT}.
-        If this tolerance is unacceptably  large the problem may be
-        infeasible.`
+    messages[status] = `Phase 1 of the simplex method failed to find a feasible solution. The pseudo-objective function evaluates to ${tableauLastItemByModulo} which exceeds the required tolerance of ${tolerance} for a solution to be considered 'close enough' to zero to be a basic solution. Consider increasing the tolerance to be greater than ${tableauLastItemByModulo}. If this tolerance is unacceptably large the problem may be infeasible.`
   }
 
+  const iterationNumber = solveSimplexResult.iterationNumber
   if (status === 0) {
     // Phase 2
-    solveSimplexResult = _solveSimplex(T, basis, maxiter, 2, tol)
+    solveSimplexResult = _solveSimplex({
+      basis,
+      maximumIterations,
+      phase: 2,
+      tableau,
+      tolerance
+    })
   }
 
-  const solution = zeros(n + m)
-  const rowLength = shape(T)[1]
-  const lastColT = T.slice(0, n).map(row => row[rowLength - 1])
-  basis.slice(0, n).forEach(function (curVal, index) {
-    solution[curVal] = lastColT[index]
-  })
-  const x = solution.slice(0, m).slice(0, c.length - n)
-
-  perfEnd('simplex')
-  perfResults()
+  const solution = _findSolution({ basis, heightA, tableau, widthA })
+  status = solveSimplexResult.status
 
   return {
-    x,
-    status,
+    iterationNumber,
     message: messages[status],
-    iteration: nit2
+    solution,
+    status
+  }
+}
+
+function _solveSimplex ({
+  basis,
+  maximumIterations = 1000,
+  phase = 2,
+  tableau,
+  tolerance = 1e-9
+}) {
+  let iterationNumber = 0
+  let status = 0
+  let complete = false
+  while (!complete) {
+    // Find the pivot column
+    const pivotColumn = _pivotColumn(tableau, tolerance)
+    let pivotRow = {}
+    if (isNaN(pivotColumn)) {
+      pivotRow = NaN
+      status = 0
+      complete = true
+    } else {
+      // Find the pivot row
+      pivotRow = _pivotRow({ tableau, pivotColumn, phase, tolerance })
+      if (isNaN(pivotRow)) {
+        status = 3
+        complete = true
+      }
+    }
+    if (!complete) {
+      const isMaximumIterations = iterationNumber >= maximumIterations
+      if (isMaximumIterations) {
+        // Iteration limit exceeded
+        status = 1
+        complete = true
+      } else {
+        _changeBasis({ basis, pivotColumn, pivotRow })
+        _applyPivot({ tableau, pivotRow, pivotColumn })
+        iterationNumber++
+      }
+    }
+  }
+
+  return {
+    iterationNumber,
+    status
   }
 }
 

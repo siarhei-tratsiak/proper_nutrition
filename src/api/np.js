@@ -32,7 +32,8 @@ function countNonMaskedElements (maskedArray) {
 }
 
 function identityMatrix (size) {
-  const matrix = _zerosMatrix(size)
+  const zerosMatrix = Array.from(Array(size), () => zeros(size))
+  const matrix = zerosMatrix
   matrix.forEach((row, index) => (row[index] = 1))
   return matrix
 }
@@ -43,7 +44,6 @@ function isClose ({
   relativeTolerance = 1e-9,
   absoluteTolerance = 0
 }) {
-  const absoluteDifference = Math.abs(firstValue - secondValue)
   const maxAbsoluteValue = Math.max(
     Math.abs(firstValue),
     Math.abs(secondValue)
@@ -52,6 +52,7 @@ function isClose ({
     relativeTolerance * maxAbsoluteValue,
     absoluteTolerance
   )
+  const absoluteDifference = Math.abs(firstValue - secondValue)
   const isClose = absoluteDifference <= maxTolerance
   return isClose
 }
@@ -66,10 +67,10 @@ function less (array, value) {
   return arrayOfboolean
 }
 
-function minNonZeroIndex (array) {
-  const filterCallback = (element) => element !== 0 && element !== '-'
-  const nonZeroAndNonMaskedElements = array.filter(filterCallback)
-  const min = Math.min.apply(null, nonZeroAndNonMaskedElements)
+function minNonMaskedIndex (array) {
+  const nonMasked = (element) => element !== '-'
+  const nonMaskedElements = array.filter(nonMasked)
+  const min = Math.min.apply(null, nonMaskedElements)
   const minIndex = (element) => element === min
   const index = array.findIndex(minIndex)
   return index
@@ -96,18 +97,13 @@ function zeros (lenght) {
   return array
 }
 
-function _zerosMatrix (size) {
-  const zerosMatrix = Array.from(Array(size), () => zeros(size))
-  return zerosMatrix
-}
-
 export {
   arange,
   countNonMaskedElements,
   identityMatrix,
   isClose,
   less,
-  minNonZeroIndex,
+  minNonMaskedIndex,
   shape,
   zeros
 }

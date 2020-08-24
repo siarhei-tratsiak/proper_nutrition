@@ -8,7 +8,7 @@ import {
 } from '@/api/indexedDBService'
 import { simplex } from '@/api/simplex'
 import { products } from '@/data/products.js'
-import router from '@/router/index.js'
+// import router from '@/router/index.js'
 import { getMsInDay, getToday, getMsInYear } from '@/api/dates.js'
 import { nutrient as nutrients } from '@/data/nutrient_ru.js'
 
@@ -62,17 +62,17 @@ const actions = {
       [-1, -2, -3],
       [-5, -6, -7],
       [9, 10, 11]
-    ];
-    b = [-4, -8, 12];
-    c = [13, 14, 15]; */
+    ]
+    b = [-4, -8, 12]
+    c = [13, 14, 15] */
     // max
     /* A = [
-      [1, 2, 3],
-      [5, 6, 7],
-      [-9, -10, -11]
-    ];
-    b = [4, 8, -12];
-    c = [-13, -14, -15]; */
+      [0, 1, 1],
+      [2, 1, 2],
+      [-2, 1, -2]
+    ]
+    b = [4, 6, -2]
+    c = [3, 2, 1] */
     const test = false
     let result = []
     result = [
@@ -266,9 +266,9 @@ const actions = {
       }
     ]
     if (!test) {
-      result = simplex(A, b, c)
+      result = simplex({ initA: A, initb: b, initc: c })
       console.log(result)
-      result = result.x
+      result = result.solution
         .map((curVal, index) => {
           const id = indices[index]
           return {
@@ -291,7 +291,7 @@ const actions = {
     commit('setProducts', result)
     // dispatch("setNutrients");
     commit('setStatus', { counting: false })
-    router.push('Result')
+    // router.push('Result')
   },
 
   async initData ({ dispatch }) {
