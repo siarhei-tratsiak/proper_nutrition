@@ -488,7 +488,6 @@ const state = {
   },
   status: {
     counting: false,
-    dbIsReady: false,
     productDialogIsOpened: false,
     recordingToDB: false,
     selected: false

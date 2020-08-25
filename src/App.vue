@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navigation></Navigation>
+    <Navigation />
     <v-content>
       <router-view></router-view>
     </v-content>
@@ -8,9 +8,8 @@
 </template>
 
 <script>
-import { getToday, getTomorrow } from '@/api/dates.js'
+import { mapActions } from 'vuex'
 import Navigation from '@/components/navigation/Navigation.vue'
-import { mapActions, mapMutations } from 'vuex'
 
 export default {
   components: {
@@ -19,14 +18,10 @@ export default {
 
   created: function () {
     this.initData()
-    const start = getToday()
-    const end = getTomorrow()
-    this.setPeriod({ start, end })
   },
 
   methods: {
-    ...mapActions(['initData']),
-    ...mapMutations(['setPeriod'])
+    ...mapActions(['initData'])
   },
 
   name: 'App'

@@ -305,10 +305,6 @@ const actions = {
   async initDB ({ commit }) {
     const db = await initDatabase()
     commit('setDB', db)
-    if (db) {
-      commit('setStatus', { dbIsReady: true })
-      return true
-    }
   },
 
   async initFavored ({ state, commit }) {

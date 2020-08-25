@@ -1,44 +1,10 @@
 import Dexie from 'dexie'
-import { DBName } from '@/data/DBSettings'
 import { defaultParameters } from '@/data/defaultParameters'
 import { products } from '@/data/products'
 
-async function _checkNewUsers (db, products, filtersTable) {
-  const uidsFromFilters = await _userIDsFromFilters(db)
-  let filtersData = []
-  await db.users
-    .where('id')
-    .noneOf(uidsFromFilters)
-    .eachPrimaryKey(id => {
-      const userFiltersData = products.map(product => [product[0], id, 1, 0])
-      filtersData = filtersData.concat(userFiltersData)
-    })
-  filtersTable.data = filtersData
-  await _fillDB(db, filtersTable)
-}
-
-async function _checkDB (db, tables, products) {
-  const isChecked = tables.reduce(async (acc, table) => {
-    const count = await db[table.name].count()
-    if (count < table.data.length) {
-      const isFilled = await _fillDB(db, table)
-      return acc + isFilled
-    }
-    if (table.name === 'users') {
-      const filtersTable = tables.find(table => table.name === 'filters')
-      await _checkNewUsers(db, products, filtersTable)
-    }
-    return true
-  }, false)
-  return isChecked
-}
-
-async function _createDB (tables) {
-  const schemaDefinition = {}
-  tables.forEach(function (table) {
-    schemaDefinition[table.name] = table.columns.join(', ')
-  })
-  const db = new Dexie(DBName)
+function _createDB (tables) {
+  const schemaDefinition = _schemaDefinition(tables)
+  const db = new Dexie('ProperNutritionDB')
   db.version(6).stores(schemaDefinition)
   return db
 }
@@ -52,18 +18,19 @@ function editRations (db, ration) {
 }
 
 async function _fillDB (db, table) {
-  const valuesList = await _prepareData(table)
-  const tableName = table.name
-  await db
-    .transaction('rw', db[tableName], () => {
-      valuesList.forEach(row => {
-        db[tableName].put(row)
-      })
-    })
-    .catch(function (e) {
-      throw new Error(e)
-    })
-  return true
+  const records = await _prepareData(table)
+  db[table.name].bulkPut(records)
+}
+
+async function _fillMissingRecords (db, tables) {
+  const fillMissingRecords = async table => {
+    const numberOfRecords = await db[table.name].count()
+    const notAllDataInTable = numberOfRecords < table.data.length
+    if (notAllDataInTable) {
+      _fillDB(db, table)
+    }
+  }
+  tables.forEach(fillMissingRecords)
 }
 
 async function getRation (db, userID, start, end = undefined) {
@@ -92,7 +59,7 @@ async function getRation (db, userID, start, end = undefined) {
   return result
 }
 
-async function initDatabase () {
+function _getTables () {
   const constraintsColumnsNames = [
     '++id',
     'user_id',
@@ -121,7 +88,8 @@ async function initDatabase () {
     'mass',
     '[user_id+date]'
   ]
-  const usersColumnsNames = ['++id'].concat(Object.keys(defaultParameters))
+  const userColumnNames = ['++id'].concat(Object.keys(defaultParameters))
+  const userData = [Object.values(defaultParameters)]
   const tables = [
     { name: 'constraints', data: [], columns: constraintsColumnsNames },
     {
@@ -136,31 +104,42 @@ async function initDatabase () {
     },
     {
       name: 'users',
-      data: [Object.values(defaultParameters)],
-      columns: usersColumnsNames
+      data: userData,
+      columns: userColumnNames
     }
   ]
-  const db = await _createDB(tables)
-  const isChecked = await _checkDB(db, tables, products)
-  if (isChecked) {
-    return db
-  }
+  return tables
+}
+
+async function initDatabase () {
+  const tables = _getTables()
+  const db = _createDB(tables)
+  _fillMissingRecords(db, tables)
+  return db
 }
 
 function _prepareData (table) {
-  let valuesList = table.data
-  let columns = table.columns
-  valuesList = valuesList.map(values => {
-    const obj = {}
-    if (columns[0] === '++id') {
-      columns = columns.slice(1)
+  const columnNames = table.columns
+  const dataToRecord = values => {
+    const record = {}
+    const columnNamesWithoutID = columnNames.slice(1)
+    const addValueToRecord = (columnName, index) => {
+      record[columnName] = values[index]
     }
-    columns.forEach(function (column, value) {
-      obj[column] = values[value]
-    })
-    return obj
-  })
-  return valuesList
+    columnNamesWithoutID.forEach(addValueToRecord)
+    return record
+  }
+  const records = table.data.map(dataToRecord)
+  return records
+}
+
+function _schemaDefinition (tables) {
+  const schemaDefinition = {}
+  const defineFields = table => {
+    schemaDefinition[table.name] = table.columns.join(', ')
+  }
+  tables.forEach(defineFields)
+  return schemaDefinition
 }
 
 function searchProduct (db, productName) {
@@ -168,13 +147,6 @@ function searchProduct (db, productName) {
   return db.products
     .filter(product => re.test(product.name.toLowerCase()))
     .toArray()
-}
-
-async function _userIDsFromFilters (db) {
-  const filters = await db.filters.toArray()
-  const userIDs = filters.map(row => row.user_id)
-  const uniqueUserIDs = [...new Set(userIDs)]
-  return uniqueUserIDs
 }
 
 export { deleteRation, editRations, getRation, initDatabase, searchProduct }

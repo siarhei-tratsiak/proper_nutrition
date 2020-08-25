@@ -29,8 +29,8 @@ function getToday () {
 function getTomorrow () {
   const msInDay = getMsInDay()
   const today = getToday()
-  const end = today + msInDay
-  return end
+  const tomorrow = today + msInDay
+  return tomorrow
 }
 
 export { formatDateForPicker, getMsInDay, getMsInYear, getToday, getTomorrow }

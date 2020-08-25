@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { getToday, getTomorrow } from '@/api/dates'
+import { mapMutations, mapState } from 'vuex'
 import RunButton from '@/components/home/RunButton.vue'
 import SelectPeriod from '@/components/home/SelectPeriod.vue'
 
@@ -28,9 +29,19 @@ export default {
     }
   },
 
+  created: function () {
+    const start = getToday()
+    const end = getTomorrow()
+    this.setPeriod({ start, end })
+  },
+
   data: () => ({
     color: 'green accent-2'
-  })
+  }),
+
+  methods: {
+    ...mapMutations(['setPeriod'])
+  }
 }
 </script>
 
