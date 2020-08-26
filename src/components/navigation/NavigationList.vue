@@ -1,28 +1,29 @@
 <template>
   <v-list
-    :class="isHorizontal ? '' : 'd-flex justify-center flex-grow-1'"
-    nav
-    dense
+    :class="horizontalDependencies.listClasses"
     color="primary"
+    dense
+    nav
   >
     <v-list-item
-      :class="isHorizontal ? '' : 'mb-0 mr-1 flex-grow-0'"
+      :class="horizontalDependencies.listItemClasses"
       :key="menuItem.path"
-      :style="isHorizontal ? {} : { 'flex-basis': 'auto' }"
+      :style="horizontalDependencies.listitemStyle"
       :to="{ name: menuItem.path }"
       v-for="menuItem in menuItems"
     >
-      <v-list-item-icon :class="{ 'dense-icon': !isHorizontal }">
+      <v-list-item-icon :class="horizontalDependencies.iconClass">
         <v-icon>{{ menuItem.icon }}</v-icon>
       </v-list-item-icon>
-      <v-list-item-title
-        :class="'d-none d-' + (isHorizontal ? 'md' : 'xs') + '-flex'"
-      >{{ menuItem.title }}</v-list-item-title>
+      <v-list-item-title :class="horizontalDependencies.titleClasses">
+        {{ menuItem.title }}
+      </v-list-item-title>
     </v-list-item>
   </v-list>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data: function () {
     return {
@@ -35,7 +36,37 @@ export default {
       ]
     }
   },
-  props: ['isHorizontal']
+
+  computed: {
+    ...mapState(['isHorizontal']),
+
+    horizontalDependencies: function () {
+      const horizontalDependencies = {
+        iconClass: ['', 'dense-icon'],
+        listClasses: ['', 'd-flex justify-center flex-grow-1'],
+        listItemClasses: ['', 'mb-0 mr-1 flex-grow-0'],
+        listitemStyle: [{}, { 'flex-basis': 'auto' }],
+        titleClasses: ['d-none d-md-flex', 'd-none d-xs-flex']
+      }
+      for (const key in horizontalDependencies) {
+        this.assingValue(key, horizontalDependencies)
+      }
+      return horizontalDependencies
+    }
+  },
+
+  methods: {
+    assingValue: function (key, horizontalDependencies) {
+      const value = horizontalDependencies[key]
+      const [ifTrue, ifFalse] = [...value]
+      horizontalDependencies[key] = this.checkHorizonal(ifTrue, ifFalse)
+    },
+
+    checkHorizonal: function (ifTrue, ifFalse) {
+      const result = this.isHorizontal ? ifTrue : ifFalse
+      return result
+    }
+  }
 }
 </script>
 
