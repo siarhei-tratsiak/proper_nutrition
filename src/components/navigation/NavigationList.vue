@@ -15,7 +15,10 @@
       <v-list-item-icon :class="horizontalDependencies.iconClass">
         <v-icon>{{ menuItem.icon }}</v-icon>
       </v-list-item-icon>
-      <v-list-item-title :class="horizontalDependencies.titleClasses">
+      <v-list-item-title
+        :class="horizontalDependencies.titleClasses"
+        class="d-none"
+      >
         {{ menuItem.title }}
       </v-list-item-title>
     </v-list-item>
@@ -46,23 +49,23 @@ export default {
         listClasses: ['', 'd-flex justify-center flex-grow-1'],
         listItemClasses: ['', 'mb-0 mr-1 flex-grow-0'],
         listitemStyle: [{}, { 'flex-basis': 'auto' }],
-        titleClasses: ['d-none d-md-flex', 'd-none d-xs-flex']
+        titleClasses: ['d-md-flex', 'd-xs-flex']
       }
       for (const key in horizontalDependencies) {
-        this.assingValue(key, horizontalDependencies)
+        this._assingValue(key, horizontalDependencies)
       }
       return horizontalDependencies
     }
   },
 
   methods: {
-    assingValue: function (key, horizontalDependencies) {
+    _assingValue: function (key, horizontalDependencies) {
       const value = horizontalDependencies[key]
       const [ifTrue, ifFalse] = [...value]
-      horizontalDependencies[key] = this.checkHorizonal(ifTrue, ifFalse)
+      horizontalDependencies[key] = this._checkHorizonal(ifTrue, ifFalse)
     },
 
-    checkHorizonal: function (ifTrue, ifFalse) {
+    _checkHorizonal: function (ifTrue, ifFalse) {
       const result = this.isHorizontal ? ifTrue : ifFalse
       return result
     }

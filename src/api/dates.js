@@ -1,5 +1,6 @@
-function formatDateForPicker (date = 0) {
-  return new Date(date).toISOString().substr(0, 10)
+function formatDateForPicker (date) {
+  const newDate = date ? new Date(date) : new Date()
+  return newDate.toISOString().substr(0, 10)
 }
 
 function getMsInDay () {

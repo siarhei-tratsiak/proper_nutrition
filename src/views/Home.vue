@@ -1,9 +1,20 @@
 <template>
-  <div :class="color" id="background" class="d-flex flex-column align-center">
-    <div class="flex-grow-1 d-flex justify-center align-center">
-      <RunButton v-if="ready" />
-    </div>
+  <div
+    :class="color"
+    class="align-center d-flex flex-column"
+    id="background"
+  >
+
+    <p class="d-flex flex-grow-1 align-center">НАЖМИТЕ КНОПКУ</p>
+
+    <RunButton v-if="ready" />
+
+    <p class="d-flex flex-grow-1 align-center">
+      ЧТОБЫ ВЫЧИСЛИТЬ РАЦИОН ЗА ПЕРИОД:
+    </p>
+
     <SelectPeriod />
+
   </div>
 </template>
 

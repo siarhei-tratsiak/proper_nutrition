@@ -1,21 +1,21 @@
 <template>
   <v-menu
-    v-model="menu"
-    :close-on-content-click="false"
+    class="menu-class"
     :nudge-right="40"
-    transition="scale-transition"
-    offset-y
     min-width="290px"
+    offset-y
+    transition="scale-transition"
+    v-model="menu"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
         :class="textFieldClass"
-        v-model="date"
         :label="label"
+        outlined
         prepend-icon="mdi-calendar"
         readonly
-        outlined
         v-bind="attrs"
+        v-model="date"
         v-on="on"
       ></v-text-field>
     </template>
@@ -32,9 +32,12 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex'
+import { formatDateForPicker, getMsInDay } from '@/api/dates'
 
 export default {
+
   computed: {
+
     ...mapState(['period']),
 
     label: function () {
@@ -42,46 +45,67 @@ export default {
     },
 
     textFieldClass: function () {
-      return { 'ml-2': !this.isFrom, 'mr-2': this.isFrom }
+      return this.isFrom ? 'mr-2' : 'ml-2'
     }
+
   },
 
   data: function () {
     return {
-      date: new Date().toISOString().substr(0, 10),
+      date: formatDateForPicker(),
       menu: false
     }
   },
 
   methods: {
+
     ...mapActions(['setRationForPeriod']),
     ...mapMutations(['setPeriod']),
 
     allowedDates (date) {
+      const parsedDate = this._parsedDate(date)
+      const isDateAllowed = this.isFrom ? this._isDateLess(parsedDate) : this._isDateNotLess(parsedDate)
+      return isDateAllowed
+    },
+
+    _getPeriod (date) {
+      const period = {}
+      const parsedDate = this._parsedDate(date)
       if (this.isFrom) {
-        const to = this.period.end
-        return Date.parse(date) < to
+        period.start = parsedDate
       } else {
-        const from = this.period.start
-        return Date.parse(date) >= from
+        const msInDay = getMsInDay()
+        period.end = parsedDate + msInDay
       }
+      return period
+    },
+
+    _isDateLess (parsedDate) {
+      const to = this.period.end
+      const isDateLess = parsedDate < to
+      return isDateLess
+    },
+
+    _isDateNotLess (parsedDate) {
+      const from = this.period.start
+      const isDateNotLess = parsedDate >= from
+      return isDateNotLess
     },
 
     input (date) {
-      this.menu = false
-      const formattedDate = Date.parse(date)
-      const period = {}
-      if (this.isFrom) {
-        period.start = formattedDate
-      } else {
-        const msInDay = 24 * 60 * 60 * 1000
-        period.end = formattedDate + msInDay
-      }
+      const period = this._getPeriod(date)
       this.setPeriod(period)
+    },
+
+    _parsedDate (date) {
+      const parsedDate = Date.parse(date)
+      return parsedDate
     }
+
   },
 
   props: ['isFrom']
+
 }
 </script>
 

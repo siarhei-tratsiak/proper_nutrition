@@ -1,4 +1,5 @@
 <template>
+  <div class="align-center d-flex flex-grow-1 justify-center">
   <v-btn
     @click="getSolution(nutrients)"
     color="primary"
@@ -11,6 +12,7 @@
       <v-progress-circular indeterminate :size="progressSize"></v-progress-circular>
     </template>
   </v-btn>
+  </div>
 </template>
 
 <script>
