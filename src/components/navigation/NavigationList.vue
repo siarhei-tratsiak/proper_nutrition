@@ -15,6 +15,7 @@
       <v-list-item-icon :class="horizontalDependencies.iconClass">
         <v-icon>{{ menuItem.icon }}</v-icon>
       </v-list-item-icon>
+
       <v-list-item-title
         :class="horizontalDependencies.titleClasses"
         class="d-none"
@@ -27,6 +28,7 @@
 
 <script>
 import { mapState } from 'vuex'
+
 export default {
   data: function () {
     return {
