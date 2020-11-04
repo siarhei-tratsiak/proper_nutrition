@@ -19,6 +19,7 @@
         v-on="on"
       ></v-text-field>
     </template>
+
     <v-date-picker
       :allowed-dates="allowedDates"
       first-day-of-week="1"
@@ -37,7 +38,6 @@ import { formatDateForPicker, getMsInDay } from '@/api/dates'
 export default {
 
   computed: {
-
     ...mapState(['period']),
 
     label: function () {
@@ -47,7 +47,6 @@ export default {
     textFieldClass: function () {
       return this.isFrom ? 'mr-2' : 'ml-2'
     }
-
   },
 
   data: function () {
@@ -58,17 +57,16 @@ export default {
   },
 
   methods: {
-
     ...mapActions(['setRationForPeriod']),
     ...mapMutations(['setPeriod']),
 
-    allowedDates (date) {
+    allowedDates: function (date) {
       const parsedDate = this._parsedDate(date)
       const isDateAllowed = this.isFrom ? this._isDateLess(parsedDate) : this._isDateNotLess(parsedDate)
       return isDateAllowed
     },
 
-    _getPeriod (date) {
+    _getPeriod: function (date) {
       const period = {}
       const parsedDate = this._parsedDate(date)
       if (this.isFrom) {
@@ -80,32 +78,30 @@ export default {
       return period
     },
 
-    _isDateLess (parsedDate) {
+    _isDateLess: function (parsedDate) {
       const to = this.period.end
       const isDateLess = parsedDate < to
       return isDateLess
     },
 
-    _isDateNotLess (parsedDate) {
+    _isDateNotLess: function (parsedDate) {
       const from = this.period.start
       const isDateNotLess = parsedDate >= from
       return isDateNotLess
     },
 
-    input (date) {
+    input: function (date) {
       const period = this._getPeriod(date)
       this.setPeriod(period)
     },
 
-    _parsedDate (date) {
+    _parsedDate: function (date) {
       const parsedDate = Date.parse(date)
       return parsedDate
     }
-
   },
 
   props: ['isFrom']
-
 }
 </script>
 

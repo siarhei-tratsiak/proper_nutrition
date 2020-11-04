@@ -1,17 +1,18 @@
 <template>
   <div class="align-center d-flex flex-grow-1 justify-center">
-  <v-btn
-    @click="getSolution(nutrients)"
-    color="primary"
-    fab
-    id="run_button"
-    :loading="this.status.counting"
-  >
-    <v-icon :size="size">mdi-room-service</v-icon>
-    <template v-slot:loader>
-      <v-progress-circular indeterminate :size="progressSize"></v-progress-circular>
-    </template>
-  </v-btn>
+    <v-btn
+      @click="getSolution(nutrients)"
+      color="primary"
+      fab
+      id="run_button"
+      :loading="this.status.counting"
+    >
+      <v-icon :size="size">mdi-room-service</v-icon>
+
+      <template v-slot:loader>
+        <v-progress-circular indeterminate :size="progressSize"></v-progress-circular>
+      </template>
+    </v-btn>
   </div>
 </template>
 
