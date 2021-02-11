@@ -17,7 +17,7 @@
       </v-list-item-icon>
 
       <v-list-item-title
-        :class="horizontalDependencies.titleClasses"
+        :class="horizontalDependencies.titleClass"
         class="d-none"
       >
         {{ menuItem.title }}
@@ -30,6 +30,28 @@
 import { mapState } from 'vuex'
 
 export default {
+  computed: {
+    ...mapState(['isHorizontal']),
+
+    horizontalDependencies: function () {
+      const horizontal = {
+        iconClass: '',
+        listClasses: '',
+        listItemClasses: '',
+        listitemStyle: {},
+        titleClass: 'd-md-flex'
+      }
+      const vertical = {
+        iconClass: 'dense-icon',
+        listClasses: 'd-flex justify-center flex-grow-1',
+        listItemClasses: 'mb-0 mr-1 flex-grow-0',
+        listitemStyle: { 'flex-basis': 'auto' },
+        titleClass: 'd-xs-flex'
+      }
+      return this.isHorizontal ? horizontal : vertical
+    }
+  },
+
   data: function () {
     return {
       menuItems: [
@@ -39,37 +61,6 @@ export default {
         { path: 'Ration', icon: 'mdi-calendar-month', title: 'Рацион' },
         { path: 'Settings', icon: 'mdi-cog', title: 'Настройки' }
       ]
-    }
-  },
-
-  computed: {
-    ...mapState(['isHorizontal']),
-
-    horizontalDependencies: function () {
-      const horizontalDependencies = {
-        iconClass: ['', 'dense-icon'],
-        listClasses: ['', 'd-flex justify-center flex-grow-1'],
-        listItemClasses: ['', 'mb-0 mr-1 flex-grow-0'],
-        listitemStyle: [{}, { 'flex-basis': 'auto' }],
-        titleClasses: ['d-md-flex', 'd-xs-flex']
-      }
-      for (const key in horizontalDependencies) {
-        this._assingValue(key, horizontalDependencies)
-      }
-      return horizontalDependencies
-    }
-  },
-
-  methods: {
-    _assingValue: function (key, horizontalDependencies) {
-      const value = horizontalDependencies[key]
-      const [ifTrue, ifFalse] = [...value]
-      horizontalDependencies[key] = this._checkHorizonal(ifTrue, ifFalse)
-    },
-
-    _checkHorizonal: function (ifTrue, ifFalse) {
-      const result = this.isHorizontal ? ifTrue : ifFalse
-      return result
     }
   }
 }
