@@ -1,13 +1,12 @@
 <template>
   <div
-    :class="color"
-    class="align-center d-flex flex-column"
+    class="accent-2 align-center d-flex flex-column green"
     id="background"
   >
 
-    <p class="d-flex flex-grow-1 align-center">НАЖМИТЕ КНОПКУ</p>
+    <p class="align-center d-flex flex-grow-1">НАЖМИТЕ КНОПКУ</p>
 
-    <RunButton v-if="ready" />
+    <RunButton v-if="isReady" />
 
     <p class="d-flex flex-grow-1 align-center">
       ЧТОБЫ ВЫЧИСЛИТЬ РАЦИОН ЗА ПЕРИОД:
@@ -19,40 +18,19 @@
 </template>
 
 <script>
-import { getToday, getTomorrow } from '@/api/dates'
-import { mapMutations, mapState } from 'vuex'
+import ReadinessCheck from '@/mixins/ReadinessCheck'
 import RunButton from '@/components/home/RunButton.vue'
 import SelectPeriod from '@/components/home/SelectPeriod.vue'
 
 export default {
-  name: 'Home',
-
   components: {
     RunButton,
     SelectPeriod
   },
 
-  computed: {
-    ...mapState(['settings']),
+  mixins: [ReadinessCheck],
 
-    ready: function () {
-      return !!this.settings.userID
-    }
-  },
-
-  created: function () {
-    const start = getToday()
-    const end = getTomorrow()
-    this.setPeriod({ start, end })
-  },
-
-  data: () => ({
-    color: 'green accent-2'
-  }),
-
-  methods: {
-    ...mapMutations(['setPeriod'])
-  }
+  name: 'Home'
 }
 </script>
 

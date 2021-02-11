@@ -16,7 +16,7 @@
 <script>
 import { products } from '@/data/products.js'
 import { mapMutations, mapState } from 'vuex'
-import debounce from 'lodash'
+import debounce from 'lodash/debounce'
 
 export default {
   computed: {

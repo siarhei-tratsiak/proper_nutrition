@@ -1,3 +1,5 @@
+import { products } from '@/data/products.js'
+
 const mutations = {
   setConstraints (state, constraints) {
     state.constraints = constraints
@@ -46,7 +48,15 @@ const mutations = {
     state.products = products
   },
 
-  setProductsList (state, productsList) {
+  setProductSearch (state, productName) {
+    state.productSearch = productName
+  },
+
+  setProductsList (state) {
+    const productsList = products.map(product => ({
+      id: product[0],
+      name: product[1]
+    }))
     state.productsList = productsList
   },
 
@@ -88,16 +98,23 @@ const mutations = {
   },
 
   setSelectedProducts (state, payload) {
-    state.selected.forEach(
-      selectedItem =>
-        (selectedItem.selected = +payload.some(
-          product => product.id === selectedItem.id
-        ))
-    )
+    const selectedIDs = payload.map(product => product.id)
+    const stateSelectedIDs = state.selected
+      .filter(product => !!product.selected)
+      .map(product => product.id)
+    const difference = selectedIDs.filter(id => !stateSelectedIDs.includes(id))
+    difference.forEach(id => {
+      const index = state.selected.findIndex(product => product.id === id)
+      state.selected[index].selected = 1
+    })
   },
 
-  setSettings (state, payload) {
-    Object.keys(payload).forEach(key => (state.settings[key] = payload[key]))
+  setSettings (state, status) {
+    Object.keys(status).forEach(key => (state.status[key] = status[key]))
+  },
+
+  setStateObject (state, payload) {
+    Object.keys(payload.state).forEach(key => (state[payload.objectName][key] = payload.state[key]))
   },
 
   setStatus (state, status) {

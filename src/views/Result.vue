@@ -2,14 +2,14 @@
   <div>
     <ResultProductsList></ResultProductsList>
     <br />
-    <NutrientsBalance v-if="ready"></NutrientsBalance>
+    <NutrientsBalance v-if="isReady"></NutrientsBalance>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import ResultProductsList from '@/components/result/ResultProductsList.vue'
-import NutrientsBalance from '@/components/result/NutrientsBalance.vue'
+import NutrientsBalance from '@/components/result/NutrientsBalance'
+import ReadinessCheck from '@/mixins/ReadinessCheck'
+import ResultProductsList from '@/components/result/ResultProductsList'
 
 export default {
   components: {
@@ -17,12 +17,6 @@ export default {
     NutrientsBalance
   },
 
-  computed: {
-    ...mapState(['settings']),
-
-    ready: function () {
-      return !!this.settings.userID
-    }
-  }
+  mixins: [ReadinessCheck]
 }
 </script>

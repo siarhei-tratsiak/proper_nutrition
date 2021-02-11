@@ -35,7 +35,7 @@ export default {
       menuItems: [
         { path: 'Home', icon: 'mdi-home', title: 'На главную' },
         { path: 'Result', icon: 'mdi-hamburger', title: 'Результат' },
-        { path: 'List', icon: 'mdi-format-list-checks', title: 'Продукты' },
+        { path: 'Products', icon: 'mdi-format-list-checks', title: 'Продукты' },
         { path: 'Ration', icon: 'mdi-calendar-month', title: 'Рацион' },
         { path: 'Settings', icon: 'mdi-cog', title: 'Настройки' }
       ]

@@ -44,6 +44,12 @@ export default {
     }
   },
 
+  created: function () {
+    const start = getToday()
+    const end = getTomorrow()
+    this.setPeriod({ start, end })
+  },
+
   data: function () {
     return {
       items: ['Сегодня', 'Неделя', '7 дней', 'Месяц', '30 дней', 'Другое']

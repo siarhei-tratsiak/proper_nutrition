@@ -2,8 +2,53 @@ import { foodNutrient } from '@/data/foodNutrient.js'
 import { products } from '@/data/products.js'
 import { nutrientIndices } from '@/data/nutrientIndices.js'
 
-function arraysDifference (arr1, arr2) {
-  return arr1.filter(x => !arr2.includes(x))
+const service = {
+  getNutrientMinMaxValues: (constraints, userID) => {
+    return constraints.map(constraint => ({
+      user_id: userID,
+      nutrient_id: constraint.id,
+      min: _countMin(constraint),
+      max: _countMax(constraint)
+    }))
+  },
+
+  isNoExtremum: (constraints) => {
+    const extremumIndex = constraints.findIndex(
+      constraint => constraint.target !== 2
+    )
+    return extremumIndex === -1
+  },
+
+  notMatchingIDs: (id, idList) => {
+    return !idList.includes(id)
+  },
+
+  toNotMinMax: (minMaxValue) => {
+    const source = {
+      target: 2,
+      min_mutable: 0,
+      max_mutable: 0
+    }
+    return Object.assign(minMaxValue, source)
+  }
+}
+
+function _countMin (nutrient) {
+  const min = nutrient.isExactValues
+    ? nutrient.min
+    : Math.round(nutrient.count * 0.9)
+  return min
+}
+
+function _countMax (nutrient) {
+  const max = nutrient.isExactValues
+    ? nutrient.max
+    : Math.round(nutrient.count * 1.1)
+  return max
+}
+
+function arraysDifference (array1, array2) {
+  return array1.filter(item => !array2.includes(item))
 }
 
 function clauseForSelectedAll (filters, userId) {
@@ -13,6 +58,18 @@ function clauseForSelectedAll (filters, userId) {
 function clauseForSelectedProducts (filters, userID, payload) {
   const payloadIDs = payload.map(id => [userID, id])
   return filters.where(['user_id', 'product_id']).anyOf(payloadIDs)
+}
+
+function countGoalvalue (weight) {
+  let goalValue = 0
+  if (weight >= 60 && weight < 70) {
+    goalValue = 1
+  } else if (weight >= 70 && weight < 80) {
+    goalValue = 2
+  } else {
+    goalValue = 3
+  }
+  return goalValue
 }
 
 function getA (groupedNutrients, simplexConstraints) {
@@ -121,6 +178,22 @@ async function getSelectedProducts (db) {
   return result
 }
 
+function isNoExtremum (constraints) {
+  const extremumIndex = constraints.findIndex(
+    constraint => constraint.target !== 2
+  )
+  return extremumIndex === -1
+}
+
+function isOldTarget (oldTarget, newTargetID) {
+  let isOldTarget = false
+  if (oldTarget.length) {
+    const id = oldTarget[0].id
+    isOldTarget = id !== newTargetID
+  }
+  return isOldTarget
+}
+
 function modifySelected (filters, userID, selectedIDs, isSelected) {
   const whereClauseUnselected = clauseForSelectedProducts(
     filters,
@@ -136,6 +209,7 @@ export {
   arraysDifference,
   clauseForSelectedAll,
   clauseForSelectedProducts,
+  countGoalvalue,
   getA,
   getB,
   getC,
@@ -143,5 +217,8 @@ export {
   getFilteredNutrients,
   getIndices,
   getSelectedProducts,
-  modifySelected
+  isNoExtremum,
+  isOldTarget,
+  modifySelected,
+  service
 }

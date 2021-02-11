@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card v-if="settings.userID">
+    <v-card v-if="isReady">
       <Calendar />
       <RationTable />
       <ProductDialog />
@@ -12,7 +12,7 @@
 import Calendar from '@/components/ration/Calendar'
 import ProductDialog from '@/components/ration/dialog/ProductDialog'
 import RationTable from '@/components/ration/RationTable'
-import { mapState } from 'vuex'
+import ReadinessCheck from '@/mixins/ReadinessCheck'
 
 export default {
   components: {
@@ -31,8 +31,6 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState(['settings'])
-  }
+  mixins: [ReadinessCheck]
 }
 </script>

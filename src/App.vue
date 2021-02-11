@@ -2,14 +2,15 @@
   <v-app>
     <Navigation />
     <v-content>
-      <router-view></router-view>
+      <router-view />
     </v-content>
   </v-app>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import Navigation from '@/components/navigation/Navigation.vue'
+
+import Navigation from '@/components/navigation/Navigation'
 
 export default {
   components: {
