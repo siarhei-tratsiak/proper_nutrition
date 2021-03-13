@@ -1,18 +1,9 @@
-import {
-  countGoalvalue,
-  getA,
-  getB,
-  getC,
-  getConstraintWithRation,
-  getFilteredNutrients,
-  getIndices,
-  getSelectedProducts
-} from '@/store/store_service.js'
+import { service } from '@/store/service'
 import {
   getMsInDay,
   getMsInYear,
   getToday
-} from '@/api/dates.js'
+} from '@/api/dates'
 import {
   carbohydratesDailyIntake,
   fatDailyIntake,
@@ -23,63 +14,77 @@ import {
 
 const getters = {
 
-  getConditions: state =>
-    async function (nutrients) {
-      const msInDay = 24 * 60 * 60 * 1000
-      const days = Math.round(
-        (state.period.end - state.period.start) / msInDay
+  getConditions: (state, getters) => async (nutrients) => {
+    let selectedProductIDs = state.selectedProductIDs
+    const selectedProductNutrients = service
+      .getFilteredNutrients(selectedProductIDs)
+    const constraints = getters._getSimplexConstraints(nutrients)
+    const restrictionMatrix = service
+      .getRestrictionMatrix(selectedProductNutrients, constraints)
+    const objective = constraints.find(
+      constraint => constraint.target !== 2
+    )
+    const constraintsVector = service.getConstraintsVector(constraints, objective)
+    const objectiveCoefficients = service
+      .getObjectiveCoefficients(selectedProductNutrients, objective)
+    selectedProductIDs = service
+      .getSelectedProductIDs(selectedProductNutrients)
+    return {
+      restrictionMatrix,
+      constraintsVector,
+      objectiveCoefficients,
+      selectedProductIDs
+    }
+  },
+
+  _getSimplexConstraints: (state) => (nutrients) => {
+    const days = state.days
+    return state.constraints.map(constraint => {
+      [constraint.min, constraint.max] = service.getConstraintsWithRation(
+        nutrients,
+        constraint,
+        days
       )
-      const simplexConstraints = state.constraints.map(constraint => {
-        [constraint.min, constraint.max] = getConstraintWithRation(
-          nutrients,
-          constraint,
-          days
-        )
-        return constraint
-      })
-      const db = await state.db
-      const selectedProducts = await getSelectedProducts(db)
-      const groupedNutrients = getFilteredNutrients(selectedProducts)
-      const objective = simplexConstraints.find(
-        constraint => constraint.target !== 2
-      )
-      const A = getA(groupedNutrients, simplexConstraints)
-      const b = getB(simplexConstraints, objective)
-      const c = getC(groupedNutrients, objective)
-      const indices = getIndices(groupedNutrients)
-      return {
-        A,
-        b,
-        c,
-        indices
-      }
-    },
+      return constraint
+    })
+  },
 
   getConstraints: (state, getters) => nutrientIDs => {
     const constraints = []
     const age = getters._countAge
     const functionsMatchingId = [
-      { id: 1008, name: '_getCalories' },
-      { id: 1003, name: '_getPCF', payload: { id: 1003, dailyIntake: proteinDailyIntake } },
-      { id: 1004, name: '_getPCF', payload: { id: 1004, dailyIntake: fatDailyIntake } },
-      { id: 1005, name: '_getPCF', payload: { id: 1005, dailyIntake: carbohydratesDailyIntake } },
-      { id: 1087, name: '_getCalcium', payload: age },
-      { id: 1089, name: '_getIron', payload: age },
-      { id: 1090, name: '_getMagnesium', payload: age },
-      { id: 1114, name: '_getVitaminD', payload: age }
+      { nutrient_id: 1008, name: '_getCalories' },
+      {
+        nutrient_id: 1003,
+        name: '_getPCF',
+        payload: { id: 1003, dailyIntake: proteinDailyIntake }
+      },
+      {
+        nutrient_id: 1004,
+        name: '_getPCF',
+        payload: { id: 1004, dailyIntake: fatDailyIntake }
+      },
+      {
+        nutrient_id: 1005,
+        name: '_getPCF',
+        payload: { id: 1005, dailyIntake: carbohydratesDailyIntake }
+      },
+      { nutrient_id: 1087, name: '_getCalcium', payload: age },
+      { nutrient_id: 1089, name: '_getIron', payload: age },
+      { nutrient_id: 1090, name: '_getMagnesium', payload: age },
+      { nutrient_id: 1114, name: '_getVitaminD', payload: age }
     ]
     functionsMatchingId.forEach(func => {
-      if (nutrientIDs.includes(func.id)) {
+      if (nutrientIDs.includes(func.nutrient_id)) {
         constraints.push(getters[func.name](func.payload))
       }
     })
     const payloadSet = getters.getPayloadSet(nutrientIDs)
     payloadSet.forEach(payload => {
       constraints.push({
-        id: payload[0],
+        nutrient_id: payload[0],
         min: payload[1],
-        max: payload[2],
-        isExactValues: true
+        max: payload[2]
       })
     })
     return constraints
@@ -107,7 +112,11 @@ const getters = {
     const count = Math.round(
       basalMetabolicRate * physicalActivityLevel * goalCoefficient
     )
-    const calories = { id: 1008, count }
+    const calories = {
+      nutrient_id: 1008,
+      min: count * 0.9,
+      max: count * 1.1
+    }
     return calories
   },
 
@@ -116,9 +125,13 @@ const getters = {
     const sex = settings.sex
     const goal = settings.goal
     const weight = settings.weight
-    const goalValue = countGoalvalue(weight)
+    const goalValue = service.countGoalvalue(weight)
     const count = nutrient.dailyIntake[sex][goal][goalValue]
-    const PCF = { id: nutrient.id, count }
+    const PCF = {
+      nutrient_id: nutrient.id,
+      min: count * 0.9,
+      max: count * 1.1
+    }
     return PCF
   },
 
@@ -126,10 +139,9 @@ const getters = {
     const min = age > 25 ? 950 : 1000
     const max = age > 51 ? 2000 : 2500
     return {
-      id: 1087,
+      nutrient_id: 1087,
       min,
-      max,
-      isExactValues: true
+      max
     }
   },
 
@@ -137,10 +149,9 @@ const getters = {
     const sex = state.settings.sex
     const min = sex === 'female' && age < 51 ? 18 : 8
     return {
-      id: 1089,
+      nutrient_id: 1089,
       min,
-      max: 45,
-      isExactValues: true
+      max: 45
     }
   },
 
@@ -148,20 +159,18 @@ const getters = {
     const sex = state.settings.sex
     const min = sex === 'male' ? (age < 31 ? 400 : 420) : age < 31 ? 310 : 320
     return {
-      id: 1090,
+      nutrient_id: 1090,
       min,
-      max: null,
-      isExactValues: true
+      max: null
     }
   },
 
   _getVitaminD: state => age => {
     const min = age < 71 ? 15 : 20
     return {
-      id: 1114,
+      nutrient_id: 1114,
       min,
-      max: 100,
-      isExactValues: true
+      max: 100
     }
   },
 

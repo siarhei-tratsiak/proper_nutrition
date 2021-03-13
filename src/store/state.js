@@ -22,7 +22,7 @@ const state = {
   productsList: [],
   ration: [],
   rationForPeriod: [],
-  selected: [],
+  selectedProductIDs: [],
   selectedDate: null,
   settings: {
     sex: '',
@@ -35,9 +35,8 @@ const state = {
     userID: undefined
   },
   status: {
-    counting: false,
+    isLoading: false,
     productDialogIsOpened: false,
-    recordingToDB: false,
     selected: false
   }
 }

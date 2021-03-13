@@ -1,20 +1,17 @@
 import {
   arraysDifference,
   isOldTarget,
-  modifySelected,
   service
-} from '@/store/store_service.js'
+} from '@/store/service'
 import {
   deleteRation,
   editRations,
-  getRation,
   IDBS,
-  searchProduct,
-  updateConstraint
+  searchProduct
 } from '@/api/indexedDBService'
 import { simplex } from '@/api/simplex'
-import { products } from '@/data/products.js'
-import { nutrient as nutrients } from '@/data/nutrient_ru.js'
+import { nutrient as nutrients } from '@/data/nutrient_ru'
+import router from '@/router'
 
 const actions = {
   deleteRation ({ state }, id) {
@@ -33,244 +30,36 @@ const actions = {
   },
 
   async getSolution ({ getters, commit }, nutrients) {
-    commit('setStatus', { counting: true })
-    commit('setDays')
-    const { A, b, c, indices } = await getters.getConditions(nutrients)
-    // min
-    /* A = [
-      [-1, -2, -3],
-      [-5, -6, -7],
-      [9, 10, 11]
-    ]
-    b = [-4, -8, 12]
-    c = [13, 14, 15] */
-    // max
-    /* A = [
-      [0, 1, 1],
-      [2, 1, 2],
-      [-2, 1, -2]
-    ]
-    b = [4, 6, -2]
-    c = [3, 2, 1] */
-    const test = false
-    let result = []
-    result = [
-      {
-        index: 664,
-        value: 4.569412690773433
-      },
-      {
-        index: 765,
-        value: 6.768717862962623
-      },
-      {
-        index: 789,
-        value: 0.005774796693993312
-      },
-      {
-        index: 861,
-        value: 0.007633636034107025
-      },
-      {
-        index: 880,
-        value: 0.5071104741299753
-      },
-      {
-        index: 1443,
-        value: 0.005175322906293025
-      },
-      {
-        index: 1635,
-        value: 0.020567777637319963
-      },
-      {
-        index: 1647,
-        value: 0.23914786677821118
-      },
-      {
-        index: 1895,
-        value: 0.05071810939376501
-      },
-      {
-        index: 1929,
-        value: 0.18342288079307126
-      },
-      {
-        index: 1934,
-        value: 0.010044039255018513
-      },
-      {
-        index: 1939,
-        value: 0.024192952681500575
-      },
-      {
-        index: 2014,
-        value: 0.09870617458709506
-      },
-      {
-        index: 2045,
-        value: 0.025186091797739372
-      },
-      {
-        index: 2052,
-        value: 0.0789726247104865
-      },
-      {
-        index: 2072,
-        value: 0.0857622850519656
-      },
-      {
-        index: 2090,
-        value: 0.15949424574600735
-      },
-      {
-        index: 2180,
-        value: 0.10854010309067817
-      },
-      {
-        index: 2242,
-        value: 0.06887192690836842
-      },
-      {
-        index: 2269,
-        value: 0.5989104828101579
-      },
-      {
-        index: 2274,
-        value: 0.04510459535937683
-      },
-      {
-        index: 2586,
-        value: 0.008125068228944198
-      },
-      {
-        index: 2755,
-        value: 0.07322363542732481
-      },
-      {
-        index: 3156,
-        value: 2.3207512378162543
-      },
-      {
-        index: 3570,
-        value: 0.0914460579157686
-      },
-      {
-        index: 3574,
-        value: 0.3564966409125774
-      },
-      {
-        index: 3594,
-        value: 0.0023122581937672277
-      },
-      {
-        index: 3595,
-        value: 0.12222571168031642
-      },
-      {
-        index: 4656,
-        value: 1.5988411580064883
-      },
-      {
-        index: 4920,
-        value: 0.005490019506223904
-      },
-      {
-        index: 5133,
-        value: 0.016795908711585417
-      },
-      {
-        index: 5402,
-        value: 0.29717748701830565
-      },
-      {
-        index: 5408,
-        value: 0.1999168003139237
-      },
-      {
-        index: 5933,
-        value: 0.021947062884508046
-      },
-      {
-        index: 6470,
-        value: 0.17447230030517985
-      },
-      {
-        index: 6498,
-        value: 0.09581875908962274
-      },
-      {
-        index: 6507,
-        value: 0.0017674293955819143
-      },
-      {
-        index: 6542,
-        value: 0.0770775917098274
-      },
-      {
-        index: 6621,
-        value: 0.0881485430770563
-      },
-      {
-        index: 6868,
-        value: 0.06058400156383571
-      },
-      {
-        index: 6869,
-        value: 0.018614733999458115
-      },
-      {
-        index: 6873,
-        value: 0.013092452173017698
-      },
-      {
-        index: 6991,
-        value: 0.19503997170330079
-      },
-      {
-        index: 7888,
-        value: 0.9837378232016989
-      },
-      {
-        index: 8065,
-        value: 9.325446708534356
-      },
-      {
-        index: 8085,
-        value: 0.02303112433974114
-      },
-      {
-        index: 8512,
-        value: 0.02415544321767649
-      }
-    ]
-    if (!test) {
-      result = simplex({ initA: A, initb: b, initc: c })
-      console.log(result)
-      result = result.solution
-        .map((curVal, index) => {
-          const id = indices[index]
-          return {
-            id,
-            value: curVal
-          }
-        })
-        .filter(curVal => curVal.value !== 0)
-    }
-    result = result.map(curVal => {
-      const id = curVal.id
-      const product = products.find(product => product[0] === +id)
-      return {
-        id,
-        category: null,
-        name: product[1],
-        value: curVal.value * 100
-      }
+    commit('setStateObject', {
+      objectName: 'status',
+      state: { isLoading: true }
     })
+    commit('setDays')
+    const {
+      restrictionMatrix,
+      constraintsVector,
+      objectiveCoefficients,
+      selectedProductIDs
+    } = await getters.getConditions(nutrients)
+    /* restrictionMatrix = [[1, -2], [-1, -1], [1, -1], [0, 1]]
+    constraintsVector = [-2, -4, 2, 6]
+    objectiveCoefficients = [-1, -2] */
+    let result = simplex({
+      restrictionMatrix,
+      constraintsVector,
+      objectiveCoefficients
+    })
+    console.log(result)
+    result = result.solution
+      .map((productValue, index) => service
+        .getProductsData(index, productValue, selectedProductIDs))
+      .filter(product => product.value !== 0)
     commit('setProducts', result)
-    // dispatch("setNutrients");
-    commit('setStatus', { counting: false })
-    // router.push('Result')
+    commit('setStateObject', {
+      objectName: 'status',
+      state: { isLoading: false }
+    })
+    router.push('Result')
   },
 
   async initData ({ commit, dispatch }) {
@@ -292,52 +81,54 @@ const actions = {
     commit('setStateObject', userPayload)
   },
 
-  _setAllConstraints ({ commit, dispatch, getters }) {
+  _setAllConstraints ({ dispatch }) {
     const nutrientIDs = nutrients.map(nutrient => nutrient[0])
     const constraintsPayload = { nutrientIDs, checkExtremum: true }
     dispatch('setConstraints', constraintsPayload)
-    const constraints = getters.getConstraints(nutrientIDs)
-    commit('setConstraints', constraints)
   },
 
-  async setConstraints ({ dispatch, getters, state }, payload) {
+  async setConstraints ({ commit, dispatch, getters, state }, payload) {
     const userID = state.settings.userID
     const nutrientIDs = payload.nutrientIDs
     const constraints = getters.getConstraints(nutrientIDs)
     const nutrientMinMaxValues = service.getNutrientMinMaxValues(
       constraints, userID
     )
-    const existingConstraints = await IDBS.getNutrientConstraints(
+    let existingConstraints = await IDBS.getNutrientConstraints(
       state.db, userID, nutrientIDs
     )
     existingConstraints.forEach(constraint =>
       dispatch('_updateConstraint', { constraint, nutrientMinMaxValues })
     )
-    const existingConstraintIDs = existingConstraints.map(
-      constraint => constraint.id
+    const existingConstraintNutrientIDs = existingConstraints.map(
+      constraint => constraint.nutrient_id
     )
     const addData = nutrientMinMaxValues
       .filter(minMaxValue => service.notMatchingIDs(
-        minMaxValue.nutrient_id, existingConstraintIDs
+        minMaxValue.nutrient_id, existingConstraintNutrientIDs
       ))
       .map(minMaxValue => service.toNotMinMax(minMaxValue))
     const isAddData = addData.length
     if (isAddData) {
       IDBS.addConstraints(state.db, addData)
     }
+    existingConstraints = await IDBS.getNutrientConstraints(
+      state.db, userID, nutrientIDs
+    )
+    commit('setConstraints', existingConstraints)
     if (payload.checkExtremum) {
-      dispatch('_setExtremum', constraints)
+      dispatch('_checkExtremum', existingConstraints)
     }
   },
 
   _updateConstraint ({ state }, payload) {
     const nutrientMinMaxValue = payload.nutrientMinMaxValues.find(
-      value => value.nurient_id === payload.constraint.id
+      value => value.nutrient_id === payload.constraint.nutrient_id
     )
-    updateConstraint(state.db, payload.constraint, nutrientMinMaxValue)
+    IDBS.updateConstraint(state.db, payload.constraint, nutrientMinMaxValue)
   },
 
-  _setExtremum ({ dispatch }, constraints) {
+  _checkExtremum ({ dispatch }, constraints) {
     if (service.isNoExtremum(constraints)) {
       dispatch('_updateTarget', constraints)
     }
@@ -353,12 +144,16 @@ const actions = {
 
   async _initSelected ({ state, commit }) {
     const userID = state.settings.userID
-    const filters = await IDBS.getFilters(state.db, userID)
-    const selected = filters.map(row => ({
-      id: row.product_id,
-      selected: row.selected
-    }))
-    commit('setSelected', selected)
+    let filters = await IDBS.getFilters(state.db, userID)
+    const isNoFilters = !filters.length
+    if (isNoFilters) {
+      filters = await IDBS.addFilters(state.db, userID)
+    }
+    const selectedProductIDs = filters
+      .filter(row => row.selected === 1)
+      .map(selectedProduct => selectedProduct.product_id)
+    commit('setState',
+      { name: 'selectedProductIDs', value: selectedProductIDs })
     commit('setStateObject', { objectName: 'status', state: { selected: true } })
   },
 
@@ -376,12 +171,12 @@ const actions = {
   },
 
   async setRation ({ state, commit }, date) {
-    const ration = await getRation(state.db, state.settings.userID, date)
-    commit('setRation', ration)
+    const ration = await IDBS.getRation(state.db, state.settings.userID, date)
+    commit('setState', { name: 'ration', value: ration })
   },
 
   async setRationForPeriod ({ state, commit }) {
-    let ration = await getRation(
+    let ration = await IDBS.getRation(
       state.db,
       state.settings.userID,
       state.period.start,
@@ -391,7 +186,7 @@ const actions = {
       id: product.product_id,
       value: product.mass
     }))
-    commit('setRationForPeriod', ration)
+    commit('setState', { name: 'rationForPeriod', value: ration })
   },
 
   setSettings ({ state, commit }, payload) {
@@ -402,7 +197,6 @@ const actions = {
   async setUserID ({ state, commit }) {
     const lastUser = await state.db.users.toCollection().last()
     const userID = lastUser.id
-
     commit('setSettings', {
       setting: 'userID',
       value: userID
@@ -430,23 +224,15 @@ const actions = {
   },
 
   async toggleSelected ({ state, commit }, payload) {
-    commit('setStatus', {
-      recordingToDB: true
-    })
+    const db = state.db
     const userID = state.settings.userID
-    const filters = state.db.filters
-    const oldSelectedIndices = state.selected
-      .filter(selectedItem => selectedItem.selected === 1)
-      .map(selectedItem => selectedItem.id)
+    const oldSelectedIndices = state.selectedProductIDs
     const newSelectedIndices = payload.map(payloadItem => payloadItem.id)
-    commit('setSelectedProducts', payload)
     const unselected = arraysDifference(oldSelectedIndices, newSelectedIndices)
+    IDBS.modifySelected(db, userID, unselected, 0)
     const selected = arraysDifference(newSelectedIndices, oldSelectedIndices)
-    modifySelected(filters, userID, unselected, 0)
-    modifySelected(filters, userID, selected, 1)
-    commit('setStatus', {
-      recordingToDB: false
-    })
+    IDBS.modifySelected(db, userID, selected, 1)
+    commit('setSelectedProducts', payload)
   },
 
   async updateTarget ({ state, dispatch }, payload) {

@@ -1,3 +1,4 @@
+import { dates } from '@/api/dates'
 import { products } from '@/data/products.js'
 
 const mutations = {
@@ -8,8 +9,7 @@ const mutations = {
   setDays (state) {
     const start = state.period.start
     const end = state.period.end
-    const msInDay = 24 * 60 * 60 * 1000
-    state.days = (end - start) / msInDay
+    state.days = dates.getDays(start, end)
   },
 
   setDB (state, db) {
@@ -40,10 +40,6 @@ const mutations = {
     state.isHorizontal = isHorizontal
   },
 
-  setPeriod (state, period) {
-    Object.keys(period).forEach(key => (state.period[key] = period[key]))
-  },
-
   setProducts (state, products) {
     state.products = products
   },
@@ -66,10 +62,6 @@ const mutations = {
 
   setRationForPeriod (state, ration) {
     state.rationForPeriod = ration
-  },
-
-  setSelected (state, selected) {
-    state.selected = selected
   },
 
   setSelectedAll (state, payload) {
@@ -98,27 +90,20 @@ const mutations = {
   },
 
   setSelectedProducts (state, payload) {
-    const selectedIDs = payload.map(product => product.id)
-    const stateSelectedIDs = state.selected
-      .filter(product => !!product.selected)
-      .map(product => product.id)
-    const difference = selectedIDs.filter(id => !stateSelectedIDs.includes(id))
-    difference.forEach(id => {
-      const index = state.selected.findIndex(product => product.id === id)
-      state.selected[index].selected = 1
-    })
+    const selectedProductIDs = payload.map(product => product.id)
+    state.selectedProductIDs = selectedProductIDs
   },
 
   setSettings (state, status) {
     Object.keys(status).forEach(key => (state.status[key] = status[key]))
   },
 
-  setStateObject (state, payload) {
-    Object.keys(payload.state).forEach(key => (state[payload.objectName][key] = payload.state[key]))
+  setState (state, payload) {
+    state[payload.name] = payload.value
   },
 
-  setStatus (state, status) {
-    Object.keys(status).forEach(key => (state.status[key] = status[key]))
+  setStateObject (state, payload) {
+    Object.keys(payload.state).forEach(key => (state[payload.objectName][key] = payload.state[key]))
   },
 
   updateConstraint (state, payload) {

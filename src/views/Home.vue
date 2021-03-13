@@ -3,17 +3,15 @@
     class="accent-2 align-center d-flex flex-column green"
     id="background"
   >
-
-    <p class="align-center d-flex flex-grow-1">НАЖМИТЕ КНОПКУ</p>
+    <p class="align-center d-flex flex-grow-1 text-center">НАЖМИТЕ КНОПКУ</p>
 
     <RunButton v-if="isReady" />
 
-    <p class="d-flex flex-grow-1 align-center">
+    <p class="align-center d-flex flex-grow-1 text-center">
       ЧТОБЫ ВЫЧИСЛИТЬ РАЦИОН ЗА ПЕРИОД:
     </p>
 
     <SelectPeriod />
-
   </div>
 </template>
 

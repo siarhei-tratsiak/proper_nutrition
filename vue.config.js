@@ -5,6 +5,6 @@ module.exports = {
     config.module
       .rule('js')
       .exclude.add(path.resolve('src/data/products.js'))
-      .add(path.resolve('src/data/foodNutrient.js'))
+      .add(path.resolve('src/data/foodNutrients.js'))
   }
 }

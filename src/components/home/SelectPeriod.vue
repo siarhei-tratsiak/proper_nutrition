@@ -10,7 +10,7 @@
 
     <v-select
       @input="input"
-      :items="items"
+      :items="periods"
       label="Период"
       solo
       :value="interval"
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { getTomorrow, getMsInDay, getToday } from '@/api/dates.js'
+import { dates } from '@/api/dates'
 import DatePicker from '@/components/home/DatePicker'
 import { mapActions, mapMutations, mapState } from 'vuex'
 
@@ -39,50 +39,35 @@ export default {
       },
 
       set: function (name) {
-        this.setPeriod({ name })
+        const end = dates.getTomorrow()
+        const start = this._getStart(name)
+        const payload = { objectName: 'period', state: { start, end, name } }
+        this.setStateObject(payload)
       }
     }
   },
 
   created: function () {
-    const start = getToday()
-    const end = getTomorrow()
-    this.setPeriod({ start, end })
+    const start = dates.getToday()
+    const end = dates.getTomorrow()
+    const payload = { objectName: 'period', state: { start, end } }
+    this.setStateObject(payload)
   },
 
-  data: function () {
-    return {
-      items: ['Сегодня', 'Неделя', '7 дней', 'Месяц', '30 дней', 'Другое']
-    }
-  },
+  data: () => ({
+    periods: ['Сегодня', 'С понедельника', '7 дней', 'С 1 числа', '30 дней', 'Другое']
+  }),
 
   methods: {
     ...mapActions(['setRationForPeriod']),
-    ...mapMutations(['setPeriod', 'set']),
+    ...mapMutations(['setStateObject']),
 
-    _getFirstDayOfMonth: function (now, today, msInDay) {
-      const dayOfMonth = now.getDate()
-      const firstDayOfMonth = today - (dayOfMonth - 1) * msInDay
-      return firstDayOfMonth
-    },
-
-    _getMonday: function (now, today, msInDay) {
-      const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay()
-      const monday = today - (dayOfWeek - 1) * msInDay
-      return monday
-    },
-
-    _getMonthAgo: function (today, msInDay) {
-      const monthAgo = today - 29 * msInDay
-      return monthAgo
-    },
-
-    _getStart: function (interval) {
-      const msInDay = getMsInDay()
+    _getStart: function (intervalName) {
+      const msInDay = dates.getMsInDay()
       const now = new Date()
-      const today = getToday()
+      const today = dates.getToday()
       let start = today
-      switch (interval) {
+      switch (intervalName) {
         case 'Неделя':
           start = this._getMonday(now, today, msInDay)
           break
@@ -98,19 +83,30 @@ export default {
       return start
     },
 
+    _getMonday: function (now, today, msInDay) {
+      const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay()
+      const monday = today - (dayOfWeek - 1) * msInDay
+      return monday
+    },
+
     _getWeekAgo: function (today, msInDay) {
       const weekAgo = today - 6 * msInDay
       return weekAgo
     },
 
-    input: function (interval) {
-      this.interval = interval
+    _getFirstDayOfMonth: function (now, today, msInDay) {
+      const dayOfMonth = now.getDate()
+      const firstDayOfMonth = today - (dayOfMonth - 1) * msInDay
+      return firstDayOfMonth
     },
 
-    _setInterval: function (interval) {
-      const end = getTomorrow()
-      const start = this._getStart(interval)
-      this.setPeriod({ start, end })
+    _getMonthAgo: function (today, msInDay) {
+      const monthAgo = today - 29 * msInDay
+      return monthAgo
+    },
+
+    input: function (interval) {
+      this.interval = interval
     }
   }
 }

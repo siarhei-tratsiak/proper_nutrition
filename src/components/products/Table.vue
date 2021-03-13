@@ -23,14 +23,11 @@ import { mapActions, mapState } from 'vuex'
 export default {
 
   computed: {
-    ...mapState({
-      productSearch: 'productSearch',
-      selectedProducts: 'selected'
-    }),
+    ...mapState(['productSearch', 'selectedProductIDs']),
 
     selected: {
       get: function () {
-        return this.selectedProductIDs()
+        return this.selectedProductIDs.map(id => ({ id }))
       },
 
       set: function (payload) {
@@ -45,14 +42,7 @@ export default {
   }),
 
   methods: {
-    ...mapActions(['toggleSelected']),
-
-    selectedProductIDs: function () {
-      const selectedProductIDs = this.selectedProducts
-        .filter(product => product.selected === 1)
-        .map(product => ({ id: product.id }))
-      return selectedProductIDs
-    }
+    ...mapActions(['toggleSelected'])
   }
 }
 </script>

@@ -5,37 +5,58 @@
       color="primary"
       fab
       id="run_button"
-      :loading="this.status.counting"
+      :loading="this.status.isLoading"
     >
       <v-icon :size="size">mdi-room-service</v-icon>
 
       <template v-slot:loader>
-        <v-progress-circular indeterminate :size="progressSize"></v-progress-circular>
+        <v-progress-circular indeterminate :size="progressSize" />
       </template>
     </v-btn>
   </div>
 </template>
 
 <script>
+import { debounce } from 'lodash'
 import { mapActions, mapState } from 'vuex'
 import GetNutrientsBalance from '@/mixins/GetNutrientsBalance.vue'
 
 export default {
-  data: () => ({
-    size: '12vmin'
-  }),
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.listener)
+  },
+
+  data: function () {
+    return {
+      delayMS: 300,
+      listener: debounce(this._onResize, this.delayMS),
+      progressSize: this._countProgressSize(),
+      size: '12vmin'
+    }
+  },
 
   computed: {
-    ...mapState(['status']),
-
-    progressSize: () => Math.min(window.innerHeight, window.innerWidth) * 0.12
+    ...mapState(['status'])
   },
 
   methods: {
-    ...mapActions(['getSolution'])
+    ...mapActions(['getSolution']),
+
+    _countProgressSize: () => {
+      const progressRibbonWidthMultiplier = 0.2
+      return Math.min(window.innerHeight, window.innerWidth) * progressRibbonWidthMultiplier
+    },
+
+    _onResize: function () {
+      this.progressSize = this._countProgressSize()
+    }
   },
 
-  mixins: [GetNutrientsBalance]
+  mixins: [GetNutrientsBalance],
+
+  mounted: function () {
+    window.addEventListener('resize', this.listener)
+  }
 }
 </script>
 

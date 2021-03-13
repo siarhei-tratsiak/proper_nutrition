@@ -1,8 +1,8 @@
 <template>
   <v-menu
     class="menu-class"
-    :nudge-right="40"
     min-width="290px"
+    :nudge-right="nudgeRight"
     offset-y
     transition="scale-transition"
     v-model="menu"
@@ -32,8 +32,8 @@
 </template>
 
 <script>
+import { dates } from '@/api/dates'
 import { mapActions, mapMutations, mapState } from 'vuex'
-import { formatDateForPicker, getMsInDay } from '@/api/dates'
 
 export default {
 
@@ -49,33 +49,26 @@ export default {
     }
   },
 
-  data: function () {
-    return {
-      date: formatDateForPicker(),
-      menu: false
-    }
-  },
+  data: () => ({
+    date: dates.formatDateForPicker(),
+    menu: false,
+    nudgeRight: 40
+  }),
 
   methods: {
     ...mapActions(['setRationForPeriod']),
-    ...mapMutations(['setPeriod']),
+    ...mapMutations(['setStateObject']),
 
     allowedDates: function (date) {
-      const parsedDate = this._parsedDate(date)
-      const isDateAllowed = this.isFrom ? this._isDateLess(parsedDate) : this._isDateNotLess(parsedDate)
+      const parsedDate = Date.parse(date)
+      const isDateAllowed = this._isDateAllowed(parsedDate)
       return isDateAllowed
     },
 
-    _getPeriod: function (date) {
-      const period = {}
-      const parsedDate = this._parsedDate(date)
-      if (this.isFrom) {
-        period.start = parsedDate
-      } else {
-        const msInDay = getMsInDay()
-        period.end = parsedDate + msInDay
-      }
-      return period
+    _isDateAllowed: function (parsedDate) {
+      return this.isFrom
+        ? this._isDateLess(parsedDate)
+        : this._isDateNotLess(parsedDate)
     },
 
     _isDateLess: function (parsedDate) {
@@ -92,12 +85,20 @@ export default {
 
     input: function (date) {
       const period = this._getPeriod(date)
-      this.setPeriod(period)
+      const payload = { objectName: 'period', state: period }
+      this.setStateObject(payload)
     },
 
-    _parsedDate: function (date) {
+    _getPeriod: function (date) {
+      const period = { name: 'Другое' }
       const parsedDate = Date.parse(date)
-      return parsedDate
+      if (this.isFrom) {
+        period.start = parsedDate
+      } else {
+        const msInDay = dates.getMsInDay()
+        period.end = parsedDate + msInDay
+      }
+      return period
     }
   },
 

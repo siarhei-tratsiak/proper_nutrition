@@ -1,8 +1,11 @@
 <script>
-import { conditions } from '@/data/DBSettings.js'
-import { mapGetters } from 'vuex'
-import { nutrient as nutrients } from '@/data/nutrient.js'
-import { nutrientIndices } from '@/data/nutrientIndices.js'
+import { conditions } from '@/data/DBSettings'
+import { dates } from '@/api/dates'
+import { foodNutrients } from '@/data/foodNutrients'
+import { mapGetters, mapState } from 'vuex'
+import { nutrient as nutrients } from '@/data/nutrient'
+import { nutrientIndices } from '@/data/nutrientIndices'
+import { np } from '@/api/np'
 import ProgressBarCell from '@/components/nutrientsTable/ProgressBarCell'
 
 export default {
@@ -10,6 +13,8 @@ export default {
 
   computed: {
     ...mapGetters(['getReducedConstraints']),
+
+    ...mapState(['period', 'products', 'productsList', 'rationForPeriod']),
 
     nutrients: function () {
       const usedNutrients = this._getUsedNutrients()
@@ -21,6 +26,14 @@ export default {
         nutrientValues
       )
       return nutrients
+    },
+
+    productIDs: function () {
+      return this.productsList.map(product => product.id)
+    },
+
+    rationProductIDs: function () {
+      return this.rationForPeriod.map(product => product.id)
     }
   },
 
@@ -35,6 +48,132 @@ export default {
   },
 
   methods: {
+    _getUsedNutrients () {
+      return nutrients
+        .filter(this._isFromNutrientIndices)
+        .map(this._sliceNutrient)
+    },
+
+    _isFromNutrientIndices (nutrient) {
+      return nutrientIndices.includes(nutrient[0])
+    },
+
+    _sliceNutrient (nutrient) {
+      return nutrient.slice(0, 3)
+    },
+
+    _getNutrientValues () {
+      const nutrientsCount = nutrientIndices.length
+      let nutrientValues = np.zeros(nutrientsCount)
+      const isMultipleProducts = this.products.length ||
+        this.rationForPeriod.length
+      if (isMultipleProducts) {
+        nutrientValues = this._forMultipleProducts()
+      }
+      return nutrientValues
+    },
+
+    _forMultipleProducts () {
+      const usedfoodNutrients = foodNutrients.filter(this._usedfoodNutrients)
+      const nutrientValuesTotal = usedfoodNutrients.map(
+        this._getNutrientValuesTotal
+      )
+      const summedNutrientValues = nutrientValuesTotal.length
+        ? nutrientValuesTotal.reduce(this._rowsSum)
+        : np.zeros(65)
+      return summedNutrientValues
+    },
+
+    _usedfoodNutrients (foodNutrientRecord) {
+      const isHome = this.$route.name === 'Home'
+      const productID = foodNutrientRecord[0]
+      const isUsed =
+        (isHome ? false : this.productIDs.includes(productID)) ||
+        this.rationProductIDs.includes(productID)
+      return isUsed
+    },
+
+    _getNutrientValuesTotal (foodNutrients) {
+      const productID = foodNutrients[0]
+      const productValue = this._getProductValue(productID)
+      const nutrientValues = foodNutrients[1]
+      const nutrientValuesTotal = nutrientValues.map(
+        nutrientValue => (nutrientValue * productValue) / 100
+      )
+      return nutrientValuesTotal
+    },
+
+    _getProductValue (productID) {
+      const findedProduct = this.products.find(
+        product => product.id === productID
+      )
+      const resultProductValue = findedProduct ? findedProduct.value : 0
+      const findedRation = this.rationForPeriod.find(
+        product => product.id === productID
+      )
+      const rationProductValue = findedRation ? findedRation.value : 0
+      return resultProductValue + rationProductValue
+    },
+
+    _getNutrients (usedNutrients, reducedConstraints, nutrientValues) {
+      const days = dates.getDays(this.period.start, this.period.end)
+      const nutrients = usedNutrients.map((usedNutrient, rowIndex) =>
+        this._getProgressBarData({
+          days,
+          nutrientValues,
+          reducedConstraints,
+          rowIndex,
+          usedNutrient
+        })
+      )
+      return nutrients
+    },
+
+    _getProgressBarData (payload) {
+      const nutrientID = payload.usedNutrient[0]
+      const mockNutrientConstraints = [null, 0, null]
+      const nutrientConstraints =
+        this._findConstraintWithID(payload.reducedConstraints, nutrientID) ||
+        mockNutrientConstraints
+      const nutrientValue = payload.nutrientValues[payload.rowIndex]
+      const { minAbs, maxAbs } = this._getMinimaxAbs(
+        payload.days, nutrientConstraints)
+      const comparison = [minAbs, nutrientValue, maxAbs]
+      const base = this._getBase(comparison)
+      const value = minAbs + maxAbs === 0 ? 0 : base * nutrientValue
+      return {
+        base,
+        minAbs,
+        valueAbs: nutrientValue,
+        maxAbs: maxAbs,
+        min: base * minAbs,
+        value,
+        max: base * maxAbs,
+        name: payload.usedNutrient[1],
+        units: payload.usedNutrient[2]
+      }
+    },
+
+    _getMinimaxAbs (days, nutrientConstraints) {
+      const minAbs = nutrientConstraints[1] * days
+      const maxAbs = nutrientConstraints[2]
+        ? nutrientConstraints[2] * days
+        : null
+      return { minAbs, maxAbs }
+    },
+
+    _getBase (comparison) {
+      const maxAbs = Math.max(...comparison)
+      const base = maxAbs === 0 ? 0 : 100 / maxAbs
+      return base
+    },
+
+    _findConstraintWithID (reducedConstraints, nutrientID) {
+      return reducedConstraints.find(
+        constraint => constraint[0] === nutrientID
+      )
+    },
+
     _combineConstraints (acc, constraint) {
       const constraintNutrientID = constraint[0]
       const borderValue = constraint[2]
@@ -50,77 +189,14 @@ export default {
       return acc
     },
 
-    _findConstraintWithID (reducedConstraints, nutrientID) {
-      return reducedConstraints.find(
-        constraint => constraint[0] === nutrientID
-      )
-    },
-
-    _getBase (comparison) {
-      const maxAbs = Math.max(...comparison)
-      const base = maxAbs === 0 ? 0 : 100 / maxAbs
-      return base
-    },
-
-    _getNutrient (nutrientIndex) {
-      return nutrients
-        .find(nutrient => nutrient[0] === nutrientIndex)
-        .slice(0, 3)
-    },
-
-    _getNutrients (usedNutrients, reducedConstraints, nutrientValues) {
-      const nutrients = usedNutrients.map((usedNutrient, rowIndex) => {
-        const progressBarData = this._getProgressBarData(
-          reducedConstraints,
-          nutrientValues,
-          usedNutrient,
-          rowIndex
-        )
-        return progressBarData
-      })
-      return nutrients
-    },
-
-    _getProgressBarData (
-      reducedConstraints,
-      nutrientValues,
-      usedNutrient,
-      rowIndex
-    ) {
-      const nutrientID = usedNutrient[0]
-      const mockNutrientConstraints = [null, 0, null]
-      const nutrientConstraints =
-        this._findConstraintWithID(reducedConstraints, nutrientID) ||
-        mockNutrientConstraints
-      const nutrientValue = nutrientValues[rowIndex]
-      const { minAbs, maxAbs } = this._getMinimaxAbs(nutrientConstraints)
-      const comparison = [minAbs, nutrientValue, maxAbs]
-      const base = this._getBase(comparison)
-      const value = minAbs + maxAbs === 0 ? 0 : base * nutrientValue
-      return {
-        base,
-        minAbs,
-        valueAbs: nutrientValue,
-        maxAbs: maxAbs,
-        min: base * minAbs,
-        value,
-        max: base * maxAbs,
-        name: usedNutrient[1],
-        units: usedNutrient[2]
-      }
-    },
-
     _getReducedConstraints () {
       const initialAcc = []
       return conditions.constraints.reduce(
         this._combineConstraints,
         initialAcc
       )
-    },
-
-    _getUsedNutrients () {
-      return nutrientIndices.map(this._getNutrient)
     }
+
   }
 }
 </script>

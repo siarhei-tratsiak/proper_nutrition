@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { foodNutrient } from '@/data/foodNutrient.js'
+import { foodNutrients } from '@/data/foodNutrients.js'
 import GetNutrietsTableData from '@/mixins/GetNutrientsTableData'
 
 export default {
@@ -33,7 +33,7 @@ export default {
     },
 
     _getNutrientValues () {
-      const foodNutrientWithCurrentID = foodNutrient.find(
+      const foodNutrientWithCurrentID = foodNutrients.find(
         this._foodNutrientWithCurrentID
       )
       const nutrientValues = foodNutrientWithCurrentID[1]

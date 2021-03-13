@@ -1,43 +1,96 @@
 import Dexie from 'dexie'
 import { defaultUser } from '@/data/defaultParameters'
 import { products } from '@/data/products'
+import { selected } from '@/data/selected'
 
 const IDBS = {
-  addConstraints: (db, constraints) => {
-    return db.constraints.bulkAdd(constraints)
+  addConstraints: (db, constraints) => db.constraints.bulkAdd(constraints),
+
+  addFilters: function (db, userID) {
+    const selectedRecords = products.map(
+      product => _getSelectedRecord(product, userID)
+    )
+    const getFilters = this.getFilters
+    return db.transaction('rw', db.filters, async () => {
+      db.filters.bulkAdd(selectedRecords)
+      const userFilters = getFilters(db, userID)
+      return userFilters
+    })
   },
 
-  getConstraintsWithNotRangeTarget: (db) => {
-    return db.constraints
-      .where('target')
-      .notEqual(2)
-      .toArray()
+  getConstraintsWithNotRangeTarget: (db) => db.constraints
+    .where('target')
+    .notEqual(2)
+    .toArray(),
+
+  getFilters: (db, userID) => db.filters
+    .where('user_id')
+    .equals(userID)
+    .toArray(),
+
+  getLastUser: (db) => db.users.toCollection().last(),
+
+  getNutrientConstraints: (db, userID, nutrientIDs) => db.constraints
+    .where('nutrient_id')
+    .anyOf(nutrientIDs)
+    .filter(constraint => constraint.user_id === userID)
+    .toArray(),
+
+  getRation: async (db, userID, start, end = undefined) => {
+    let rations = []
+    if (end) {
+      rations = await db.rations
+        .where(['user_id', 'date'])
+        .between([userID, start], [userID, end], true, true)
+        .toArray()
+    } else {
+      rations = await db.rations
+        .where({ user_id: userID, date: start })
+        .toArray()
+    }
+    const rationProductIDs = rations.map(ration => ration.product_id)
+    const rationProducts = products.filter(product =>
+      rationProductIDs.includes(product[0])
+    )
+    const result = rations.map(ration => {
+      const product = rationProducts.find(
+        product => product[0] === ration.product_id
+      )
+      ration.product_name = product[1]
+      return ration
+    })
+    return result
   },
 
-  getFilters: (db, userID) => {
-    return db.filters
-      .where('user_id')
-      .equals(userID)
-      .toArray()
-  },
+  getSelectedFilters: async (db) => db.filters
+    .where({ selected: 1 })
+    .toArray(),
 
-  getLastUser: function (db) {
-    return db.users.toCollection().last()
-  },
-
-  getNutrientConstraints: function (db, userID, nutrientIDs) {
-    return db.constraints
-      .where('nutrient_id')
-      .anyOf(nutrientIDs)
-      .filter(constraint => constraint.user_id === userID)
-      .toArray()
-  },
-
-  initDatabase: async function () {
+  initDatabase: async () => {
     const tables = _getTables()
     const db = _createDB(tables)
     await _fillMissingRecords(db, tables)
     return db
+  },
+
+  modifySelected: (db, userID, selectedIDs, isSelected) => {
+    db.filters
+      .where('product_id')
+      .anyOf(selectedIDs)
+      .and(filter => filter.user_id === userID)
+      .modify({ selected: isSelected })
+  },
+
+  updateConstraint: (db, constraint, nutrientMinMaxValue) => {
+    const constraintID = constraint.id
+    const newConstraint = Object.assign({}, nutrientMinMaxValue)
+    if (constraint.min_mutable) {
+      delete newConstraint.min
+    }
+    if (constraint.max_mutable) {
+      delete newConstraint.max
+    }
+    return db.constraints.update(constraintID, newConstraint)
   },
 
   updateTarget: (db, payload) => {
@@ -103,6 +156,16 @@ function _getSchemaDefinition (tables) {
   return schemaDefinition
 }
 
+function _getSelectedRecord (product, userID) {
+  const productID = product[0]
+  const isSelected = +selected.includes(productID)
+  return {
+    product_id: productID,
+    user_id: userID,
+    selected: isSelected
+  }
+}
+
 function _columnNamesString (columnsList) {
   return columnsList.join(', ')
 }
@@ -163,30 +226,6 @@ function getConstraints (db, userID) {
     .toArray()
 }
 
-async function getRation (db, userID, start, end = undefined) {
-  let rations = []
-  if (end) {
-    rations = await db.rations
-      .where(['user_id', 'date'])
-      .between([userID, start], [userID, end], true, true)
-      .toArray()
-  } else {
-    rations = await db.rations.where({ user_id: userID, date: start }).toArray()
-  }
-  const rationProductIDs = rations.map(ration => ration.product_id)
-  const filteredProducts = products.filter(product =>
-    rationProductIDs.includes(product[0])
-  )
-  const result = rations.map(ration => {
-    const product = filteredProducts.find(
-      product => product[0] === ration.product_id
-    )
-    ration.product_name = product[1]
-    return ration
-  })
-  return result
-}
-
 function searchProduct (db, productName) {
   const re = new RegExp(productName.toLowerCase(), 'g')
   return db.products
@@ -194,25 +233,11 @@ function searchProduct (db, productName) {
     .toArray()
 }
 
-function updateConstraint (db, constraint, nutrientMinMaxValue) {
-  const constraintID = constraint.id
-  const newConstraint = Object.assign({}, nutrientMinMaxValue)
-  if (constraint.min_mutable) {
-    delete newConstraint.min
-  }
-  if (constraint.max_mutable) {
-    delete newConstraint.max
-  }
-  return db.constraints.update(constraintID, newConstraint)
-}
-
 export {
   deleteRation,
   editRations,
   getConstraint,
   getConstraints,
-  getRation,
   IDBS,
-  searchProduct,
-  updateConstraint
+  searchProduct
 }
