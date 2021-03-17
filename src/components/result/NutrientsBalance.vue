@@ -10,9 +10,9 @@
       hide-default-footer
       item-key="name"
       :items="nutrients"
-      mobile-breakpoint="600"
+      :mobile-breakpoint="mobileBreakpoint"
     >
-      <template v-slot:item.value="{ item }">
+      <template v-slot:[`item.value`]="{ item }">
         <ProgressBarCell :nutrient="item"></ProgressBarCell>
       </template>
     </v-data-table>
@@ -27,6 +27,10 @@ export default {
   components: {
     ProgressBarCell
   },
+
+  data: () => ({
+    mobileBreakpoint: '600'
+  }),
 
   mixins: [GetNutrientsBalance]
 }

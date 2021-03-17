@@ -21,16 +21,16 @@ function simplex ({
   let A = cloneDeep(restrictionMatrix)
   const b = cloneDeep(constraintsVector)
   let c = cloneDeep(objectiveCoefficients)
+  // All constraints must have b >= 0.
+  _revertNegativeConstraints(A, b)
   const heightA = np.shape(A)[0]
+  const widthA = np.shape(A)[1]
   const diagonalMatrix = np.identityMatrix(heightA)
   const addSlackVariableToRow = (row, index) =>
     [...row, ...diagonalMatrix[index]]
   A = A.map(addSlackVariableToRow)
   const zerosOfHeightA = np.zeros(heightA)
   c = [...c, ...zerosOfHeightA]
-  const widthA = np.shape(A)[1]
-  // All constraints must have b >= 0.
-  _revertNegativeConstraints(A, b)
   // As all constraints are equality constraints
   // the artificial variables will also be basic variables.
   const pseudoVariablesIndexes = np.arange(heightA, widthA)
@@ -43,8 +43,7 @@ function simplex ({
     c,
     c0,
     diagonalMatrix,
-    pseudoVariablesIndexes,
-    zerosOfHeightA
+    pseudoVariablesIndexes
   })
   let solveSimplexResult = _solveSimplex({
     basis,
@@ -77,7 +76,6 @@ function simplex ({
   }
 
   const solution = _findSolution({ basis, heightA, tableau, widthA })
-  status = solveSimplexResult.status
 
   return {
     iterationNumber,
@@ -104,21 +102,19 @@ function _createTableau ({
   b,
   c,
   c0,
-  diagonalMatrix,
-  pseudoVariablesIndexes,
-  zerosOfHeightA
+  pseudoVariablesIndexes
 }) {
-  const rowConstraints = _getRowConstraints({ A, b, diagonalMatrix })
-  const rowObjective = [...c, ...zerosOfHeightA, c0]
+  const rowConstraints = _getRowConstraints(A, b)
+  const rowObjective = [...c, c0]
   const rowPseudoObjective =
     _getRowPseudoObjective(pseudoVariablesIndexes, rowConstraints)
   const tableau = [...rowConstraints, rowObjective, rowPseudoObjective]
   return tableau
 }
 
-function _getRowConstraints ({ A, b, diagonalMatrix }) {
+function _getRowConstraints (A, b) {
   const rowConstraint = (row, index) =>
-    [...row, ...diagonalMatrix[index], b[index]]
+    [...row, b[index]]
   const rowConstraints = A.map(rowConstraint)
   return rowConstraints
 }

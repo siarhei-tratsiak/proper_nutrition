@@ -9,8 +9,9 @@ import {
   IDBS,
   searchProduct
 } from '@/api/indexedDBService'
+import { dates } from '@/api/dates'
 import { simplex } from '@/api/simplex'
-import { nutrient as nutrients } from '@/data/nutrient_ru'
+import { nutrients } from '@/data/nutrients_ru'
 import router from '@/router'
 
 const actions = {
@@ -40,7 +41,7 @@ const actions = {
       constraintsVector,
       objectiveCoefficients,
       selectedProductIDs
-    } = await getters.getConditions(nutrients)
+    } = getters.getConditions(nutrients)
     /* restrictionMatrix = [[1, -2], [-1, -1], [1, -1], [0, 1]]
     constraintsVector = [-2, -4, 2, 6]
     objectiveCoefficients = [-1, -2] */
@@ -53,7 +54,7 @@ const actions = {
     result = result.solution
       .map((productValue, index) => service
         .getProductsData(index, productValue, selectedProductIDs))
-      .filter(product => product.value !== 0)
+      .filter(product => product.mass !== 0)
     commit('setProducts', result)
     commit('setStateObject', {
       objectName: 'status',
@@ -175,7 +176,8 @@ const actions = {
     commit('setState', { name: 'ration', value: ration })
   },
 
-  async setRationForPeriod ({ state, commit }) {
+  async setRationForPeriod ({ state, commit, dispatch }) {
+    dispatch('_checkPeriod')
     let ration = await IDBS.getRation(
       state.db,
       state.settings.userID,
@@ -187,6 +189,16 @@ const actions = {
       value: product.mass
     }))
     commit('setState', { name: 'rationForPeriod', value: ration })
+  },
+
+  _checkPeriod ({ state, commit }) {
+    const start = state.period.start
+    if (!start) {
+      const start = dates.getToday()
+      const end = dates.getTomorrow()
+      const payload = { objectName: 'period', state: { start, end } }
+      commit('setStateObject', payload)
+    }
   },
 
   setSettings ({ state, commit }, payload) {

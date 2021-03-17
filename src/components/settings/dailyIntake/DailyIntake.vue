@@ -52,7 +52,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { nutrient as nutrients } from '@/data/nutrient_ru.js'
+import { nutrients } from '@/data/nutrients_ru.js'
 import DefaultButton from '@/components/settings/dailyIntake/DefaultButton'
 import FieldCheckbox from '@/components/settings/dailyIntake/FieldCheckbox'
 import SwitchLock from '@/components/settings/dailyIntake/SwitchLock'

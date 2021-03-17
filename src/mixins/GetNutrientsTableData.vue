@@ -1,11 +1,9 @@
 <script>
 import { conditions } from '@/data/DBSettings'
 import { dates } from '@/api/dates'
-import { foodNutrients } from '@/data/foodNutrients'
 import { mapGetters, mapState } from 'vuex'
-import { nutrient as nutrients } from '@/data/nutrient'
+import { nutrients } from '@/data/nutrients_ru'
 import { nutrientIndices } from '@/data/nutrientIndices'
-import { np } from '@/api/np'
 import ProgressBarCell from '@/components/nutrientsTable/ProgressBarCell'
 
 export default {
@@ -26,10 +24,6 @@ export default {
         nutrientValues
       )
       return nutrients
-    },
-
-    productIDs: function () {
-      return this.productsList.map(product => product.id)
     },
 
     rationProductIDs: function () {
@@ -60,59 +54,6 @@ export default {
 
     _sliceNutrient (nutrient) {
       return nutrient.slice(0, 3)
-    },
-
-    _getNutrientValues () {
-      const nutrientsCount = nutrientIndices.length
-      let nutrientValues = np.zeros(nutrientsCount)
-      const isMultipleProducts = this.products.length ||
-        this.rationForPeriod.length
-      if (isMultipleProducts) {
-        nutrientValues = this._forMultipleProducts()
-      }
-      return nutrientValues
-    },
-
-    _forMultipleProducts () {
-      const usedfoodNutrients = foodNutrients.filter(this._usedfoodNutrients)
-      const nutrientValuesTotal = usedfoodNutrients.map(
-        this._getNutrientValuesTotal
-      )
-      const summedNutrientValues = nutrientValuesTotal.length
-        ? nutrientValuesTotal.reduce(this._rowsSum)
-        : np.zeros(65)
-      return summedNutrientValues
-    },
-
-    _usedfoodNutrients (foodNutrientRecord) {
-      const isHome = this.$route.name === 'Home'
-      const productID = foodNutrientRecord[0]
-      const isUsed =
-        (isHome ? false : this.productIDs.includes(productID)) ||
-        this.rationProductIDs.includes(productID)
-      return isUsed
-    },
-
-    _getNutrientValuesTotal (foodNutrients) {
-      const productID = foodNutrients[0]
-      const productValue = this._getProductValue(productID)
-      const nutrientValues = foodNutrients[1]
-      const nutrientValuesTotal = nutrientValues.map(
-        nutrientValue => (nutrientValue * productValue) / 100
-      )
-      return nutrientValuesTotal
-    },
-
-    _getProductValue (productID) {
-      const findedProduct = this.products.find(
-        product => product.id === productID
-      )
-      const resultProductValue = findedProduct ? findedProduct.value : 0
-      const findedRation = this.rationForPeriod.find(
-        product => product.id === productID
-      )
-      const rationProductValue = findedRation ? findedRation.value : 0
-      return resultProductValue + rationProductValue
     },
 
     _getNutrients (usedNutrients, reducedConstraints, nutrientValues) {
@@ -152,14 +93,6 @@ export default {
         name: payload.usedNutrient[1],
         units: payload.usedNutrient[2]
       }
-    },
-
-    _getMinimaxAbs (days, nutrientConstraints) {
-      const minAbs = nutrientConstraints[1] * days
-      const maxAbs = nutrientConstraints[2]
-        ? nutrientConstraints[2] * days
-        : null
-      return { minAbs, maxAbs }
     },
 
     _getBase (comparison) {

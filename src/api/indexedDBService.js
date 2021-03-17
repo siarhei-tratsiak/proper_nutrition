@@ -37,17 +37,18 @@ const IDBS = {
     .toArray(),
 
   getRation: async (db, userID, start, end = undefined) => {
-    let rations = []
+    let rations = db.rations
     if (end) {
-      rations = await db.rations
+      const includeLower = true
+      const includeUpper = true
+      rations = rations
         .where(['user_id', 'date'])
-        .between([userID, start], [userID, end], true, true)
-        .toArray()
+        .between([userID, start], [userID, end], includeLower, includeUpper)
     } else {
-      rations = await db.rations
+      rations = rations
         .where({ user_id: userID, date: start })
-        .toArray()
     }
+    rations = await rations.toArray()
     const rationProductIDs = rations.map(ration => ration.product_id)
     const rationProducts = products.filter(product =>
       rationProductIDs.includes(product[0])

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { products } from '@/data/products.js'
+import { products } from '@/data/products'
 import NutrientsTable from '@/components/nutrientsTable/NutrientsTable'
 
 export default {
@@ -14,7 +14,9 @@ export default {
 
   computed: {
     productName: function () {
-      return products.find(product => product[0] === this.productID)[1]
+      const product = products.find(product => product[0] === this.productID)
+      const productName = product[1]
+      return productName
     }
   },
 

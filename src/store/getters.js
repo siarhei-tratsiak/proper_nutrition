@@ -14,7 +14,7 @@ import {
 
 const getters = {
 
-  getConditions: (state, getters) => async (nutrients) => {
+  getConditions: (state, getters) => (nutrients) => {
     let selectedProductIDs = state.selectedProductIDs
     const selectedProductNutrients = service
       .getFilteredNutrients(selectedProductIDs)
@@ -129,8 +129,8 @@ const getters = {
     const count = nutrient.dailyIntake[sex][goal][goalValue]
     const PCF = {
       nutrient_id: nutrient.id,
-      min: count * 0.9,
-      max: count * 1.1
+      min: Math.round(count * 0.9),
+      max: Math.round(count * 1.1)
     }
     return PCF
   },
@@ -192,7 +192,14 @@ const getters = {
       constraint.min,
       constraint.max
     ])
-  }
+  },
+
+  getResultProducts: state => () =>
+    state.products.map(product => ({
+      id: product.id,
+      name: product.name,
+      mass: service.roundToTenth(product.mass)
+    }))
 }
 
 export { getters }

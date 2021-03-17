@@ -61,8 +61,8 @@ const service = {
     const id = selectedProductIDs[index]
     const product = products.find(product => product[0] === +id)
     const name = product[1]
-    const weight = productValue * 100
-    return { id, name, weight }
+    const mass = productValue * 100
+    return { id, name, mass }
   },
 
   getRestrictionMatrix: (productNutrients, constraints) => {
@@ -113,6 +113,8 @@ const service = {
     return !idList.includes(id)
   },
 
+  roundToTenth: (value) => Math.round(value * 10) / 10,
+
   toNotMinMax: (minMaxValue) => {
     const source = {
       target: 2,
@@ -141,15 +143,15 @@ function _constraintForRation (constraint, days, nutrientValue) {
 }
 
 function _getConstraintsVectorMin (constraints, objective) {
-  const nutrientID = objective.nutrient_id
-  const target = objective.target
   const filteredConstraints = constraints
     .filter(constraint => constraint.min !== 0) // удалить, если масса продуктов будет отрицательной
+  /* const nutrientID = objective.nutrient_id
+  const target = objective.target
   if (target === 0) {
     return filteredConstraints.map(constraint =>
       nutrientID === constraint.nutrient_id ? 0 : -constraint.min
     )
-  }
+  } */
   return filteredConstraints.map(constraint => -constraint.min)
 }
 
@@ -157,13 +159,13 @@ function _getConstraintsVectorMax (constraints, objective) {
   const filteredConstraints = constraints.filter(
     constraint => constraint.max !== null
   )
-  const nutrientID = objective.nutrient_id
+  /* const nutrientID = objective.nutrient_id
   const target = objective.target
   if (target === 0) {
     return filteredConstraints.map(constraint =>
       nutrientID === constraint.nutrient_id ? constraint.min : constraint.max
     )
-  }
+  } */
   return filteredConstraints.map(constraint => constraint.max)
 }
 

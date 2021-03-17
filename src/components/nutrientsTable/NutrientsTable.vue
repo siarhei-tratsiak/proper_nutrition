@@ -6,7 +6,7 @@
       hide-default-footer
       item-key="name"
       :items="nutrients"
-      mobile-breakpoint="600"
+      :mobile-breakpoint="mobileBreakpoint"
     >
       <template v-slot:[`item.value`]="{ item }">
         <ProgressBarCell :nutrient="item"></ProgressBarCell>
@@ -20,13 +20,12 @@ import { foodNutrients } from '@/data/foodNutrients.js'
 import GetNutrietsTableData from '@/mixins/GetNutrientsTableData'
 
 export default {
-  methods: {
-    _foodNutrientWithCurrentID (foodNutrientRecord) {
-      const foodNutrientProductID = foodNutrientRecord[0]
-      return this.productID === foodNutrientProductID
-    },
+  data: () => ({
+    mobileBreakpoint: '600'
+  }),
 
-    _getMinimaxAbs (nutrientConstraints) {
+  methods: {
+    _getMinimaxAbs (_, nutrientConstraints) {
       const minAbs = nutrientConstraints[1]
       const maxAbs = nutrientConstraints[2]
       return { minAbs, maxAbs }
@@ -38,6 +37,11 @@ export default {
       )
       const nutrientValues = foodNutrientWithCurrentID[1]
       return nutrientValues
+    },
+
+    _foodNutrientWithCurrentID (foodNutrientRecord) {
+      const foodNutrientProductID = foodNutrientRecord[0]
+      return this.productID === foodNutrientProductID
     }
   },
 
