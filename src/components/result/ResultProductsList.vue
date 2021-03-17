@@ -8,6 +8,7 @@
       id="result-products-list"
       :items="items"
       :itemsPerPage="itemsPerPage"
+      :no-data-text="noDataText"
     >
       <template v-slot:item.name="{ item }">
         <router-link :to="{ name: 'Product', params: { id: item.id } }">
@@ -35,7 +36,8 @@ export default {
       { text: 'Название', value: 'name' },
       { text: 'Масса, г', value: 'mass' }
     ],
-    itemsPerPage: -1
+    itemsPerPage: -1,
+    noDataText: 'Нет данных'
   })
 }
 </script>
