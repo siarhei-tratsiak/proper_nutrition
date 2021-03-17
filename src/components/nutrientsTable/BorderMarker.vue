@@ -3,7 +3,7 @@
     class="align-end border-marker d-flex flex-column"
     :style="{ width: width + '%' }"
   >
-    <span class="border-marker-item">{{ isMin ? "min" : "max" }}</span>
+    <span class="border-marker-item">{{ isMin ? "мин" : "макс" }}</span>
     <span class="border-marker-item marker"></span>
     <span class="border-marker-item">{{ abs }}</span>
   </div>
