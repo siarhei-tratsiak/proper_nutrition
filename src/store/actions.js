@@ -50,7 +50,11 @@ const actions = {
       constraintsVector,
       objectiveCoefficients
     })
-    console.log(result)
+    const isResult = !result.status
+    commit('setStateObject', {
+      objectName: 'status',
+      state: { isResult }
+    })
     result = result.solution
       .map((productValue, index) => service
         .getProductsData(index, productValue, selectedProductIDs))

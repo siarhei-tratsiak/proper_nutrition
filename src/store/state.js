@@ -36,6 +36,7 @@ const state = {
   },
   status: {
     isLoading: false,
+    isResult: false,
     productDialogIsOpened: false,
     selected: false
   }
