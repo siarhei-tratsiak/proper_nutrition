@@ -1,52 +1,63 @@
 <template>
-  <v-card>
-    <v-data-table
+  <v-data-table
       disable-pagination
+      group-by="isMain"
+      group-desc
       :headers="headers"
       hide-default-footer
       item-key="name"
       :items="nutrients"
       :mobile-breakpoint="mobileBreakpoint"
     >
+      <template v-slot:[`group.header`]="{ group, headers, isOpen, toggle }">
+        <td :colspan="headers.length">
+          <v-btn
+            @click="toggle"
+            icon
+            :ref="group ? 'main' : 'additional'"
+            small
+          >
+            <v-icon v-if="isOpen">mdi-minus</v-icon>
+            <v-icon v-else>mdi-plus</v-icon>
+          </v-btn>
+
+          {{ group ? 'основные' : 'дополнительные' }}
+        </td>
+      </template>
+
       <template v-slot:[`item.value`]="{ item }">
         <ProgressBarCell :nutrient="item"></ProgressBarCell>
       </template>
     </v-data-table>
-  </v-card>
 </template>
 
 <script>
-import { foodNutrients } from '@/data/foodNutrients.js'
-import GetNutrietsTableData from '@/mixins/GetNutrientsTableData'
+import ProgressBarCell from '@/components/nutrientsTable/ProgressBarCell.vue'
 
 export default {
+  components: {
+    ProgressBarCell
+  },
+
   data: () => ({
+    headers: [
+      { text: 'нутриент', value: 'name' },
+      { text: 'в 100 г продукта', value: 'value' },
+      { text: 'ед. изм.', value: 'units' }
+    ],
     mobileBreakpoint: '600'
   }),
 
   methods: {
-    _getMinimaxAbs (_, nutrientConstraints) {
-      const minAbs = nutrientConstraints[1]
-      const maxAbs = nutrientConstraints[2]
-      return { minAbs, maxAbs }
-    },
-
-    _getNutrientValues () {
-      const foodNutrientWithCurrentID = foodNutrients.find(
-        this._foodNutrientWithCurrentID
-      )
-      const nutrientValues = foodNutrientWithCurrentID[1]
-      return nutrientValues
-    },
-
-    _foodNutrientWithCurrentID (foodNutrientRecord) {
-      const foodNutrientProductID = foodNutrientRecord[0]
-      return this.productID === foodNutrientProductID
+    clickAdditional () {
+      this.$refs.additional.$el.click()
     }
   },
 
-  mixins: [GetNutrietsTableData],
+  mounted () {
+    this.clickAdditional()
+  },
 
-  props: ['productID']
+  props: ['nutrients']
 }
 </script>

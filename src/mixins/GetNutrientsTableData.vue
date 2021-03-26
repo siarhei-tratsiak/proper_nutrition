@@ -27,17 +27,7 @@ export default {
     },
 
     rationProductIDs: function () {
-      return this.rationForPeriod.map(product => product.id)
-    }
-  },
-
-  data: function () {
-    return {
-      headers: [
-        { text: 'нутриент', value: 'name' },
-        { text: 'в 100 г продукта', value: 'value' },
-        { text: 'ед. изм.', value: 'units' }
-      ]
+      return this.rationForPeriod.map((product) => product.id)
     }
   },
 
@@ -78,20 +68,23 @@ export default {
         mockNutrientConstraints
       const nutrientValue = payload.nutrientValues[payload.rowIndex]
       const { minAbs, maxAbs } = this._getMinimaxAbs(
-        payload.days, nutrientConstraints)
+        payload.days,
+        nutrientConstraints
+      )
       const comparison = [minAbs, nutrientValue, maxAbs]
       const base = this._getBase(comparison)
       const value = minAbs + maxAbs === 0 ? 0 : base * nutrientValue
       return {
         base,
-        minAbs,
-        valueAbs: nutrientValue,
-        maxAbs: maxAbs,
-        min: base * minAbs,
-        value,
+        isMain: !!(minAbs || maxAbs),
         max: base * maxAbs,
+        maxAbs,
+        min: base * minAbs,
+        minAbs,
         name: payload.usedNutrient[1],
-        units: payload.usedNutrient[2]
+        units: payload.usedNutrient[2],
+        value,
+        valueAbs: nutrientValue
       }
     },
 
@@ -103,7 +96,7 @@ export default {
 
     _findConstraintWithID (reducedConstraints, nutrientID) {
       return reducedConstraints.find(
-        constraint => constraint[0] === nutrientID
+        (constraint) => constraint[0] === nutrientID
       )
     },
 
@@ -129,7 +122,6 @@ export default {
         initialAcc
       )
     }
-
   }
 }
 </script>
