@@ -21,7 +21,6 @@ import { products } from '@/data/products.js'
 import { mapActions, mapState } from 'vuex'
 
 export default {
-
   computed: {
     ...mapState(['productSearch', 'selectedProductIDs']),
 
@@ -36,13 +35,19 @@ export default {
     }
   },
 
-  data: () => ({
-    headers: [{ text: 'НАЗВАНИЕ', value: 'name' }],
-    products: products.map(product => ({ id: product[0], name: product[1] }))
-  }),
+  data: function () {
+    return {
+      headers: [{ text: 'НАЗВАНИЕ', value: 'name' }],
+      products: this.productsArrayToObject()
+    }
+  },
 
   methods: {
-    ...mapActions(['toggleSelected'])
+    ...mapActions(['toggleSelected']),
+
+    productsArrayToObject () {
+      return products.map(product => ({ id: product[0], name: product[1] }))
+    }
   }
 }
 </script>

@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import ProgressBarCell from '@/components/nutrientsTable/ProgressBarCell.vue'
+import ProgressBarCell from '@/components/nutrientsTable/ProgressBarCell'
 
 export default {
   components: {

@@ -1,18 +1,17 @@
-import {
-  arraysDifference,
-  isOldTarget,
-  service
-} from '@/store/service'
+import { dates } from '@/api/dates'
 import {
   deleteRation,
   editRations,
   IDBS,
   searchProduct
 } from '@/api/indexedDBService'
-import { dates } from '@/api/dates'
 import { simplex } from '@/api/simplex'
 import { nutrients } from '@/data/nutrients_ru'
 import router from '@/router'
+import {
+  isOldTarget,
+  service
+} from '@/store/service'
 
 const actions = {
   deleteRation ({ state }, id) {
@@ -162,15 +161,6 @@ const actions = {
     commit('setStateObject', { objectName: 'status', state: { selected: true } })
   },
 
-  async initFavored ({ state, commit }) {
-    const userID = state.settings.userID
-    const rawFavored = await state.db.filters
-      .where({ user_id: userID, favored: 1 })
-      .toArray()
-    const favored = rawFavored.map(filter => filter.product_id)
-    commit('setFavored', favored)
-  },
-
   searchProduct ({ state }, productName) {
     return searchProduct(state.db, productName)
   },
@@ -229,26 +219,20 @@ const actions = {
     commit('updateConstraints', mutationPayload)
   },
 
-  toggleFavored ({ state }, payload) {
-    state.db.filters
-      .where({ user_id: state.settings.userID, product_id: payload.id })
-      .modify({ favored: payload.favored })
-  },
-
-  toggleFilter ({ commit }) {
-    commit('setFilter')
-  },
-
   async toggleSelected ({ state, commit }, payload) {
     const db = state.db
     const userID = state.settings.userID
     const oldSelectedIndices = state.selectedProductIDs
     const newSelectedIndices = payload.map(payloadItem => payloadItem.id)
-    const unselected = arraysDifference(oldSelectedIndices, newSelectedIndices)
-    IDBS.modifySelected(db, userID, unselected, 0)
-    const selected = arraysDifference(newSelectedIndices, oldSelectedIndices)
-    IDBS.modifySelected(db, userID, selected, 1)
-    commit('setSelectedProducts', payload)
+    const unselected = service
+      .arraysDifference(oldSelectedIndices, newSelectedIndices)
+    let isSelected = +false
+    IDBS.modifySelected(db, userID, unselected, isSelected)
+    const selected = service
+      .arraysDifference(newSelectedIndices, oldSelectedIndices)
+    isSelected = +true
+    IDBS.modifySelected(db, userID, selected, isSelected)
+    commit('setSelectedProductIDs', payload)
   },
 
   async updateTarget ({ state, dispatch }, payload) {

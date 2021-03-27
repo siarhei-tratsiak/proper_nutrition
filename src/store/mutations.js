@@ -28,24 +28,12 @@ const mutations = {
     }
   },
 
-  setFavored (state, favored) {
-    state.favored = favored
-  },
-
-  setFilter (state) {
-    state.isFilterOn = !state.isFilterOn
-  },
-
   setHorizontal (state, isHorizontal) {
     state.isHorizontal = isHorizontal
   },
 
   setProducts (state, products) {
     state.products = products
-  },
-
-  setProductSearch (state, productName) {
-    state.productSearch = productName
   },
 
   setProductsList (state) {
@@ -89,9 +77,8 @@ const mutations = {
       payload.selected
   },
 
-  setSelectedProducts (state, payload) {
-    const selectedProductIDs = payload.map(product => product.id)
-    state.selectedProductIDs = selectedProductIDs
+  setSelectedProductIDs (state, payload) {
+    state.selectedProductIDs = payload.map(product => product.id)
   },
 
   setSettings (state, status) {

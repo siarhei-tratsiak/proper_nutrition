@@ -8,8 +8,6 @@ const state = {
     product_id: undefined,
     user_id: undefined
   },
-  favored: [],
-  isFilterOn: false,
   isHorizontal: false,
   nutrients: [],
   period: {

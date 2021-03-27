@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import GetNutrientsBalance from '@/mixins/GetNutrientsBalance.vue'
+import GetNutrientsBalance from '@/mixins/GetNutrientsBalance'
 import NutrientsTable from '@/components/nutrientsTable/NutrientsTable'
 
 export default {

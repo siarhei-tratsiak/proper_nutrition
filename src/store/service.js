@@ -1,9 +1,12 @@
-import { foodNutrients } from '@/data/foodNutrients'
 import { IDBS } from '@/api/indexedDBService'
-import { products } from '@/data/products'
+import { foodNutrients } from '@/data/foodNutrients'
 import { nutrientIndices } from '@/data/nutrientIndices'
+import { products } from '@/data/products'
 
 const service = {
+  arraysDifference: (array1, array2) =>
+    array1.filter(item => !array2.includes(item)),
+
   countGoalvalue: (weight) => {
     let goalValue = 0
     if (weight >= 60 && weight < 70) {
@@ -125,10 +128,6 @@ const service = {
   }
 }
 
-function arraysDifference (array1, array2) {
-  return array1.filter(item => !array2.includes(item))
-}
-
 function clauseForSelectedAll (filters, userId) {
   return filters.where('user_id').equals(userId)
 }
@@ -145,13 +144,6 @@ function _constraintForRation (constraint, days, nutrientValue) {
 function _getConstraintsVectorMin (constraints, objective) {
   const filteredConstraints = constraints
     .filter(constraint => constraint.min !== 0) // удалить, если масса продуктов будет отрицательной
-  /* const nutrientID = objective.nutrient_id
-  const target = objective.target
-  if (target === 0) {
-    return filteredConstraints.map(constraint =>
-      nutrientID === constraint.nutrient_id ? 0 : -constraint.min
-    )
-  } */
   return filteredConstraints.map(constraint => -constraint.min)
 }
 
@@ -159,13 +151,6 @@ function _getConstraintsVectorMax (constraints, objective) {
   const filteredConstraints = constraints.filter(
     constraint => constraint.max !== null
   )
-  /* const nutrientID = objective.nutrient_id
-  const target = objective.target
-  if (target === 0) {
-    return filteredConstraints.map(constraint =>
-      nutrientID === constraint.nutrient_id ? constraint.min : constraint.max
-    )
-  } */
   return filteredConstraints.map(constraint => constraint.max)
 }
 
@@ -214,7 +199,6 @@ function isOldTarget (oldTarget, newTargetID) {
 }
 
 export {
-  arraysDifference,
   clauseForSelectedAll,
   isNoExtremum,
   isOldTarget,

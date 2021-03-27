@@ -27,14 +27,15 @@ export default {
         return this.productSearch
       },
 
-      set: function (payload) {
-        return this.setProductSearch(payload)
+      set: function (value) {
+        const searchPayload = { name: 'productSearch', value }
+        return this.setState(searchPayload)
       }
     }
   },
 
   methods: {
-    ...mapMutations(['setProductSearch'])
+    ...mapMutations(['setState'])
   }
 }
 </script>
