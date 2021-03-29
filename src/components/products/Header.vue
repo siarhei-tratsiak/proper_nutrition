@@ -27,15 +27,36 @@ export default {
         return this.productSearch
       },
 
-      set: function (value) {
-        const searchPayload = { name: 'productSearch', value }
-        return this.setState(searchPayload)
+      set: function (searchText) {
+        this._debounceSearch(searchText)
       }
     }
   },
 
+  data: () => ({
+    delayMS: 500,
+    inputTime: 0
+  }),
+
   methods: {
-    ...mapMutations(['setState'])
+    ...mapMutations(['setState']),
+
+    _debounceSearch (searchText) {
+      this.inputTime = Date.now()
+      setTimeout(this._checkDelay, this.delayMS, searchText)
+    },
+
+    _checkDelay (searchText) {
+      const isDelayEnough = Date.now() - this.inputTime >= this.delayMS
+      if (isDelayEnough) {
+        this._setSearch(searchText)
+      }
+    },
+
+    _setSearch (searchText) {
+      const searchPayload = { name: 'productSearch', value: searchText }
+      this.setState(searchPayload)
+    }
   }
 }
 </script>
