@@ -148,7 +148,7 @@ const actions = {
 
   async _initSelected ({ state, commit }) {
     const userID = state.settings.userID
-    let filters = await IDBS.getFilters(state.db, userID)
+    let filters = await IDBS.getUserFilters(state.db, userID)
     const isNoFilters = !filters.length
     if (isNoFilters) {
       filters = await IDBS.addFilters(state.db, userID)

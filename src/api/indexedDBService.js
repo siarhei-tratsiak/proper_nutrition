@@ -1,7 +1,7 @@
-import Dexie from 'dexie'
 import { defaultUser } from '@/data/defaultParameters'
 import { products } from '@/data/products'
 import { selected } from '@/data/selected'
+import Dexie from 'dexie'
 
 const IDBS = {
   addConstraints: (db, constraints) => db.constraints.bulkAdd(constraints),
@@ -10,10 +10,10 @@ const IDBS = {
     const selectedRecords = products.map(
       product => _getSelectedRecord(product, userID)
     )
-    const getFilters = this.getFilters
+    const getUserFilters = this.getUserFilters
     return db.transaction('rw', db.filters, async () => {
       db.filters.bulkAdd(selectedRecords)
-      const userFilters = getFilters(db, userID)
+      const userFilters = getUserFilters(db, userID)
       return userFilters
     })
   },
@@ -21,11 +21,6 @@ const IDBS = {
   getConstraintsWithNotRangeTarget: (db) => db.constraints
     .where('target')
     .notEqual(2)
-    .toArray(),
-
-  getFilters: (db, userID) => db.filters
-    .where('user_id')
-    .equals(userID)
     .toArray(),
 
   getLastUser: (db) => db.users.toCollection().last(),
@@ -65,6 +60,11 @@ const IDBS = {
 
   getSelectedFilters: async (db) => db.filters
     .where({ selected: 1 })
+    .toArray(),
+
+  getUserFilters: (db, userID) => db.filters
+    .where('user_id')
+    .equals(userID)
     .toArray(),
 
   initDatabase: async () => {

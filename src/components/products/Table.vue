@@ -4,6 +4,8 @@
       item-key="id"
       :items="products"
       mobile-breakpoint="0"
+      :no-data-text="noDataText"
+      :no-results-text="noResultsText"
       :search="productSearch"
       show-select
       v-model="selected"
@@ -38,6 +40,8 @@ export default {
   data: function () {
     return {
       headers: [{ text: 'НАЗВАНИЕ', value: 'name' }],
+      noDataText: 'Нет данных',
+      noResultsText: 'Ничего не найдено',
       products: this.productsArrayToObject()
     }
   },
