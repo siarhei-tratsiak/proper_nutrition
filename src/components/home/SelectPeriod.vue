@@ -60,6 +60,7 @@ export default {
 
   methods: {
     ...mapActions(['setRationForPeriod']),
+
     ...mapMutations(['setStateObject']),
 
     _getStart: function (intervalName) {

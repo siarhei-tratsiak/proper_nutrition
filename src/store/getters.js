@@ -1,4 +1,3 @@
-import { service } from '@/store/service'
 import {
   getMsInDay,
   getMsInYear,
@@ -11,6 +10,8 @@ import {
   nutrientConstraintsBySex,
   proteinDailyIntake
 } from '@/data/defaultParameters'
+import { service } from '@/store/service'
+import { cloneDeep } from 'lodash'
 
 const getters = {
 
@@ -39,7 +40,8 @@ const getters = {
 
   _getSimplexConstraints: (state) => (nutrients) => {
     const days = state.days
-    return state.constraints.map(constraint => {
+    const constraints = cloneDeep(state.constraints)
+    return constraints.map(constraint => {
       [constraint.min, constraint.max] = service.getConstraintsWithRation(
         nutrients,
         constraint,

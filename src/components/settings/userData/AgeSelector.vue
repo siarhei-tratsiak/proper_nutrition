@@ -64,14 +64,14 @@ export default {
   methods: {
     ...mapActions(['setConstraints', 'setSettings']),
 
-    maxDate () {
+    maxDate: function () {
       const today = getToday()
       const year = getMsInYear()
       const maxDate = today - 17 * year
       return formatDateForPicker(maxDate)
     },
 
-    save (date) {
+    save: function (date) {
       this.$refs.menu.save(date)
     }
   }

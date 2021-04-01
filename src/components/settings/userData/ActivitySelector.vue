@@ -46,7 +46,7 @@ export default {
   methods: {
     ...mapActions(['setConstraints', 'setSettings']),
 
-    update (activity) {
+    update: function (activity) {
       this.setSettings({ activity })
       const payload = { nutrientIDs: [1008] }
       this.setConstraints(payload)

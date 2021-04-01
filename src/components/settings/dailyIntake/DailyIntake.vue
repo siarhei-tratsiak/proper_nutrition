@@ -110,7 +110,7 @@ export default {
   methods: {
     ...mapActions(['updateConstraint']),
 
-    update (value, id, type) {
+    update: function (value, id, type) {
       const payload = { id }
       payload.value = type === 'min' ? { min: +value } : { max: +value }
       this.updateConstraint(payload)

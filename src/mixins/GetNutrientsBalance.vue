@@ -19,7 +19,7 @@ export default {
 
     // do not move to GetNutrietsTableData
     // these functions may differ in parent components
-    _getMinimaxAbs (days, nutrientConstraints) {
+    _getMinimaxAbs: function (days, nutrientConstraints) {
       const minAbs = nutrientConstraints[1] * days
       const maxAbs = nutrientConstraints[2]
         ? nutrientConstraints[2] * days
@@ -27,7 +27,7 @@ export default {
       return { minAbs, maxAbs }
     },
 
-    _getNutrientValues () {
+    _getNutrientValues: function () {
       const nutrientsCount = nutrientIndices.length
       let nutrientValues = np.zeros(nutrientsCount)
       const isMultipleProducts = this.products.length ||
@@ -38,7 +38,7 @@ export default {
       return nutrientValues
     },
 
-    _forMultipleProducts () {
+    _forMultipleProducts: function () {
       const isHome = this.$route.name === 'Home'
       const usedfoodNutrients = foodNutrients.filter(foodNutrientRecord =>
         this._usedfoodNutrients(foodNutrientRecord, isHome))
@@ -51,7 +51,7 @@ export default {
       return summedNutrientValues
     },
 
-    _usedfoodNutrients (foodNutrientRecord, isHome) {
+    _usedfoodNutrients: function (foodNutrientRecord, isHome) {
       const productID = foodNutrientRecord[0]
       const isUsed =
         (isHome ? false : this.selectedProductIDs.includes(productID)) ||
@@ -59,7 +59,7 @@ export default {
       return isUsed
     },
 
-    _getNutrientValuesTotal (foodNutrients) {
+    _getNutrientValuesTotal: function (foodNutrients) {
       const productID = foodNutrients[0]
       const productValue = this._getProductValue(productID)
       const nutrientValues = foodNutrients[1]
@@ -69,7 +69,7 @@ export default {
       return nutrientValuesTotal
     },
 
-    _getProductValue (productID) {
+    _getProductValue: function (productID) {
       const findedProduct = this.products.find(
         product => product.id === productID
       )
@@ -81,15 +81,15 @@ export default {
       return resultProductValue + rationProductValue
     },
 
-    _getProductIDs () {
+    _getProductIDs: function () {
       return this.products.map(product => product.id)
     },
 
-    _getRationProductIDs () {
+    _getRationProductIDs: function () {
       return this.rationForPeriod.map(product => product.id)
     },
 
-    _rowsSum (acc, nutrientValues) {
+    _rowsSum: function (acc, nutrientValues) {
       return acc.map(
         (nutrientValue, index) => nutrientValues[index] + nutrientValue
       )

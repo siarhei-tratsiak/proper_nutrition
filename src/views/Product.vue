@@ -32,13 +32,13 @@ export default {
   },
 
   methods: {
-    _getMinimaxAbs (_, nutrientConstraints) {
+    _getMinimaxAbs: function (_, nutrientConstraints) {
       const minAbs = nutrientConstraints[1]
       const maxAbs = nutrientConstraints[2]
       return { minAbs, maxAbs }
     },
 
-    _getNutrientValues () {
+    _getNutrientValues: function () {
       const foodNutrientWithCurrentID = foodNutrients.find(
         this._foodNutrientWithCurrentID
       )
@@ -46,7 +46,7 @@ export default {
       return nutrientValues
     },
 
-    _foodNutrientWithCurrentID (foodNutrientRecord) {
+    _foodNutrientWithCurrentID: function (foodNutrientRecord) {
       const foodNutrientProductID = foodNutrientRecord[0]
       return this.productID === foodNutrientProductID
     }

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px">
+  <v-dialog max-width="500px" v-model="dialog">
     <v-card>
       <v-card-title>
         <span class="headline">{{ headlineText }}</span>
@@ -11,10 +11,10 @@
             <v-row>
               <SearchProduct :rules="rules" />
 
-              <v-col cols="12" sm="6" md="3">
+              <v-col cols="12" md="3" sm="6">
                 <v-text-field
                   label="Масса, г"
-                  :rules="[rules.required, rules.min]"
+                  :rules="Object.values(rules)"
                   v-model="product.mass"
                 ></v-text-field>
               </v-col>
@@ -24,7 +24,9 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
+
           <CloseButton />
+
           <SaveButton :valid="valid" />
         </v-card-actions>
       </v-form>
@@ -34,6 +36,7 @@
 
 <script>
 import CloseButton from '@/components/ration/dialog/CloseButton'
+import CloseProductDialog from '@/mixins/CloseProductDialog'
 import SaveButton from '@/components/ration/dialog/SaveButton'
 import SearchProduct from '@/components/ration/dialog/SearchProduct'
 import { mapMutations, mapState } from 'vuex'
@@ -52,6 +55,7 @@ export default {
       get: function () {
         return this.status.productDialogIsOpened
       },
+
       set: function () {
         this.close()
       }
@@ -69,24 +73,27 @@ export default {
       get: function () {
         return this.editedProduct
       },
+
       set: function (mass) {
-        this.setEditedProduct({ mass: mass })
+        const editedProduct = { objectName: 'editedProduct', state: { mass } }
+        this.setStateObject(editedProduct)
       }
     }
   },
 
-  data: function () {
-    return {
-      rules: {
-        required: value => !!value || 'Обязательное',
-        min: value => value > 0 || 'Больше 0'
-      },
-      valid: true
-    }
-  },
+  data: () => ({
+    rules: {
+      required: value => !!value || 'Обязательное',
+      numeric: value => !isNaN(value) || 'Не число',
+      positive: value => +value > 0 || 'Не больше 0'
+    },
+    valid: true
+  }),
 
   methods: {
-    ...mapMutations(['setEditedProduct'])
-  }
+    ...mapMutations(['setStateObject'])
+  },
+
+  mixins: [CloseProductDialog]
 }
 </script>

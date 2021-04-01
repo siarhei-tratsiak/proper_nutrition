@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" sm="6" md="9">
+  <v-col cols="12" md="9" sm="6">
     <v-autocomplete
       clearable
       flat
@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import { products } from '@/data/products.js'
+import { products } from '@/data/products'
 import { mapMutations, mapState } from 'vuex'
-import debounce from 'lodash/debounce'
+import { debounce } from 'lodash'
 
 export default {
   computed: {
@@ -28,7 +28,11 @@ export default {
       },
 
       set: function (productID) {
-        this.setEditedProduct({ product_id: productID })
+        const editedProduct = {
+          objectName: 'editedProduct',
+          state: { product_id: productID }
+        }
+        this.setStateObject(editedProduct)
       }
     }
   },
@@ -43,9 +47,9 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setEditedProduct']),
+    ...mapMutations(['setStateObject']),
 
-    _querySelections () {
+    _querySelections: function () {
       const searchResult = this._searchProduct(this.search || '')
       this.items = searchResult.map(product => ({
         text: product[1],
@@ -53,8 +57,10 @@ export default {
       }))
     },
 
-    _searchProduct (productName) {
-      const re = new RegExp(productName.toLowerCase(), 'g')
+    _searchProduct: function (productName) {
+      const escapeProductName = productName
+        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      const re = new RegExp(escapeProductName.toLowerCase(), 'g')
       return products.filter(product => re.test(product[1].toLowerCase()))
     }
   },

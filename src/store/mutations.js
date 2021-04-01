@@ -2,8 +2,10 @@ import { dates } from '@/api/dates'
 import { products } from '@/data/products.js'
 
 const mutations = {
-  setConstraints (state, constraints) {
-    state.constraints = constraints
+  clearEditedProduct (state) {
+    Object.keys(state.editedProduct).forEach(
+      key => (state.editedProduct[key] = undefined)
+    )
   },
 
   setDays (state) {
@@ -14,18 +16,6 @@ const mutations = {
 
   setDB (state, db) {
     state.db = db
-  },
-
-  setEditedProduct (state, product = null) {
-    if (product) {
-      Object.keys(product).forEach(
-        key => (state.editedProduct[key] = product[key])
-      )
-    } else {
-      Object.keys(state.editedProduct).forEach(
-        key => (state.editedProduct[key] = undefined)
-      )
-    }
   },
 
   setHorizontal (state, isHorizontal) {
@@ -67,9 +57,10 @@ const mutations = {
   },
 
   setSelectedDate (state, date) {
-    const msInDay = 24 * 60 * 60 * 1000
-    const ms = Date.parse(date)
-    state.selectedDate = ms - (ms % msInDay)
+    const msInDay = dates.getMsInDay()
+    const dateInMs = Date.parse(date)
+    const dayStart = dateInMs - (dateInMs % msInDay)
+    state.selectedDate = dayStart
   },
 
   setSelectedProduct (state, payload) {
@@ -90,7 +81,8 @@ const mutations = {
   },
 
   setStateObject (state, payload) {
-    Object.keys(payload.state).forEach(key => (state[payload.objectName][key] = payload.state[key]))
+    Object.keys(payload.state)
+      .forEach(key => (state[payload.objectName][key] = payload.state[key]))
   },
 
   updateConstraint (state, payload) {

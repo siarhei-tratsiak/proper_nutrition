@@ -5,7 +5,7 @@
   >
     <span class="border-marker-item">{{ isMin ? "мин" : "макс" }}</span>
     <span class="border-marker-item marker"></span>
-    <span class="border-marker-item">{{ abs }}</span>
+    <span class="border-marker-item">{{ abs.toFixed(1) }}</span>
   </div>
 </template>
 

@@ -21,16 +21,6 @@ export default {
     RationTable
   },
 
-  data () {
-    return {
-      headers: [
-        { text: 'Продукт', value: 'product' },
-        { text: 'Масса, г', value: 'mass' },
-        { text: 'Действия', sortable: false, value: 'actions' }
-      ]
-    }
-  },
-
   mixins: [ReadinessCheck]
 }
 </script>

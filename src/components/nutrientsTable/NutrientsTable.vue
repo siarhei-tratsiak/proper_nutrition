@@ -49,13 +49,13 @@ export default {
   }),
 
   methods: {
-    clickAdditional () {
+    _clickAdditional: function () {
       this.$refs.additional.$el.click()
     }
   },
 
   mounted () {
-    this.clickAdditional()
+    this._clickAdditional()
   },
 
   props: ['nutrients']

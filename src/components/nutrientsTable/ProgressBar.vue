@@ -3,7 +3,7 @@
     height="12"
     v-model="nutrient.value"
   >
-      <strong>{{  Math.round(nutrient.valueAbs) }}</strong>
+      <strong>{{  nutrient.valueAbs.toFixed(2) }}</strong>
   </v-progress-linear>
 </template>
 

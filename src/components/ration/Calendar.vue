@@ -1,5 +1,11 @@
 <template>
-  <v-date-picker first-day-of-week="1" full-width locale="ru-ru" no-title v-model="picker"></v-date-picker>
+  <v-date-picker
+    first-day-of-week="1"
+    full-width
+    locale="ru-ru"
+    no-title
+    v-model="picker"
+  />
 </template>
 
 <script>
@@ -11,8 +17,10 @@ export default {
 
     picker: {
       get: function () {
-        const date = new Date(this.selectedDate).toISOString().substr(0, 10)
-        return date
+        const dateFormattedForPicker = new Date(this.selectedDate)
+          .toISOString()
+          .substr(0, 10)
+        return dateFormattedForPicker
       },
 
       set: function (date) {
@@ -28,6 +36,7 @@ export default {
 
   methods: {
     ...mapActions(['setRation']),
+
     ...mapMutations(['setSelectedDate'])
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-btn @click="openProductDialog()" color="primary" dark fab x-small>
+  <v-btn @click="openProductDialog" color="primary" dark fab x-small>
     <v-icon>mdi-plus</v-icon>
   </v-btn>
 </template>
@@ -9,11 +9,14 @@ import { mapMutations } from 'vuex'
 
 export default {
   methods: {
-    ...mapMutations(['setStatus']),
+    ...mapMutations(['setStateObject']),
 
-    openProductDialog () {
-      const status = { productDialogIsOpened: true }
-      this.setStatus(status)
+    openProductDialog: function () {
+      const status = {
+        objectName: 'status',
+        state: { productDialogIsOpened: true }
+      }
+      this.setStateObject(status)
     }
   }
 }

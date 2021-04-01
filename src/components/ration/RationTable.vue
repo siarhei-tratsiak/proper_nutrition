@@ -1,64 +1,57 @@
 <template>
-  <v-data-table class="ration-table" :headers="headers" hide-default-footer :items="ration">
+  <v-data-table
+    class="ration-table"
+    :headers="headers"
+    hide-default-footer
+    :items="ration"
+    :no-data-text="noDataText"
+  >
     <template v-slot:top>
-      <TableTop />
+      <RationTableTop />
     </template>
 
     <template v-slot:[`item.product_name`]="{ item }">
-      <router-link
-        :to="{ name: 'Product', params: { id: item.product_id } }"
-      >{{ item.product_name }}</router-link>
+      <router-link :to="{ name: 'Product', params: { id: item.product_id } }">
+        {{ item.product_name }}
+      </router-link>
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon @click="editItem(item)">mdi-pencil</v-icon>
-      <v-icon @click="deleteItem(item)">mdi-delete</v-icon>
+      <RationTableActions :item='item' />
     </template>
   </v-data-table>
 </template>
 
 <script>
-import TableTop from '@/components/ration/TableTop'
-import { mapActions, mapMutations, mapState } from 'vuex'
+import RationTableActions from '@/components/ration/RationTableActions'
+import RationTableTop from '@/components/ration/RationTableTop'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   components: {
-    TableTop
-  },
-
-  created: function () {
-    this.setRation(this.selectedDate)
-  },
-
-  data () {
-    return {
-      headers: [
-        { text: 'Продукт', value: 'product_name' },
-        { text: 'Масса, г', value: 'mass' },
-        { text: 'Действия', sortable: false, value: 'actions' }
-      ]
-    }
+    RationTableActions,
+    RationTableTop
   },
 
   computed: {
     ...mapState(['ration', 'selectedDate'])
   },
 
+  created: function () {
+    this.setRation(this.selectedDate)
+  },
+
+  data: () => ({
+    headers: [
+      { text: 'Продукт', value: 'product_name' },
+      { text: 'Масса, г', value: 'mass' },
+      { text: 'Действия', sortable: false, value: 'actions' }
+    ],
+    noDataText: 'Нет данных'
+  }),
+
   methods: {
-    ...mapActions(['deleteRation', 'setRation']),
-    ...mapMutations(['setEditedProduct', 'setStatus']),
-
-    editItem (item) {
-      this.setEditedProduct(item)
-      const status = { productDialogIsOpened: true }
-      this.setStatus(status)
-    },
-
-    deleteItem (item) {
-      const id = item.id
-      this.deleteRation(id)
-      this.setRation(this.selectedDate)
-    }
+    ...mapActions(['setRation'])
   }
 }
 </script>

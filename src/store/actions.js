@@ -1,10 +1,5 @@
 import { dates } from '@/api/dates'
-import {
-  deleteRation,
-  editRations,
-  IDBS,
-  searchProduct
-} from '@/api/indexedDBService'
+import { IDBS } from '@/api/indexedDBService'
 import { simplex } from '@/api/simplex'
 import { nutrients } from '@/data/nutrients_ru'
 import router from '@/router'
@@ -15,13 +10,11 @@ import {
 
 const actions = {
   deleteRation ({ state }, id) {
-    const db = state.db
-    deleteRation(db, id)
+    IDBS.deleteRation(state.db, id)
   },
 
   editRation ({ state }, ration) {
-    const db = state.db
-    editRations(db, ration)
+    IDBS.editRations(state.db, ration)
   },
 
   getCategoryIsExpanded ({ state, commit }) {
@@ -41,14 +34,12 @@ const actions = {
       objectiveCoefficients,
       selectedProductIDs
     } = getters.getConditions(nutrients)
-    /* restrictionMatrix = [[1, -2], [-1, -1], [1, -1], [0, 1]]
-    constraintsVector = [-2, -4, 2, 6]
-    objectiveCoefficients = [-1, -2] */
     let result = simplex({
       restrictionMatrix,
       constraintsVector,
       objectiveCoefficients
     })
+    console.log(result)
     const isResult = !result.status
     commit('setStateObject', {
       objectName: 'status',
@@ -119,7 +110,11 @@ const actions = {
     existingConstraints = await IDBS.getNutrientConstraints(
       state.db, userID, nutrientIDs
     )
-    commit('setConstraints', existingConstraints)
+    const constraintsPayload = {
+      name: 'constraints',
+      value: existingConstraints
+    }
+    commit('setState', constraintsPayload)
     if (payload.checkExtremum) {
       dispatch('_checkExtremum', existingConstraints)
     }
@@ -159,10 +154,6 @@ const actions = {
     commit('setState',
       { name: 'selectedProductIDs', value: selectedProductIDs })
     commit('setStateObject', { objectName: 'status', state: { selected: true } })
-  },
-
-  searchProduct ({ state }, productName) {
-    return searchProduct(state.db, productName)
   },
 
   async setRation ({ state, commit }, date) {

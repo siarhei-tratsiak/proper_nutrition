@@ -12,7 +12,7 @@ export default {
   computed: {
     ...mapGetters(['getReducedConstraints']),
 
-    ...mapState(['period', 'products', 'productsList', 'rationForPeriod']),
+    ...mapState(['constraints', 'period', 'products', 'productsList', 'rationForPeriod']),
 
     nutrients: function () {
       const usedNutrients = this._getUsedNutrients()
@@ -32,41 +32,42 @@ export default {
   },
 
   methods: {
-    _getUsedNutrients () {
+    _getUsedNutrients: function () {
       return nutrients
         .filter(this._isFromNutrientIndices)
         .map(this._sliceNutrient)
     },
 
-    _isFromNutrientIndices (nutrient) {
+    _isFromNutrientIndices: function (nutrient) {
       return nutrientIndices.includes(nutrient[0])
     },
 
-    _sliceNutrient (nutrient) {
+    _sliceNutrient: function (nutrient) {
       return nutrient.slice(0, 3)
     },
 
-    _getNutrients (usedNutrients, reducedConstraints, nutrientValues) {
+    _getNutrients: function (usedNutrients, reducedConstraints, nutrientValues) {
       const days = dates.getDays(this.period.start, this.period.end)
-      const nutrients = usedNutrients.map((usedNutrient, rowIndex) =>
+      const nutrients = usedNutrients.map(usedNutrient =>
         this._getProgressBarData({
           days,
           nutrientValues,
           reducedConstraints,
-          rowIndex,
           usedNutrient
         })
       )
       return nutrients
     },
 
-    _getProgressBarData (payload) {
+    _getProgressBarData: function (payload) {
       const nutrientID = payload.usedNutrient[0]
       const mockNutrientConstraints = [null, 0, null]
       const nutrientConstraints =
         this._findConstraintWithID(payload.reducedConstraints, nutrientID) ||
         mockNutrientConstraints
-      const nutrientValue = payload.nutrientValues[payload.rowIndex]
+      const usedNutrientID = payload.usedNutrient[0]
+      const rowIndex = this._findIndex(usedNutrientID)
+      const nutrientValue = payload.nutrientValues[rowIndex]
       const { minAbs, maxAbs } = this._getMinimaxAbs(
         payload.days,
         nutrientConstraints
@@ -88,19 +89,22 @@ export default {
       }
     },
 
-    _getBase (comparison) {
-      const maxAbs = Math.max(...comparison)
-      const base = maxAbs === 0 ? 0 : 100 / maxAbs
-      return base
-    },
-
-    _findConstraintWithID (reducedConstraints, nutrientID) {
+    _findConstraintWithID: function (reducedConstraints, nutrientID) {
       return reducedConstraints.find(
         (constraint) => constraint[0] === nutrientID
       )
     },
 
-    _combineConstraints (acc, constraint) {
+    _findIndex: usedNutrientID => nutrientIndices
+      .findIndex(nutrientID => nutrientID === usedNutrientID),
+
+    _getBase: function (comparison) {
+      const maxAbs = Math.max(...comparison)
+      const base = maxAbs === 0 ? 0 : 100 / maxAbs
+      return base
+    },
+
+    _combineConstraints: function (acc, constraint) {
       const constraintNutrientID = constraint[0]
       const borderValue = constraint[2]
       if (acc.length > 0) {
@@ -115,7 +119,7 @@ export default {
       return acc
     },
 
-    _getReducedConstraints () {
+    _getReducedConstraints: function () {
       const initialAcc = []
       return conditions.constraints.reduce(
         this._combineConstraints,

@@ -3,11 +3,15 @@ import { mapMutations } from 'vuex'
 
 export default {
   methods: {
-    ...mapMutations(['setEditedProduct', 'setStatus']),
+    ...mapMutations(['clearEditedProduct', 'setStateObject']),
 
-    close () {
-      this.setEditedProduct()
-      this.setStatus({ productDialogIsOpened: false })
+    close: function () {
+      this.clearEditedProduct()
+      const status = {
+        objectName: 'status',
+        state: { productDialogIsOpened: false }
+      }
+      this.setStateObject(status)
     }
   }
 }

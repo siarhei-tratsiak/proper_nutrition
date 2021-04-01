@@ -28,7 +28,7 @@ export default {
   methods: {
     ...mapActions(['setConstraints', 'setSettings']),
 
-    setWeight (weight) {
+    setWeight: function (weight) {
       this.setSettings({ weight: +weight })
       const payload = { nutrientIDs: [1008] }
       this.setConstraints(payload)

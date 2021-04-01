@@ -21,7 +21,7 @@ export default {
   methods: {
     ...mapActions(['updateConstraint', 'updateTarget']),
 
-    click () {
+    click: function () {
       const payload = { id: this.targetData.id }
       const target = this.targetData.target
       payload.value = { target: +(target === 0) }

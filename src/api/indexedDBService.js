@@ -18,6 +18,10 @@ const IDBS = {
     })
   },
 
+  deleteRation: (db, id) => db.rations.delete(id),
+
+  editRations: (db, ration) => db.rations.put(ration),
+
   getConstraintsWithNotRangeTarget: (db) => db.constraints
     .where('target')
     .notEqual(2)
@@ -33,28 +37,13 @@ const IDBS = {
 
   getRation: async (db, userID, start, end = undefined) => {
     let rations = db.rations
-    if (end) {
-      const includeLower = true
-      const includeUpper = true
-      rations = rations
-        .where(['user_id', 'date'])
-        .between([userID, start], [userID, end], includeLower, includeUpper)
-    } else {
-      rations = rations
-        .where({ user_id: userID, date: start })
-    }
-    rations = await rations.toArray()
+    const whereClause = _rationWhereClause(rations, userID, start, end)
+    rations = await whereClause.toArray()
     const rationProductIDs = rations.map(ration => ration.product_id)
     const rationProducts = products.filter(product =>
       rationProductIDs.includes(product[0])
     )
-    const result = rations.map(ration => {
-      const product = rationProducts.find(
-        product => product[0] === ration.product_id
-      )
-      ration.product_name = product[1]
-      return ration
-    })
+    const result = rations.map(ration => _getration(ration, rationProducts))
     return result
   },
 
@@ -130,6 +119,14 @@ function _getTables () {
   return tables
 }
 
+function _getration (ration, rationProducts) {
+  const product = rationProducts.find(
+    product => product[0] === ration.product_id
+  )
+  ration.product_name = product[1]
+  return ration
+}
+
 function _getUserColumnsNames () {
   const defaultUserKeys = Object.keys(defaultUser)
   const userColumnsNames = ['++id'].concat(defaultUserKeys)
@@ -203,12 +200,19 @@ function _dataToRecords (table) {
   return records
 }
 
-function deleteRation (db, id) {
-  db.rations.delete(id)
-}
-
-function editRations (db, ration) {
-  db.rations.put(ration)
+function _rationWhereClause (rations, userID, start, end) {
+  let whereClause = rations
+  if (end) {
+    const includeLower = true
+    const includeUpper = true
+    whereClause = rations
+      .where(['user_id', 'date'])
+      .between([userID, start], [userID, end], includeLower, includeUpper)
+  } else {
+    whereClause = rations
+      .where({ user_id: userID, date: start })
+  }
+  return whereClause
 }
 
 function getConstraint (db, userID, nutrientID) {
@@ -227,18 +231,8 @@ function getConstraints (db, userID) {
     .toArray()
 }
 
-function searchProduct (db, productName) {
-  const re = new RegExp(productName.toLowerCase(), 'g')
-  return db.products
-    .filter(product => re.test(product.name.toLowerCase()))
-    .toArray()
-}
-
 export {
-  deleteRation,
-  editRations,
   getConstraint,
   getConstraints,
-  IDBS,
-  searchProduct
+  IDBS
 }

@@ -1,6 +1,6 @@
 <template>
   <v-toolbar>
-    <v-toolbar-title>Рацион: {{ date }}</v-toolbar-title>
+    <v-toolbar-title>Рацион: {{ formattedDate }}</v-toolbar-title>
     <v-spacer></v-spacer>
     <AddProductButton />
   </v-toolbar>
@@ -18,12 +18,12 @@ export default {
   computed: {
     ...mapState(['selectedDate']),
 
-    date: function () {
+    formattedDate: function () {
       const options = {
-        weekday: 'long',
-        year: 'numeric',
+        day: 'numeric',
         month: 'long',
-        day: 'numeric'
+        weekday: 'long',
+        year: 'numeric'
       }
       return new Date(this.selectedDate).toLocaleDateString(undefined, options)
     }

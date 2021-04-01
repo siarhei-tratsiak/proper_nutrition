@@ -16,14 +16,15 @@ export default {
   methods: {
     ...mapActions(['editRation', 'setRation']),
 
-    save () {
+    save: function () {
       const ration = {
         product_id: this.editedProduct.product_id,
         user_id: this.settings.userID,
         date: this.selectedDate,
         mass: +this.editedProduct.mass
       }
-      if (this.editedProduct.id) {
+      const isEdit = typeof this.editedProduct.id !== 'undefined'
+      if (isEdit) {
         ration.id = this.editedProduct.id
       }
       this.editRation(ration)

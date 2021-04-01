@@ -29,7 +29,7 @@ export default {
   methods: {
     ...mapActions(['updateConstraint']),
 
-    update (value) {
+    update: function (value) {
       const payload = { id: this.extremum.id }
       const extremum = value === '' ? value : +value
       payload.value = this.isMin ? { min: extremum } : { max: extremum }

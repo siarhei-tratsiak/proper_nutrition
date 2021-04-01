@@ -49,9 +49,10 @@ export default {
   methods: {
     ...mapActions(['toggleSelected']),
 
-    productsArrayToObject () {
-      return products.map(product => ({ id: product[0], name: product[1] }))
-    }
+    productsArrayToObject: () => products.map(product => ({
+      id: product[0],
+      name: product[1]
+    }))
   }
 }
 </script>

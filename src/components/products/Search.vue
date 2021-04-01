@@ -35,19 +35,19 @@ export default {
   methods: {
     ...mapMutations(['setState']),
 
-    _debounceSearch (searchText) {
+    _debounceSearch: function (searchText) {
       this.inputTime = Date.now()
       setTimeout(this._checkDelay, this.delayMS, searchText)
     },
 
-    _checkDelay (searchText) {
+    _checkDelay: function (searchText) {
       const isDelayEnough = Date.now() - this.inputTime >= this.delayMS
       if (isDelayEnough) {
         this._setSearch(searchText)
       }
     },
 
-    _setSearch (searchText) {
+    _setSearch: function (searchText) {
       const searchPayload = { name: 'productSearch', value: searchText }
       this.setState(searchPayload)
     }
