@@ -1,7 +1,7 @@
 <template>
   <v-text-field
-    filled
     @change="setWeight"
+    filled
     label="Вес: "
     :rules="rules"
     suffix="кг"
@@ -20,8 +20,8 @@ export default {
   data: () => ({
     rules: [
       value => !!value || 'Обязательное поле',
-      value => (!isNaN(parseFloat(+value)) && isFinite(+value)) || 'Не число',
-      value => +value > 0 || 'Не больше нуля'
+      value => !isNaN(value) || 'Не число',
+      value => +value > 0 || 'Не больше 0'
     ]
   }),
 
@@ -30,7 +30,7 @@ export default {
 
     setWeight: function (weight) {
       this.setSettings({ weight: +weight })
-      const payload = { nutrientIDs: [1008] }
+      const payload = { nutrientIDs: [1003, 1004, 1005, 1008] }
       this.setConstraints(payload)
     }
   }

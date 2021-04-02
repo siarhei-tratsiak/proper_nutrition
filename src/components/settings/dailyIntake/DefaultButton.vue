@@ -1,5 +1,7 @@
 <template>
-  <v-btn depressed class="ma-2" @click="setAllConstraints">по умолчанию</v-btn>
+  <v-btn class="ma-2" @click="setAllConstraints" depressed>
+    по умолчанию
+  </v-btn>
 </template>
 
 <script>

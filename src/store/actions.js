@@ -3,10 +3,7 @@ import { IDBS } from '@/api/indexedDBService'
 import { simplex } from '@/api/simplex'
 import { nutrients } from '@/data/nutrients_ru'
 import router from '@/router'
-import {
-  isOldTarget,
-  service
-} from '@/store/service'
+import { service } from '@/store/service'
 
 const actions = {
   deleteRation ({ state }, id) {
@@ -23,11 +20,6 @@ const actions = {
   },
 
   async getSolution ({ getters, commit }, nutrients) {
-    commit('setStateObject', {
-      objectName: 'status',
-      state: { isLoading: true }
-    })
-    commit('setDays')
     const {
       restrictionMatrix,
       constraintsVector,
@@ -39,7 +31,6 @@ const actions = {
       constraintsVector,
       objectiveCoefficients
     })
-    console.log(result)
     const isResult = !result.status
     commit('setStateObject', {
       objectName: 'status',
@@ -49,7 +40,8 @@ const actions = {
       .map((productValue, index) => service
         .getProductsData(index, productValue, selectedProductIDs))
       .filter(product => product.mass !== 0)
-    commit('setProducts', result)
+    const payload = { name: 'products', value: result }
+    commit('setState', payload)
     commit('setStateObject', {
       objectName: 'status',
       state: { isLoading: false }
@@ -59,10 +51,11 @@ const actions = {
 
   async initData ({ commit, dispatch }) {
     const db = await IDBS.initDatabase()
-    commit('setDB', db)
+    const payload = { name: 'db', value: db }
+    commit('setState', payload)
     commit('setProductsList')
     await dispatch('_initUser')
-    dispatch('_setAllConstraints')
+    dispatch('setAllConstraints')
     dispatch('_initSelected')
   },
 
@@ -76,7 +69,7 @@ const actions = {
     commit('setStateObject', userPayload)
   },
 
-  _setAllConstraints ({ dispatch }) {
+  setAllConstraints ({ dispatch }) {
     const nutrientIDs = nutrients.map(nutrient => nutrient[0])
     const constraintsPayload = { nutrientIDs, checkExtremum: true }
     dispatch('setConstraints', constraintsPayload)
@@ -84,12 +77,12 @@ const actions = {
 
   async setConstraints ({ commit, dispatch, getters, state }, payload) {
     const userID = state.settings.userID
-    const nutrientIDs = payload.nutrientIDs
+    let nutrientIDs = payload.nutrientIDs
     const constraints = getters.getConstraints(nutrientIDs)
     const nutrientMinMaxValues = service.getNutrientMinMaxValues(
       constraints, userID
     )
-    let existingConstraints = await IDBS.getNutrientConstraints(
+    const existingConstraints = await IDBS.getNutrientConstraints(
       state.db, userID, nutrientIDs
     )
     existingConstraints.forEach(constraint =>
@@ -105,18 +98,19 @@ const actions = {
       .map(minMaxValue => service.toNotMinMax(minMaxValue))
     const isAddData = addData.length
     if (isAddData) {
-      IDBS.addConstraints(state.db, addData)
+      await IDBS.addConstraints(state.db, addData)
     }
-    existingConstraints = await IDBS.getNutrientConstraints(
+    nutrientIDs = nutrients.map(nutrient => nutrient[0])
+    const newConstraints = await IDBS.getNutrientConstraints(
       state.db, userID, nutrientIDs
     )
     const constraintsPayload = {
       name: 'constraints',
-      value: existingConstraints
+      value: newConstraints
     }
     commit('setState', constraintsPayload)
     if (payload.checkExtremum) {
-      dispatch('_checkExtremum', existingConstraints)
+      dispatch('_checkExtremum', newConstraints)
     }
   },
 
@@ -187,8 +181,14 @@ const actions = {
   },
 
   setSettings ({ state, commit }, payload) {
-    commit('setSettings', payload)
-    state.db.users.update(state.settings.userID, payload)
+    const settingsPayload = { objectName: 'settings', state: payload }
+    commit('setStateObject', settingsPayload)
+    const updatePayload = {
+      changes: payload,
+      key: state.settings.userID,
+      tableName: 'users'
+    }
+    IDBS.updateTable(state.db, updatePayload)
   },
 
   async setUserID ({ state, commit }) {
@@ -203,10 +203,7 @@ const actions = {
   switchLock ({ commit, state }, payload) {
     const userID = state.settings.userID
     const mutationPayload = { min_mutable: +!payload, max_mutable: +!payload }
-    state.db.constraints
-      .where('user_id')
-      .equals(userID)
-      .modify(mutationPayload)
+    IDBS.modifyConstraints(state.db, userID, mutationPayload)
     commit('updateConstraints', mutationPayload)
   },
 
@@ -229,14 +226,20 @@ const actions = {
   async updateTarget ({ state, dispatch }, payload) {
     const oldTarget = await IDBS.getConstraintsWithNotRangeTarget(state.db)
     dispatch('updateConstraint', payload)
-    if (isOldTarget(oldTarget, payload.id)) {
-      payload = { id: oldTarget.id, value: { target: 2 } }
-      dispatch('updateConstraint', payload)
+    const isOldTarget = service.isOldTarget(oldTarget, payload.id)
+    if (isOldTarget) {
+      const constraintPayload = { id: oldTarget[0].id, value: { target: 2 } }
+      dispatch('updateConstraint', constraintPayload)
     }
   },
 
   updateConstraint ({ state, commit }, payload) {
-    IDBS.updateTarget(state.db, payload)
+    const updatePayload = {
+      changes: payload.value,
+      key: payload.id,
+      tableName: 'constraints'
+    }
+    IDBS.updateTable(state.db, updatePayload)
     commit('updateConstraint', payload)
   }
 }

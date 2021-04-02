@@ -1,6 +1,6 @@
 <template>
   <div>
-    <LeftMenu :isMiniVariant="isMiniVariant" v-if="isHorizontal" />
+    <LeftMenu :isMiniVariant="isMiniVariant" v-if="status.isHorizontal" />
     <TopMenu v-else />
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['isHorizontal'])
+    ...mapState(['status'])
   },
 
   data: function () {
@@ -35,13 +35,14 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setHorizontal']),
+    ...mapMutations(['setStateObject']),
 
     _checkHorizontal: function () {
       const isHorizontal = window.innerWidth > window.innerHeight
-      const orientationChanged = isHorizontal !== this.isHorizontal
+      const orientationChanged = isHorizontal !== this.status.isHorizontal
       if (orientationChanged) {
-        this.setHorizontal(isHorizontal)
+        const payload = { objectName: 'status', state: { isHorizontal } }
+        this.setStateObject(payload)
       }
     },
 

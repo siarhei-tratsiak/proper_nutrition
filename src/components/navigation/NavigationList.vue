@@ -31,7 +31,7 @@ import { mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['isHorizontal']),
+    ...mapState(['status']),
 
     horizontalDependencies: function () {
       const horizontal = {
@@ -48,7 +48,7 @@ export default {
         listitemStyle: { 'flex-basis': 'auto' },
         titleClass: 'd-xs-flex'
       }
-      return this.isHorizontal ? horizontal : vertical
+      return this.status.isHorizontal ? horizontal : vertical
     }
   },
 

@@ -8,7 +8,6 @@ const state = {
     product_id: undefined,
     user_id: undefined
   },
-  isHorizontal: false,
   nutrients: [],
   period: {
     start: null,
@@ -33,6 +32,7 @@ const state = {
     userID: undefined
   },
   status: {
+    isHorizontal: false,
     isLoading: false,
     isResult: false,
     productDialogIsOpened: false,

@@ -63,6 +63,13 @@ const IDBS = {
     return db
   },
 
+  modifyConstraints: (db, userID, payload) => {
+    db.constraints
+      .where('user_id')
+      .equals(userID)
+      .modify(payload)
+  },
+
   modifySelected: (db, userID, selectedIDs, isSelected) => {
     db.filters
       .where('product_id')
@@ -83,8 +90,8 @@ const IDBS = {
     return db.constraints.update(constraintID, newConstraint)
   },
 
-  updateTarget: (db, payload) => {
-    db.constraints.update(payload.id, payload.value)
+  updateTable: (db, payload) => {
+    db[payload.tableName].update(payload.key, payload.changes)
   }
 }
 
@@ -215,24 +222,4 @@ function _rationWhereClause (rations, userID, start, end) {
   return whereClause
 }
 
-function getConstraint (db, userID, nutrientID) {
-  return db.constraints
-    .where({
-      user_id: userID,
-      nutrient_id: nutrientID
-    })
-    .toArray()
-}
-
-function getConstraints (db, userID) {
-  return db.constraints
-    .where('user_id')
-    .equals(userID)
-    .toArray()
-}
-
-export {
-  getConstraint,
-  getConstraints,
-  IDBS
-}
+export { IDBS }

@@ -1,5 +1,7 @@
 <template>
-  <v-btn depressed @click="click">{{ text }}</v-btn>
+  <v-btn @click="click" :color="text ? 'primary' : ''" depressed>
+    {{ text }}
+  </v-btn>
 </template>
 
 <script>
@@ -8,7 +10,7 @@ import { mapActions } from 'vuex'
 export default {
   computed: {
     text: function () {
-      let text = 'нет'
+      let text = ''
       if (this.targetData.target === 0) {
         text = 'мин'
       } else if (this.targetData.target === 1) {

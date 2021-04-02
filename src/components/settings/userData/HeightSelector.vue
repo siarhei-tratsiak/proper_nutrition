@@ -1,7 +1,7 @@
 <template>
   <v-text-field
-    filled
     @change="setHeight"
+    filled
     label="Рост: "
     :rules="rules"
     suffix="см"
@@ -20,8 +20,8 @@ export default {
   data: () => ({
     rules: [
       value => !!value || 'Обязательное поле',
-      value => (!isNaN(parseFloat(+value)) && isFinite(+value)) || 'Не число',
-      value => +value > 0 || 'Не больше нуля'
+      value => !isNaN(value) || 'Не число',
+      value => +value > 0 || 'Не больше 0'
     ]
   }),
 

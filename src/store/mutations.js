@@ -14,46 +14,12 @@ const mutations = {
     state.days = dates.getDays(start, end)
   },
 
-  setDB (state, db) {
-    state.db = db
-  },
-
-  setHorizontal (state, isHorizontal) {
-    state.isHorizontal = isHorizontal
-  },
-
-  setProducts (state, products) {
-    state.products = products
-  },
-
   setProductsList (state) {
     const productsList = products.map(product => ({
       id: product[0],
       name: product[1]
     }))
     state.productsList = productsList
-  },
-
-  setRation (state, ration) {
-    state.ration = ration
-  },
-
-  setRationForPeriod (state, ration) {
-    state.rationForPeriod = ration
-  },
-
-  setSelectedAll (state, payload) {
-    state.selected.forEach(function (curVal) {
-      curVal.selected = payload.selected
-    })
-  },
-
-  setSelectedCategory (state, payload) {
-    state.selected
-      .filter(curVal => curVal.category_id === payload.category_id)
-      .forEach(function (curVal) {
-        curVal.selected = payload.selected
-      })
   },
 
   setSelectedDate (state, date) {

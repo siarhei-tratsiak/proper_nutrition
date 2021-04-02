@@ -1,5 +1,10 @@
 <template>
-  <v-checkbox hide-details off-icon="mdi-lock" on-icon="mdi-lock-open-variant" v-model="isChecked"></v-checkbox>
+  <v-checkbox
+    hide-details
+    off-icon="mdi-lock"
+    on-icon="mdi-lock-open-variant"
+    v-model="isChecked"
+  ></v-checkbox>
 </template>
 
 <script>
@@ -11,6 +16,7 @@ export default {
       get: function () {
         return !!this.mutableData[this.mutableFieldName]
       },
+
       set: function (value) {
         const payload = { id: this.mutableData.id, value: {} }
         payload.value[this.mutableFieldName] = +value

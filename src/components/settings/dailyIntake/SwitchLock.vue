@@ -1,7 +1,10 @@
 <template>
-  <v-btn depressed @click="switchLock(lock)" class="ma-2">
+  <v-btn class="ma-2" @click="switchLock(lock)" depressed>
     {{ lock ? "" : "раз" }}блокировать все
-    <v-icon right>mdi-lock{{ lock ? "" : "-open-variant" }}</v-icon>
+
+    <v-icon right>
+      mdi-lock{{ lock ? "" : "-open-variant" }}
+    </v-icon>
   </v-btn>
 </template>
 
@@ -16,5 +19,3 @@ export default {
   props: ['lock']
 }
 </script>
-
-<style></style>

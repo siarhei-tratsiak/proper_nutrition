@@ -21,7 +21,7 @@
 <script>
 import { dates } from '@/api/dates'
 import DatePicker from '@/components/home/DatePicker'
-import { mapActions, mapMutations, mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
   components: { DatePicker },
@@ -59,8 +59,6 @@ export default {
   }),
 
   methods: {
-    ...mapActions(['setRationForPeriod']),
-
     ...mapMutations(['setStateObject']),
 
     _getStart: function (intervalName) {

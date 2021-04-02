@@ -1,13 +1,13 @@
 <template>
   <v-text-field
+    @change="update"
+    class="ma-1"
     dense
     :disabled="isMin ? !extremum.min_mutable : !extremum.max_mutable"
     filled
     :label="isMin ? 'от: ' : 'до: '"
     :rules="rules"
-    :value="isMin ? extremum.min : extremum.max"
-    class="ma-1"
-    @change="update"
+    :value="getValue()"
   ></v-text-field>
 </template>
 
@@ -18,7 +18,7 @@ export default {
   data: function () {
     return {
       rules: [
-        value => (!isNaN(parseFloat(+value)) && isFinite(+value)) || 'Не число',
+        value => !isNaN(value) || 'Не число',
         value => +value >= 0 || 'Меньше нуля',
         value =>
           (this.isMin ? true : +value >= this.extremum.min) || 'Меньше минимума'
@@ -28,6 +28,11 @@ export default {
 
   methods: {
     ...mapActions(['updateConstraint']),
+
+    getValue: function () {
+      const value = this.isMin ? this.extremum.min : this.extremum.max
+      return (value === null) ? value : value.toFixed(1)
+    },
 
     update: function (value) {
       const payload = { id: this.extremum.id }
@@ -40,3 +45,9 @@ export default {
   props: ['extremum', 'isMin']
 }
 </script>
+
+<style scoped>
+.v-text-field {
+  width: calc(100% - 8px);
+}
+</style>

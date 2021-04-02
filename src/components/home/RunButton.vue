@@ -1,7 +1,7 @@
 <template>
   <div class="align-center d-flex flex-grow-1 justify-center">
     <v-btn
-      @click="getSolution(nutrients)"
+      @click="click"
       color="primary"
       fab
       id="run_button"
@@ -18,7 +18,7 @@
 
 <script>
 import { debounce } from 'lodash'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import GetNutrientsBalance from '@/mixins/GetNutrientsBalance.vue'
 
 export default {
@@ -41,6 +41,18 @@ export default {
 
   methods: {
     ...mapActions(['getSolution']),
+
+    ...mapMutations(['setDays', 'setStateObject']),
+
+    click: function () {
+      const payload = {
+        objectName: 'status',
+        state: { isLoading: true }
+      }
+      this.setStateObject(payload)
+      this.setDays()
+      this.getSolution(this.nutrients)
+    },
 
     _countProgressSize: () => {
       const progressRibbonWidthMultiplier = 0.2

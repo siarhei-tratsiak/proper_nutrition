@@ -1,5 +1,4 @@
 <script>
-import { conditions } from '@/data/DBSettings'
 import { dates } from '@/api/dates'
 import { mapGetters, mapState } from 'vuex'
 import { nutrients } from '@/data/nutrients_ru'
@@ -102,29 +101,6 @@ export default {
       const maxAbs = Math.max(...comparison)
       const base = maxAbs === 0 ? 0 : 100 / maxAbs
       return base
-    },
-
-    _combineConstraints: function (acc, constraint) {
-      const constraintNutrientID = constraint[0]
-      const borderValue = constraint[2]
-      if (acc.length > 0) {
-        const lastAccConstraint = acc[acc.length - 1]
-        const lastAccNutrientID = lastAccConstraint[0]
-        if (constraintNutrientID === lastAccNutrientID) {
-          lastAccConstraint.push(borderValue)
-          return acc
-        }
-      }
-      acc.push([constraintNutrientID, borderValue])
-      return acc
-    },
-
-    _getReducedConstraints: function () {
-      const initialAcc = []
-      return conditions.constraints.reduce(
-        this._combineConstraints,
-        initialAcc
-      )
     }
   }
 }

@@ -1,8 +1,8 @@
-<template lang="html">
-  <v-layout align-center justify-space-between fill-height>
+<template>
+  <v-layout align-center fill-height justify-space-between>
     <v-select
-      filled
       @change="setGoal"
+      filled
       :items="items"
       label="Цель:"
       :value="items[settings.goal]"
@@ -32,11 +32,9 @@ export default {
 
     setGoal: function (goal) {
       this.setSettings({ goal })
-      const payload = { nutrientIDs: [1008] }
+      const payload = { nutrientIDs: [1003, 1004, 1005, 1008] }
       this.setConstraints(payload)
     }
   }
 }
 </script>
-
-<style lang="css" scoped></style>

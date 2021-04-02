@@ -112,6 +112,15 @@ const service = {
     return extremumIndex === -1
   },
 
+  isOldTarget: (oldTarget, newTargetID) => {
+    let isOldTarget = false
+    if (oldTarget.length) {
+      const id = oldTarget[0].id
+      isOldTarget = id !== newTargetID
+    }
+    return isOldTarget
+  },
+
   notMatchingIDs: (id, idList) => {
     return !idList.includes(id)
   },
@@ -126,10 +135,6 @@ const service = {
     }
     return Object.assign(minMaxValue, source)
   }
-}
-
-function clauseForSelectedAll (filters, userId) {
-  return filters.where('user_id').equals(userId)
 }
 
 function _constraintForRation (constraint, days, nutrientValue) {
@@ -182,25 +187,4 @@ function _restrictionCoefficient (isMax, nutrientPosition, product) {
   return sign * nutrientValue
 }
 
-function isNoExtremum (constraints) {
-  const extremumIndex = constraints.findIndex(
-    constraint => constraint.target !== 2
-  )
-  return extremumIndex === -1
-}
-
-function isOldTarget (oldTarget, newTargetID) {
-  let isOldTarget = false
-  if (oldTarget.length) {
-    const id = oldTarget[0].id
-    isOldTarget = id !== newTargetID
-  }
-  return isOldTarget
-}
-
-export {
-  clauseForSelectedAll,
-  isNoExtremum,
-  isOldTarget,
-  service
-}
+export { service }

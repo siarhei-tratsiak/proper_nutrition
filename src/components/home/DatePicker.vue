@@ -33,7 +33,7 @@
 
 <script>
 import { dates } from '@/api/dates'
-import { mapActions, mapMutations, mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
 
@@ -56,7 +56,6 @@ export default {
   }),
 
   methods: {
-    ...mapActions(['setRationForPeriod']),
     ...mapMutations(['setStateObject']),
 
     allowedDates: function (date) {

@@ -83,7 +83,7 @@ export default {
 
   data: () => ({
     rules: {
-      required: value => !!value || 'Обязательное',
+      required: value => !!value || 'Обязательное поле',
       numeric: value => !isNaN(value) || 'Не число',
       positive: value => +value > 0 || 'Не больше 0'
     },

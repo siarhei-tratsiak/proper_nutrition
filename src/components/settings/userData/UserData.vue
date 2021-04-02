@@ -1,12 +1,18 @@
 <template>
   <v-card class="ma-2">
     <v-card-title>Настройки</v-card-title>
+
     <v-card-text>
       <SexSelector />
+
       <AgeSelector />
+
       <WeightSelector />
+
       <HeightSelector />
+
       <ActivitySelector />
+
       <GoalSelector />
     </v-card-text>
   </v-card>

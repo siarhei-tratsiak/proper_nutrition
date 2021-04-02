@@ -1,11 +1,25 @@
 <template>
   <v-card class="ma-2">
     <v-card-title>Суточное потребление</v-card-title>
+
     <v-card-actions class="d-flex flex-wrap justify-center">
       <SwitchLock :lock="true" />
+
       <SwitchLock :lock="false" />
+
       <DefaultButton />
+
+      <v-tooltip>
+        <template v-slot:activator="{ on }">
+          <v-icon right v-on="on">mdi-help-circle</v-icon>
+        </template>
+
+        <p>
+          Разблокированные <v-icon>mdi-lock-open-variant</v-icon> значения не изменяются при изменении параметров пользователя.
+        </p>
+      </v-tooltip>
     </v-card-actions>
+
     <v-card-text>
       <v-data-table
         dense
@@ -21,7 +35,12 @@
         </template>
 
         <template v-slot:[`item.minData`]="{ item }">
-          <TextField class="inline-flex" :extremum="item.minData" :isMin="true" />
+          <TextField
+            class="inline-flex"
+            :extremum="item.minData"
+            :isMin="true"
+          />
+
           <FieldCheckbox
             class="inline-flex margin-left"
             :mutableData="item.minData"
@@ -30,7 +49,12 @@
         </template>
 
         <template v-slot:[`item.maxData`]="{ item }">
-          <TextField class="inline-flex" :extremum="item.maxData" :isMin="false" />
+          <TextField
+            class="inline-flex"
+            :extremum="item.maxData"
+            :isMin="false"
+          />
+
           <FieldCheckbox
             class="inline-flex margin-left"
             :mutableData="item.maxData"
@@ -52,7 +76,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { nutrients } from '@/data/nutrients_ru.js'
+import { nutrients } from '@/data/nutrients_ru'
 import DefaultButton from '@/components/settings/dailyIntake/DefaultButton'
 import FieldCheckbox from '@/components/settings/dailyIntake/FieldCheckbox'
 import SwitchLock from '@/components/settings/dailyIntake/SwitchLock'
@@ -72,27 +96,7 @@ export default {
     ...mapState(['constraints']),
 
     formattedConstraints: function () {
-      return this.constraints.map(constraint => {
-        const nutrient = nutrients.find(
-          nutrient => nutrient[0] === constraint.nutrient_id
-        )
-        return {
-          name: nutrient[1],
-          minData: {
-            id: constraint.id,
-            min: constraint.min,
-            min_mutable: constraint.min_mutable
-          },
-          maxData: {
-            id: constraint.id,
-            min: constraint.min,
-            max: constraint.max,
-            max_mutable: constraint.max_mutable
-          },
-          unit: nutrient[2],
-          targetData: { id: constraint.id, target: constraint.target }
-        }
-      })
+      return this.constraints.map(this._formattedConstraint)
     }
   },
 
@@ -110,6 +114,28 @@ export default {
   methods: {
     ...mapActions(['updateConstraint']),
 
+    _formattedConstraint: function (constraint) {
+      const nutrient = nutrients.find(
+        nutrient => nutrient[0] === constraint.nutrient_id
+      )
+      return {
+        name: nutrient[1],
+        minData: {
+          id: constraint.id,
+          min: constraint.min,
+          min_mutable: constraint.min_mutable
+        },
+        maxData: {
+          id: constraint.id,
+          min: constraint.min,
+          max: constraint.max,
+          max_mutable: constraint.max_mutable
+        },
+        unit: nutrient[2],
+        targetData: { id: constraint.id, target: constraint.target }
+      }
+    },
+
     update: function (value, id, type) {
       const payload = { id }
       payload.value = type === 'min' ? { min: +value } : { max: +value }
@@ -119,7 +145,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style scoped>
 .block {
   display: block;
   text-align: center;
@@ -137,11 +163,11 @@ export default {
   margin-bottom: 30px;
 }
 
-td {
-  padding: 0px 4px !important;
+.margin-left {
+  margin-left: -32px;
 }
 
-.margin-left {
-  margin-left: -34px;
+td {
+  padding: 0px 4px !important;
 }
 </style>

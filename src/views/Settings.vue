@@ -6,13 +6,13 @@
 </template>
 
 <script>
-import UserData from '@/components/settings/userData/UserData'
 import DailyIntake from '@/components/settings/dailyIntake/DailyIntake'
+import UserData from '@/components/settings/userData/UserData'
 
 export default {
   components: {
-    UserData,
-    DailyIntake
+    DailyIntake,
+    UserData
   }
 }
 </script>

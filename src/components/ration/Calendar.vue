@@ -13,7 +13,7 @@ import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['isHorizontal', 'selectedDate']),
+    ...mapState(['selectedDate']),
 
     picker: {
       get: function () {

@@ -1,38 +1,38 @@
-<template lang="html">
+<template>
   <v-menu
-    ref="menu"
-    v-model="menu"
     :close-on-content-click="false"
-    transition="scale-transition"
-    offset-y
     min-width="290px"
+    offset-y
+    ref="menu"
+    transition="scale-transition"
+    v-model="menu"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
         filled
-        v-model="date"
         label="Дата рождения"
         readonly
         v-bind="attrs"
+        v-model="date"
         v-on="on"
       ></v-text-field>
     </template>
 
     <v-date-picker
-      ref="picker"
-      v-model="date"
+      @change="save"
+      locale="ru-ru"
       :max="maxDate()"
       min="1950-01-01"
-      locale="ru-ru"
       no-title
-      @change="save"
+      ref="picker"
+      v-model="date"
     ></v-date-picker>
   </v-menu>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { formatDateForPicker, getToday, getMsInYear } from '@/api/dates.js'
+import { dates } from '@/api/dates'
 
 export default {
   computed: {
@@ -40,8 +40,9 @@ export default {
 
     date: {
       get: function () {
-        return formatDateForPicker(this.settings.birthdate)
+        return dates.formatDateForPicker(this.settings.birthdate)
       },
+
       set: function (value) {
         const birthdate = Date.parse(value)
         this.setSettings({ birthdate })
@@ -55,27 +56,25 @@ export default {
     menu: false
   }),
 
-  watch: {
-    menu (val) {
-      val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
-    }
-  },
-
   methods: {
     ...mapActions(['setConstraints', 'setSettings']),
 
     maxDate: function () {
-      const today = getToday()
-      const year = getMsInYear()
+      const today = dates.getToday()
+      const year = dates.getMsInYear()
       const maxDate = today - 17 * year
-      return formatDateForPicker(maxDate)
+      return dates.formatDateForPicker(maxDate)
     },
 
     save: function (date) {
       this.$refs.menu.save(date)
     }
+  },
+
+  watch: {
+    menu: function (val) {
+      return val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
+    }
   }
 }
 </script>
-
-<style lang="css" scoped></style>

@@ -1,8 +1,4 @@
-import {
-  getMsInDay,
-  getMsInYear,
-  getToday
-} from '@/api/dates'
+import { dates } from '@/api/dates'
 import {
   carbohydratesDailyIntake,
   fatDailyIntake,
@@ -11,7 +7,7 @@ import {
   proteinDailyIntake
 } from '@/data/defaultParameters'
 import { service } from '@/store/service'
-import { cloneDeep } from 'lodash'
+import { clone } from 'lodash'
 
 const getters = {
 
@@ -40,7 +36,7 @@ const getters = {
 
   _getSimplexConstraints: (state) => (nutrients) => {
     const days = state.days
-    const constraints = cloneDeep(state.constraints)
+    const constraints = clone(state.constraints)
     return constraints.map(constraint => {
       [constraint.min, constraint.max] = service.getConstraintsWithRation(
         nutrients,
@@ -95,14 +91,14 @@ const getters = {
   _countAge: state => {
     const birthdate = state.settings.birthdate
     const daysInYear = 365.25
-    const age = (new Date() - birthdate) / getMsInDay() / daysInYear
+    const age = (new Date() - birthdate) / dates.getMsInDay() / daysInYear
     return age
   },
 
   _getCalories: state => () => {
     const settings = state.settings
-    const today = getToday()
-    const year = getMsInYear()
+    const today = dates.getToday()
+    const year = dates.getMsInYear()
     const age = Math.round((today - settings.birthdate) / year)
     const coefficient = settings.sex === 'male' ? 5 : -161
     const basalMetabolicRate =
@@ -180,8 +176,9 @@ const getters = {
     let payloadSet = nutrientConstraints
     const sexIndex = state.settings.sex === 'male' ? 2 : 1
     const payloadSetBySex = nutrientConstraintsBySex.map(constraint => {
-      constraint.splice(sexIndex, 1)
-      return constraint
+      const newConstraint = clone(constraint)
+      newConstraint.splice(sexIndex, 1)
+      return newConstraint
     })
     payloadSet = payloadSet.concat(payloadSetBySex)
     payloadSet = payloadSet.filter(payload => nutrientIDs.includes(payload[0]))
