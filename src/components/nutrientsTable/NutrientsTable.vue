@@ -9,7 +9,7 @@
       :items="nutrients"
       :mobile-breakpoint="mobileBreakpoint"
     >
-      <template v-slot:[`group.header`]="{ group, headers, isOpen, toggle }">
+      <template #[`group.header`]="{ group, headers, isOpen, toggle }">
         <td :colspan="headers.length">
           <v-btn
             @click="toggle"
@@ -21,11 +21,15 @@
             <v-icon v-else>mdi-plus</v-icon>
           </v-btn>
 
-          {{ group ? 'основные' : 'дополнительные' }}
+          {{
+            group ?
+            $t('nutrients.group.main') :
+            $t('nutrients.group.additional')
+          }}
         </td>
       </template>
 
-      <template v-slot:[`item.value`]="{ item }">
+      <template #[`item.value`]="{ item }">
         <ProgressBarCell :nutrient="item"></ProgressBarCell>
       </template>
     </v-data-table>
@@ -39,14 +43,16 @@ export default {
     ProgressBarCell
   },
 
-  data: () => ({
-    headers: [
-      { text: 'нутриент', value: 'name' },
-      { text: 'в 100 г продукта', value: 'value' },
-      { text: 'ед. изм.', value: 'units' }
-    ],
-    mobileBreakpoint: '600'
-  }),
+  data: function () {
+    return {
+      headers: [
+        { text: this.$t('nutrients.headers.name'), value: 'name' },
+        { text: this.$t('nutrients.headers.value'), value: 'value' },
+        { text: this.$t('nutrients.headers.units'), value: 'units' }
+      ],
+      mobileBreakpoint: '600'
+    }
+  },
 
   methods: {
     _clickAdditional: function () {

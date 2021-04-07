@@ -5,7 +5,7 @@
       flat
       hide-no-data
       :items="items"
-      label="Продукт"
+      :label="label"
       :rules="[rules.required]"
       :search-input.sync="search"
       v-model="select"
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { products } from '@/data/products'
+import { IDBS } from '@/api/indexedDBService'
 import { mapMutations, mapState } from 'vuex'
 import { debounce } from 'lodash'
 
@@ -42,6 +42,7 @@ export default {
       debouncedGetAnswer: debounce(this._querySelections, this.debounceTime),
       debounceTime: 500,
       items: [],
+      label: this.$t('dialog.searchProductLabel'),
       search: ''
     }
   },
@@ -61,6 +62,7 @@ export default {
       const escapeProductName = productName
         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       const re = new RegExp(escapeProductName.toLowerCase(), 'g')
+      const products = IDBS.getProducts(this.$i18n.locale)
       return products.filter(product => re.test(product[1].toLowerCase()))
     }
   },

@@ -49,17 +49,35 @@ export default {
         titleClass: 'd-xs-flex'
       }
       return this.status.isHorizontal ? horizontal : vertical
-    }
-  },
+    },
 
-  data: function () {
-    return {
-      menuItems: [
-        { path: 'Home', icon: 'mdi-home', title: 'На главную' },
-        { path: 'Result', icon: 'mdi-hamburger', title: 'Результат' },
-        { path: 'Products', icon: 'mdi-format-list-checks', title: 'Продукты' },
-        { path: 'Ration', icon: 'mdi-calendar-month', title: 'Рацион' },
-        { path: 'Settings', icon: 'mdi-cog', title: 'Настройки' }
+    menuItems: function () {
+      return [
+        {
+          path: 'Home',
+          icon: 'mdi-home',
+          title: this.$t('menu.main')
+        },
+        {
+          path: 'Result',
+          icon: 'mdi-hamburger',
+          title: this.$t('menu.result')
+        },
+        {
+          path: 'Products',
+          icon: 'mdi-format-list-checks',
+          title: this.$t('menu.products')
+        },
+        {
+          path: 'Ration',
+          icon: 'mdi-calendar-month',
+          title: this.$t('menu.ration')
+        },
+        {
+          path: 'Settings',
+          icon: 'mdi-cog',
+          title: this.$t('menu.settings')
+        }
       ]
     }
   }

@@ -1,0 +1,138 @@
+{
+  "runButtonInstructions": [
+    "PRESS THE BUTTON",
+    "TO CALCULATE DIET FOR THE PERIOD:"
+  ],
+  "datePicker": {
+    "from": "From",
+    "to": "To"
+  },
+  "periodLabel": "Period",
+  "periods": {
+    "today": "Today",
+    "monday": "From Monday",
+    "sevenDays": "7 days",
+    "fromTheFirst": "From the 1st",
+    "thirtyDays": "30 days",
+    "other": "Other"
+  },
+  "menu": {
+    "main": "Home",
+    "result": "Result",
+    "products": "Products",
+    "ration": "Ration",
+    "settings": "Settings"
+  },
+  "alert": "No solution found",
+  "result": {
+    "title": "Products for consumption for the selected period:",
+    "headers": {
+      "name": "Name",
+      "mass": "Mass, g"
+    },
+    "nutrientsHeader": "Balance of nutrients in the diet, taking into account the recommendations:"
+  },
+  "table": {
+    "all": "All",
+    "noDataText": "No data available",
+    "noResultsText": "No matching records found",
+    "rowsPerPage": "Rows per page:",
+    "pageText": "{0}-{1} of {2}"
+  },
+  "nutrients": {
+    "group": {
+      "main": "main",
+      "additional": "additional"
+    },
+    "headers": {
+      "name": "nutrient",
+      "value": "in 100 g of product",
+      "units": "units"
+    }
+  },
+  "extremum": {
+    "min": "min",
+    "max": "max"
+  },
+  "products": {
+    "header": "Products",
+    "default": "default",
+    "searchLabel": "Search",
+    "tableHeader": "NAME"
+  },
+  "rationTable": {
+    "headers": {
+      "product": "Product",
+      "mass": "Mass, g",
+      "actions": "Actions"
+    },
+    "title": "Ration: {date}"
+  },
+  "dialog": {
+    "headline": {
+      "add": "Add",
+      "edit": "Edit",
+      "product": "{action} product"
+    },
+    "searchProductLabel": "Product",
+    "mass": "Mass, g"
+  },
+  "rules": {
+    "required": "Required",
+    "lessMin": "Less than the minimum",
+    "numeric": "Not a number",
+    "positive": "Not more than 0"
+  },
+  "settings": {
+    "title": "Settings",
+    "user": "USER:",
+    "application": "APPLICATION:",
+    "sex": {
+      "title": "Sex:",
+      "male": "Male",
+      "female": "Female"
+    },
+    "birthdate": "Birthdate:",
+    "weight": {
+      "label": "Weight:",
+      "suffix": "kg"
+    },
+    "height": {
+      "label": "Height:",
+      "suffix": "sm"
+    },
+    "activity": {
+      "label": "Activity:",
+      "low": "low",
+      "medium": "medium",
+      "high": "high",
+      "tooltip": {
+        "low": "{low} - office worker doing little or no exercise;",
+        "medium": "{medium} - a builder or a person running an hour a day;",
+        "high": "{high} - agricultural worker (not mechanized) or a person who swims two hours a day."
+      }
+    },
+    "goal": {
+      "label": "Goal:",
+      "lose": "lose weight",
+      "keep": "keep weight",
+      "gain": "gain weight"
+    },
+    "language": {
+      "label": "Language:",
+      "ru": "Russian",
+      "en": "English"
+    }
+  },
+  "intake": {
+    "title": "Daily intake",
+    "tooltip": "Unlocked {icon} values do not change when user preferences are changed.",
+    "un": "un",
+    "lock": "lock everything",
+    "default": "default",
+    "label": {
+      "from": "from:",
+      "to": "to:"
+    }
+  }
+}

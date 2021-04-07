@@ -1,6 +1,6 @@
 <template>
   <v-btn class="ma-2" @click="switchLock(lock)" depressed>
-    {{ lock ? "" : "раз" }}блокировать все
+    {{ (lock ? "" : $t('intake.un'))+$t('intake.lock') }}
 
     <v-icon right>
       mdi-lock{{ lock ? "" : "-open-variant" }}

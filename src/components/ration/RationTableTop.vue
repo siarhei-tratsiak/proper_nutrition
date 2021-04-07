@@ -1,7 +1,11 @@
 <template>
   <v-toolbar>
-    <v-toolbar-title>Рацион: {{ formattedDate }}</v-toolbar-title>
+    <v-toolbar-title>
+      {{ $t('rationTable.title', { date: formattedDate}) }}
+    </v-toolbar-title>
+
     <v-spacer></v-spacer>
+
     <AddProductButton />
   </v-toolbar>
 </template>
@@ -25,7 +29,8 @@ export default {
         weekday: 'long',
         year: 'numeric'
       }
-      return new Date(this.selectedDate).toLocaleDateString(undefined, options)
+      return new Date(this.selectedDate)
+        .toLocaleDateString(this.$i18n.locale, options)
     }
   }
 }

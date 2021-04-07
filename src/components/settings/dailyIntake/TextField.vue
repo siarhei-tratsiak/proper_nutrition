@@ -1,28 +1,40 @@
 <template>
-  <v-text-field
-    @change="update"
-    class="ma-1"
-    dense
-    :disabled="isMin ? !extremum.min_mutable : !extremum.max_mutable"
-    filled
-    :label="isMin ? 'от: ' : 'до: '"
-    :rules="rules"
-    :value="getValue()"
-  ></v-text-field>
+  <v-form v-model="valid">
+    <v-text-field
+      @change="update"
+      class="ma-1"
+      dense
+      :disabled="isMin ? !extremum.min_mutable : !extremum.max_mutable"
+      filled
+      :label="isMin ? $t('intake.label.from') : $t('intake.label.to')"
+      :rules="rules"
+      :value="getValue()"
+    ></v-text-field>
+  </v-form>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 
 export default {
+  computed: {
+    rules: function () {
+      const numeric = this.$t('rules.numeric')
+      const positive = this.$t('rules.positive')
+      const lessMin = this.$t('rules.lessMin')
+      return [
+        value => !isNaN(value) || numeric,
+        value => +value >= 0 || positive,
+        value => ((this.isMin || !value)
+          ? true
+          : +value >= this.extremum.min) || lessMin
+      ]
+    }
+  },
+
   data: function () {
     return {
-      rules: [
-        value => !isNaN(value) || 'Не число',
-        value => +value >= 0 || 'Меньше нуля',
-        value =>
-          (this.isMin ? true : +value >= this.extremum.min) || 'Меньше минимума'
-      ]
+      valid: true
     }
   },
 
@@ -35,10 +47,12 @@ export default {
     },
 
     update: function (value) {
-      const payload = { id: this.extremum.id }
-      const extremum = value === '' ? value : +value
-      payload.value = this.isMin ? { min: extremum } : { max: extremum }
-      this.updateConstraint(payload)
+      if (this.valid) {
+        const payload = { id: this.extremum.id }
+        const extremum = value === '' ? value : +value
+        payload.value = this.isMin ? { min: extremum } : { max: extremum }
+        this.updateConstraint(payload)
+      }
     }
   },
 

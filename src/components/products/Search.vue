@@ -1,12 +1,13 @@
 <template>
   <v-text-field
-        append-icon="mdi-magnify"
-        dense
-        hide-details
-        label="Поиск"
-        single-line
-        v-model="search"
-      ></v-text-field>
+    append-icon="mdi-magnify"
+    dense
+    hide-details
+    :label="$t('products.searchLabel')"
+    single-line
+    v-model="search"
+  >
+  </v-text-field>
 </template>
 
 <script>

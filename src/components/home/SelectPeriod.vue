@@ -11,7 +11,7 @@
     <v-select
       @input="input"
       :items="periods"
-      label="Период"
+      :label="label"
       solo
       :value="interval"
     ></v-select>
@@ -29,10 +29,6 @@ export default {
   computed: {
     ...mapState(['period']),
 
-    showDatePicker: function () {
-      return this.interval === 'Другое'
-    },
-
     interval: {
       get: function () {
         return this.period.name
@@ -44,19 +40,37 @@ export default {
         const payload = { objectName: 'period', state: { start, end, name } }
         this.setStateObject(payload)
       }
+    },
+
+    label: function () {
+      return this.$t('periodLabel')
+    },
+
+    periods: function () {
+      return [
+        this.$t('periods.today'),
+        this.$t('periods.monday'),
+        this.$t('periods.sevenDays'),
+        this.$t('periods.fromTheFirst'),
+        this.$t('periods.thirtyDays'),
+        this.$t('periods.other')
+      ]
+    },
+
+    showDatePicker: function () {
+      return this.interval === this.$t('periods.other')
     }
   },
 
   created: function () {
     const start = dates.getToday()
     const end = dates.getTomorrow()
-    const payload = { objectName: 'period', state: { start, end } }
+    const payload = {
+      objectName: 'period',
+      state: { start, end, name: this.periods[0] }
+    }
     this.setStateObject(payload)
   },
-
-  data: () => ({
-    periods: ['Сегодня', 'С понедельника', '7 дней', 'С 1 числа', '30 дней', 'Другое']
-  }),
 
   methods: {
     ...mapMutations(['setStateObject']),
@@ -67,16 +81,16 @@ export default {
       const today = dates.getToday()
       let start = today
       switch (intervalName) {
-        case 'Неделя':
+        case this.$t('periods.monday'):
           start = this._getMonday(now, today, msInDay)
           break
-        case '7 дней':
+        case this.$t('periods.sevenDays'):
           start = this._getWeekAgo(today, msInDay)
           break
-        case 'Месяц':
+        case this.$t('periods.fromTheFirst'):
           start = this._getFirstDayOfMonth(now, today, msInDay)
           break
-        case '30 дней':
+        case this.$t('periods.thirtyDays'):
           start = this._getMonthAgo(today, msInDay)
       }
       return start

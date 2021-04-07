@@ -2,13 +2,13 @@
   <v-card>
     <v-card-title>{{ productName }}</v-card-title>
 
-    <NutrientsTable :nutrients='nutrients' />
+    <NutrientsTable :nutrients='nutrients()' />
   </v-card>
 </template>
 
 <script>
 import { foodNutrients } from '@/data/foodNutrients.js'
-import { products } from '@/data/products'
+import { IDBS } from '@/api/indexedDBService'
 import GetNutrietsTableData from '@/mixins/GetNutrientsTableData'
 import NutrientsTable from '@/components/nutrientsTable/NutrientsTable'
 
@@ -19,6 +19,7 @@ export default {
 
   computed: {
     productName: function () {
+      const products = IDBS.getProducts(this.$i18n.locale)
       const product = products.find(product => product[0] === this.productID)
       const productName = product[1]
       return productName
@@ -32,7 +33,7 @@ export default {
   },
 
   methods: {
-    _getMinimaxAbs: function (_, nutrientConstraints) {
+    _getMinimaxAbs: function (nutrientConstraints) {
       const minAbs = nutrientConstraints[1]
       const maxAbs = nutrientConstraints[2]
       return { minAbs, maxAbs }

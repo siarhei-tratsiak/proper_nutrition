@@ -1,12 +1,14 @@
 <template>
-  <v-text-field
-    @change="setHeight"
-    filled
-    label="Рост: "
-    :rules="rules"
-    suffix="см"
-    :value="settings.height"
-  ></v-text-field>
+  <v-form v-model="valid">
+    <v-text-field
+      @change="setHeight"
+      filled
+      :label="$t('settings.height.label')"
+      :rules="rules"
+      :suffix="$t('settings.height.suffix')"
+      :value="settings.height"
+    ></v-text-field>
+  </v-form>
 </template>
 
 <script>
@@ -14,24 +16,35 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['settings'])
+    ...mapState(['settings']),
+
+    rules: function () {
+      const required = this.$t('rules.required')
+      const numeric = this.$t('rules.numeric')
+      const positive = this.$t('rules.positive')
+      return [
+        value => !!value || required,
+        value => !isNaN(value) || numeric,
+        value => +value > 0 || positive
+      ]
+    }
   },
 
-  data: () => ({
-    rules: [
-      value => !!value || 'Обязательное поле',
-      value => !isNaN(value) || 'Не число',
-      value => +value > 0 || 'Не больше 0'
-    ]
-  }),
+  data: function () {
+    return {
+      valid: true
+    }
+  },
 
   methods: {
     ...mapActions(['setConstraints', 'setSettings']),
 
     setHeight (height) {
-      this.setSettings({ height: +height })
-      const payload = { nutrientIDs: [1008] }
-      this.setConstraints(payload)
+      if (this.valid) {
+        this.setSettings({ height: +height })
+        const payload = { nutrientIDs: [1008] }
+        this.setConstraints(payload)
+      }
     }
   }
 }

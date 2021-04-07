@@ -1,5 +1,7 @@
 <template>
-  <v-btn @click='restoreDefaults'>по умолчанию</v-btn>
+  <v-btn @click='restoreDefaults'>
+    {{ $t('products.default') }}
+  </v-btn>
 </template>
 
 <script>

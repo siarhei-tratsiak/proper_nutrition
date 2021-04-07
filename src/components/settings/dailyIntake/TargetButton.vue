@@ -12,9 +12,9 @@ export default {
     text: function () {
       let text = ''
       if (this.targetData.target === 0) {
-        text = 'мин'
+        text = this.$t('extremum.min')
       } else if (this.targetData.target === 1) {
-        text = 'макс'
+        text = this.$t('extremum.max')
       }
       return text
     }

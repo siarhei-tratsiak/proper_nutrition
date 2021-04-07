@@ -1,6 +1,6 @@
 <template lang="html">
   <v-card>
-    <v-card-title>Продукты к употреблению за выбранный период:</v-card-title>
+    <v-card-title>{{ $t('result.title') }}</v-card-title>
 
     <v-data-table
       :headers="headers"
@@ -8,9 +8,9 @@
       id="result-products-list"
       :items="items"
       :itemsPerPage="itemsPerPage"
-      :no-data-text="noDataText"
+      :no-data-text="$t('table.noDataText')"
     >
-      <template v-slot:item.name="{ item }">
+      <template #item.name="{ item }">
         <router-link :to="{ name: 'Product', params: { id: item.id } }">
           {{ item.name }}
         </router-link>
@@ -31,13 +31,14 @@ export default {
     }
   },
 
-  data: () => ({
-    headers: [
-      { text: 'Название', value: 'name' },
-      { text: 'Масса, г', value: 'mass' }
-    ],
-    itemsPerPage: -1,
-    noDataText: 'Нет данных'
-  })
+  data: function () {
+    return {
+      headers: [
+        { text: this.$t('result.headers.name'), value: 'name' },
+        { text: this.$t('result.headers.mass'), value: 'mass' }
+      ],
+      itemsPerPage: -1
+    }
+  }
 }
 </script>

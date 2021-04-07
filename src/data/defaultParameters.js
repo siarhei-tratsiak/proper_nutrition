@@ -4,7 +4,18 @@ const defaultUser = {
   weight: 68,
   height: 174,
   activity: 1,
-  goal: 1
+  goal: 1,
+  language: _getLocale()
+}
+
+function _getLocale () {
+  const browserLanguages = navigator.languages
+  const availableLanguages = ['ru', 'en']
+  const intersection = browserLanguages.filter(
+    language => availableLanguages.includes(language)
+  )
+  const selectedLanguage = intersection.length === 0 ? 'en' : intersection[0]
+  return selectedLanguage
 }
 
 const carbohydratesDailyIntake = {

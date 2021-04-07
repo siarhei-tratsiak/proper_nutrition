@@ -1,10 +1,10 @@
-<template lang="html">
+<template>
   <v-card>
     <v-card-title>
-      Баланс нутриентов в рационе с учетом рекомендаций:
+      {{ $t('result.nutrientsHeader') }}
     </v-card-title>
 
-    <NutrientsTable :nutrients='nutrients'/>
+    <NutrientsTable :nutrients='nutrients()'/>
   </v-card>
 </template>
 

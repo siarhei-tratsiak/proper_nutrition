@@ -3,7 +3,7 @@
       type="warning"
       v-if='!status.isResult'
     >
-      Решение не найдено
+      {{ $t('alert') }}
     </v-alert>
 </template>
 

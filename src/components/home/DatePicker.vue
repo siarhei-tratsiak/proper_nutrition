@@ -7,7 +7,7 @@
     transition="scale-transition"
     v-model="menu"
   >
-    <template v-slot:activator="{ on, attrs }">
+    <template #activator="{ on, attrs }">
       <v-text-field
         :class="textFieldClass"
         :label="label"
@@ -24,7 +24,7 @@
       :allowed-dates="allowedDates"
       first-day-of-week="1"
       @input="input"
-      locale="ru-ru"
+      :locale="$i18n.locale"
       no-title
       v-model="date"
     ></v-date-picker>
@@ -41,7 +41,7 @@ export default {
     ...mapState(['period']),
 
     label: function () {
-      return this.isFrom ? 'С' : 'По'
+      return this.isFrom ? this.$t('datePicker.from') : this.$t('datePicker.to')
     },
 
     textFieldClass: function () {
@@ -49,11 +49,13 @@ export default {
     }
   },
 
-  data: () => ({
-    date: dates.formatDateForPicker(),
-    menu: false,
-    nudgeRight: 40
-  }),
+  data: function () {
+    return {
+      date: dates.formatDateForPicker(),
+      menu: false,
+      nudgeRight: 40
+    }
+  },
 
   methods: {
     ...mapMutations(['setStateObject']),
@@ -89,7 +91,7 @@ export default {
     },
 
     _getPeriod: function (date) {
-      const period = { name: 'Другое' }
+      const period = { name: this.$t('periods.other') }
       const parsedDate = Date.parse(date)
       if (this.isFrom) {
         period.start = parsedDate

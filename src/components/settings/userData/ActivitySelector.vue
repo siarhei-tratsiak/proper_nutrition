@@ -4,29 +4,33 @@
       @change="update"
       filled
       :items="items"
-      label="Активность:"
+      :label="$t('settings.activity.label')"
       :value="items[settings.activity]"
     >
     </v-select>
 
     <v-tooltip top>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-icon right v-on="on">mdi-help-circle</v-icon>
       </template>
 
-      <p>
-        <strong>низкая</strong> - офисный работник, выполняет мало или не
-        выполняет упражнения;
-      </p>
+      <i18n path="settings.activity.tooltip.low" tag="p">
+        <template #low>
+          <strong>{{ $t('settings.activity.low') }}</strong>
+        </template>
+      </i18n>
 
-      <p>
-        <strong>средняя</strong> - строитель или человек, бегающий час в день;
-      </p>
+      <i18n path="settings.activity.tooltip.medium" tag="p">
+        <template #medium>
+          <strong>{{ $t('settings.activity.medium') }}</strong>
+        </template>
+      </i18n>
 
-      <p>
-        <strong>высокая</strong> - работник сельского хозяйства (не
-        механизированного) или человек, плавающий два часа в день.
-      </p>
+      <i18n path="settings.activity.tooltip.high" tag="p">
+        <template #high>
+          <strong>{{ $t('settings.activity.high') }}</strong>
+        </template>
+      </i18n>
     </v-tooltip>
   </v-layout>
 </template>
@@ -36,16 +40,19 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['settings'])
-  },
+    ...mapState(['settings']),
 
-  data: () => ({
-    items: [
-      { text: 'низкая', value: 0 },
-      { text: 'средняя', value: 1 },
-      { text: 'высокая', value: 2 }
-    ]
-  }),
+    items: function () {
+      const low = this.$t('settings.activity.low')
+      const medium = this.$t('settings.activity.medium')
+      const high = this.$t('settings.activity.high')
+      return [
+        { text: low, value: 0 },
+        { text: medium, value: 1 },
+        { text: high, value: 2 }
+      ]
+    }
+  },
 
   methods: {
     ...mapActions(['setConstraints', 'setSettings']),

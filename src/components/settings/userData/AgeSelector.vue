@@ -7,10 +7,10 @@
     transition="scale-transition"
     v-model="menu"
   >
-    <template v-slot:activator="{ on, attrs }">
+    <template #activator="{ on, attrs }">
       <v-text-field
         filled
-        label="Дата рождения"
+        :label="$t('settings.birthdate')"
         readonly
         v-bind="attrs"
         v-model="date"
@@ -20,7 +20,7 @@
 
     <v-date-picker
       @change="save"
-      locale="ru-ru"
+      :locale="$i18n.locale"
       :max="maxDate()"
       min="1950-01-01"
       no-title

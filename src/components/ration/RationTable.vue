@@ -4,19 +4,20 @@
     :headers="headers"
     hide-default-footer
     :items="ration"
-    :no-data-text="noDataText"
+    :items-per-page="-1"
+    :no-data-text="$t('table.noDataText')"
   >
-    <template v-slot:top>
+    <template #top>
       <RationTableTop />
     </template>
 
-    <template v-slot:[`item.product_name`]="{ item }">
+    <template #[`item.product_name`]="{ item }">
       <router-link :to="{ name: 'Product', params: { id: item.product_id } }">
         {{ item.product_name }}
       </router-link>
     </template>
 
-    <template v-slot:[`item.actions`]="{ item }">
+    <template #[`item.actions`]="{ item }">
       <RationTableActions :item='item' />
     </template>
   </v-data-table>
@@ -41,14 +42,25 @@ export default {
     this.setRation(this.selectedDate)
   },
 
-  data: () => ({
-    headers: [
-      { text: 'Продукт', value: 'product_name' },
-      { text: 'Масса, г', value: 'mass' },
-      { text: 'Действия', sortable: false, value: 'actions' }
-    ],
-    noDataText: 'Нет данных'
-  }),
+  data: function () {
+    return {
+      headers: [
+        {
+          text: this.$t('rationTable.headers.product'),
+          value: 'product_name'
+        },
+        {
+          text: this.$t('rationTable.headers.mass'),
+          value: 'mass'
+        },
+        {
+          text: this.$t('rationTable.headers.actions'),
+          sortable: false,
+          value: 'actions'
+        }
+      ]
+    }
+  },
 
   methods: {
     ...mapActions(['setRation'])

@@ -3,12 +3,14 @@
     class="accent-2 align-center d-flex flex-column green"
     id="background"
   >
-    <p class="align-center d-flex flex-grow-1 text-center">НАЖМИТЕ КНОПКУ</p>
+    <p class="align-center d-flex flex-grow-1 text-center">
+      {{ $t('runButtonInstructions[0]') }}
+    </p>
 
     <RunButton v-if="isReady" />
 
     <p class="align-center d-flex flex-grow-1 text-center">
-      ЧТОБЫ ВЫЧИСЛИТЬ РАЦИОН ЗА ПЕРИОД:
+      {{ $t('runButtonInstructions[1]') }}
     </p>
 
     <SelectPeriod />

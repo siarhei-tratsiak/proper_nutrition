@@ -1,5 +1,6 @@
 import { dates } from '@/api/dates'
-import { products } from '@/data/products.js'
+import { IDBS } from '@/api/indexedDBService'
+import i18n from '@/plugins/i18n'
 
 const mutations = {
   clearEditedProduct (state) {
@@ -15,6 +16,7 @@ const mutations = {
   },
 
   setProductsList (state) {
+    const products = IDBS.getProducts(i18n.locale)
     const productsList = products.map(product => ({
       id: product[0],
       name: product[1]

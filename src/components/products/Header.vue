@@ -1,6 +1,6 @@
 <template>
     <v-card-title>
-      Продукты
+      {{ $t('products.header')}}
 
       <v-spacer></v-spacer>
 

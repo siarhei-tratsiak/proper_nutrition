@@ -1,8 +1,8 @@
 <script>
-import { dates } from '@/api/dates'
 import { mapGetters, mapState } from 'vuex'
-import { nutrients } from '@/data/nutrients_ru'
 import { nutrientIndices } from '@/data/nutrientIndices'
+import { nutrients as nutrientsRU } from '@/data/nutrients_ru'
+import { nutrients as nutrientsEN } from '@/data/nutrients_en'
 import ProgressBarCell from '@/components/nutrientsTable/ProgressBarCell'
 
 export default {
@@ -13,6 +13,12 @@ export default {
 
     ...mapState(['constraints', 'period', 'products', 'productsList', 'rationForPeriod']),
 
+    rationProductIDs: function () {
+      return this.rationForPeriod.map((product) => product.id)
+    }
+  },
+
+  methods: {
     nutrients: function () {
       const usedNutrients = this._getUsedNutrients()
       const nutrientValues = this._getNutrientValues()
@@ -25,14 +31,11 @@ export default {
       return nutrients
     },
 
-    rationProductIDs: function () {
-      return this.rationForPeriod.map((product) => product.id)
-    }
-  },
-
-  methods: {
     _getUsedNutrients: function () {
-      return nutrients
+      const importedNutrients = this.$i18n.locale === 'ru'
+        ? nutrientsRU
+        : nutrientsEN
+      return importedNutrients
         .filter(this._isFromNutrientIndices)
         .map(this._sliceNutrient)
     },
@@ -46,10 +49,8 @@ export default {
     },
 
     _getNutrients: function (usedNutrients, reducedConstraints, nutrientValues) {
-      const days = dates.getDays(this.period.start, this.period.end)
       const nutrients = usedNutrients.map(usedNutrient =>
         this._getProgressBarData({
-          days,
           nutrientValues,
           reducedConstraints,
           usedNutrient
@@ -67,16 +68,15 @@ export default {
       const usedNutrientID = payload.usedNutrient[0]
       const rowIndex = this._findIndex(usedNutrientID)
       const nutrientValue = payload.nutrientValues[rowIndex]
-      const { minAbs, maxAbs } = this._getMinimaxAbs(
-        payload.days,
-        nutrientConstraints
-      )
+      const { minAbs, maxAbs } = this._getMinimaxAbs(nutrientConstraints)
       const comparison = [minAbs, nutrientValue, maxAbs]
       const base = this._getBase(comparison)
-      const value = minAbs + maxAbs === 0 ? 0 : base * nutrientValue
+      const isMain = !!(minAbs || maxAbs)
+      const valuePayload = { base, isMain, maxAbs, minAbs, nutrientValue }
+      const value = this._getValue(valuePayload)
       return {
         base,
-        isMain: !!(minAbs || maxAbs),
+        isMain,
         max: base * maxAbs,
         maxAbs,
         min: base * minAbs,
@@ -101,6 +101,16 @@ export default {
       const maxAbs = Math.max(...comparison)
       const base = maxAbs === 0 ? 0 : 100 / maxAbs
       return base
+    },
+
+    _getValue: function (payload) {
+      const isStriped = payload.isMain || (payload.nutrientValue === 0)
+      const value = payload.minAbs + payload.maxAbs === 0
+        ? 0
+        : payload.base * payload.nutrientValue
+      return isStriped
+        ? value
+        : 100
     }
   }
 }

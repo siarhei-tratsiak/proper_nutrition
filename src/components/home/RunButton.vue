@@ -9,7 +9,7 @@
     >
       <v-icon :size="size">mdi-room-service</v-icon>
 
-      <template v-slot:loader>
+      <template #loader>
         <v-progress-circular indeterminate :size="progressSize" />
       </template>
     </v-btn>
@@ -51,7 +51,7 @@ export default {
       }
       this.setStateObject(payload)
       this.setDays()
-      this.getSolution(this.nutrients)
+      this.getSolution(this.nutrients())
     },
 
     _countProgressSize: () => {

@@ -7,7 +7,7 @@ import GetNutrietsTableData from '@/mixins/GetNutrientsTableData'
 
 export default {
   computed: {
-    ...mapState(['products', 'rationForPeriod', 'selectedProductIDs'])
+    ...mapState(['days', 'products', 'rationForPeriod', 'selectedProductIDs'])
   },
 
   created: function () {
@@ -19,7 +19,8 @@ export default {
 
     // do not move to GetNutrietsTableData
     // these functions may differ in parent components
-    _getMinimaxAbs: function (days, nutrientConstraints) {
+    _getMinimaxAbs: function (nutrientConstraints) {
+      const days = this.days
       const minAbs = nutrientConstraints[1] * days
       const maxAbs = nutrientConstraints[2]
         ? nutrientConstraints[2] * days

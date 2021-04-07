@@ -2,7 +2,7 @@
   <v-date-picker
     first-day-of-week="1"
     full-width
-    locale="ru-ru"
+    :locale="$i18n.locale"
     no-title
     v-model="picker"
   />

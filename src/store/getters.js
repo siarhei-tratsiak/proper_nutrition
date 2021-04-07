@@ -7,7 +7,7 @@ import {
   proteinDailyIntake
 } from '@/data/defaultParameters'
 import { service } from '@/store/service'
-import { clone } from 'lodash'
+import { cloneDeep } from 'lodash'
 
 const getters = {
 
@@ -36,7 +36,7 @@ const getters = {
 
   _getSimplexConstraints: (state) => (nutrients) => {
     const days = state.days
-    const constraints = clone(state.constraints)
+    const constraints = cloneDeep(state.constraints)
     return constraints.map(constraint => {
       [constraint.min, constraint.max] = service.getConstraintsWithRation(
         nutrients,
@@ -176,7 +176,7 @@ const getters = {
     let payloadSet = nutrientConstraints
     const sexIndex = state.settings.sex === 'male' ? 2 : 1
     const payloadSetBySex = nutrientConstraintsBySex.map(constraint => {
-      const newConstraint = clone(constraint)
+      const newConstraint = cloneDeep(constraint)
       newConstraint.splice(sexIndex, 1)
       return newConstraint
     })

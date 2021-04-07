@@ -1,13 +1,13 @@
 <template lang="html">
   <v-layout align-center fill-height justify-space-between>
-    <v-flex>Пол:</v-flex>
+    <v-flex>{{ $t('settings.sex.title') }}</v-flex>
 
     <v-spacer />
 
     <v-radio-group @change="switchSex" row :value="settings.sex">
-      <v-radio label="Мужской" value="male"></v-radio>
+      <v-radio :label="$t('settings.sex.male')" value="male"></v-radio>
 
-      <v-radio label="Женский" value="female"></v-radio>
+      <v-radio :label="$t('settings.sex.female')" value="female"></v-radio>
     </v-radio-group>
   </v-layout>
 </template>

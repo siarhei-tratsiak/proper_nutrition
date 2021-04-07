@@ -1,4 +1,4 @@
-const nutrient = [
+const nutrients = [
   [1002, 'Nitrogen', 'G', 202, 500],
   [1003, 'Protein', 'G', 203, 600],
   [1004, 'Lipid', 'G', 204, 800],
@@ -236,4 +236,4 @@ const nutrient = [
   [2033, 'Total dietary fiber (AOAC 2011.25)', 'G', 293, 1300]
 ]
 
-export { nutrient }
+export { nutrients }

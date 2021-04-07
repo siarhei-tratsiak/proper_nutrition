@@ -1,12 +1,15 @@
 import { defaultUser } from '@/data/defaultParameters'
-import { products } from '@/data/products'
+import { products as productsEN } from '@/data/products_en'
+import { products as productsRU } from '@/data/products_ru'
 import { selected } from '@/data/selected'
+import i18n from '@/plugins/i18n'
 import Dexie from 'dexie'
 
 const IDBS = {
   addConstraints: (db, constraints) => db.constraints.bulkAdd(constraints),
 
   addFilters: function (db, userID) {
+    const products = this.getProducts(i18n.locale)
     const selectedRecords = products.map(
       product => _getSelectedRecord(product, userID)
     )
@@ -35,11 +38,14 @@ const IDBS = {
     .filter(constraint => constraint.user_id === userID)
     .toArray(),
 
-  getRation: async (db, userID, start, end = undefined) => {
+  getProducts: (locale) => locale === 'ru' ? productsRU : productsEN,
+
+  getRation: async function (db, userID, start, end = undefined) {
     let rations = db.rations
     const whereClause = _rationWhereClause(rations, userID, start, end)
     rations = await whereClause.toArray()
     const rationProductIDs = rations.map(ration => ration.product_id)
+    const products = this.getProducts(i18n.locale)
     const rationProducts = products.filter(product =>
       rationProductIDs.includes(product[0])
     )

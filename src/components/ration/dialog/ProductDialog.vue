@@ -13,7 +13,7 @@
 
               <v-col cols="12" md="3" sm="6">
                 <v-text-field
-                  label="Масса, г"
+                  :label="$t('dialog.mass')"
                   :rules="Object.values(rules)"
                   v-model="product.mass"
                 ></v-text-field>
@@ -62,7 +62,11 @@ export default {
     },
 
     headlineText: function () {
-      return (this._isNewProduct ? 'Добавить' : 'Редактировать') + ' продукт'
+      const action = this._isNewProduct
+        ? this.$t('dialog.headline.add')
+        : this.$t('dialog.headline.edit')
+      const text = this.$t('dialog.headline.product', { action })
+      return text
     },
 
     _isNewProduct: function () {
@@ -81,14 +85,19 @@ export default {
     }
   },
 
-  data: () => ({
-    rules: {
-      required: value => !!value || 'Обязательное поле',
-      numeric: value => !isNaN(value) || 'Не число',
-      positive: value => +value > 0 || 'Не больше 0'
-    },
-    valid: true
-  }),
+  data: function () {
+    const required = this.$t('rules.required')
+    const numeric = this.$t('rules.numeric')
+    const positive = this.$t('rules.positive')
+    return {
+      rules: {
+        required: value => !!value || required,
+        numeric: value => !isNaN(value) || numeric,
+        positive: value => +value > 0 || positive
+      },
+      valid: true
+    }
+  },
 
   methods: {
     ...mapMutations(['setStateObject'])

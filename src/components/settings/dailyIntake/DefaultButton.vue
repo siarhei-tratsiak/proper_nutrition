@@ -1,6 +1,6 @@
 <template>
   <v-btn class="ma-2" @click="setAllConstraints" depressed>
-    по умолчанию
+    {{ $t('intake.default') }}
   </v-btn>
 </template>
 

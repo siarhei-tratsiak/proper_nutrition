@@ -1,12 +1,14 @@
 <template>
-  <v-text-field
-    @change="setWeight"
-    filled
-    label="Вес: "
-    :rules="rules"
-    suffix="кг"
-    :value="settings.weight"
-  ></v-text-field>
+  <v-form v-model="valid">
+    <v-text-field
+      @change="setWeight"
+      filled
+      :label="$t('settings.weight.label')"
+      :rules="rules"
+      :suffix="$t('settings.weight.suffix')"
+      :value="settings.weight"
+    ></v-text-field>
+  </v-form>
 </template>
 
 <script>
@@ -14,24 +16,35 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['settings'])
+    ...mapState(['settings']),
+
+    rules: function () {
+      const required = this.$t('rules.required')
+      const numeric = this.$t('rules.numeric')
+      const positive = this.$t('rules.positive')
+      return [
+        value => !!value || required,
+        value => !isNaN(value) || numeric,
+        value => +value > 0 || positive
+      ]
+    }
   },
 
-  data: () => ({
-    rules: [
-      value => !!value || 'Обязательное поле',
-      value => !isNaN(value) || 'Не число',
-      value => +value > 0 || 'Не больше 0'
-    ]
-  }),
+  data: function () {
+    return {
+      valid: true
+    }
+  },
 
   methods: {
     ...mapActions(['setConstraints', 'setSettings']),
 
     setWeight: function (weight) {
-      this.setSettings({ weight: +weight })
-      const payload = { nutrientIDs: [1003, 1004, 1005, 1008] }
-      this.setConstraints(payload)
+      if (this.valid) {
+        this.setSettings({ weight: +weight })
+        const payload = { nutrientIDs: [1003, 1004, 1005, 1008] }
+        this.setConstraints(payload)
+      }
     }
   }
 }

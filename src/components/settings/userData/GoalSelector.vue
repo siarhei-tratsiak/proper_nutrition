@@ -4,7 +4,7 @@
       @change="setGoal"
       filled
       :items="items"
-      label="Цель:"
+      :label="$t('settings.goal.label')"
       :value="items[settings.goal]"
     >
     </v-select>
@@ -16,16 +16,19 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['settings'])
-  },
+    ...mapState(['settings']),
 
-  data: () => ({
-    items: [
-      { text: 'сбросить вес', value: 0 },
-      { text: 'сохранить вес', value: 1 },
-      { text: 'набрать вес', value: 2 }
-    ]
-  }),
+    items: function () {
+      const lose = this.$t('settings.goal.lose')
+      const keep = this.$t('settings.goal.keep')
+      const gain = this.$t('settings.goal.gain')
+      return [
+        { text: lose, value: 0 },
+        { text: keep, value: 1 },
+        { text: gain, value: 2 }
+      ]
+    }
+  },
 
   methods: {
     ...mapActions(['setConstraints', 'setSettings']),

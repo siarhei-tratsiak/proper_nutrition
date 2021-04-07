@@ -1,7 +1,7 @@
 import { IDBS } from '@/api/indexedDBService'
 import { foodNutrients } from '@/data/foodNutrients'
 import { nutrientIndices } from '@/data/nutrientIndices'
-import { products } from '@/data/products'
+import i18n from '@/plugins/i18n'
 
 const service = {
   arraysDifference: (array1, array2) =>
@@ -62,6 +62,7 @@ const service = {
 
   getProductsData: (index, productValue, selectedProductIDs) => {
     const id = selectedProductIDs[index]
+    const products = IDBS.getProducts(i18n.locale)
     const product = products.find(product => product[0] === +id)
     const name = product[1]
     const mass = productValue * 100
@@ -99,6 +100,7 @@ const service = {
   getSelectedProducts: async (db) => {
     const selectedFilters = await IDBS.getSelectedFilters(db)
     const selectedFiltersIDs = selectedFilters.map(filter => filter.product_id)
+    const products = IDBS.getProducts(i18n.locale)
     const selectedProducts = products.filter(product =>
       selectedFiltersIDs.includes(product[0])
     )

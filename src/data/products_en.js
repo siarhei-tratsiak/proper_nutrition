@@ -1,5 +1,5 @@
 /* eslint-disable */
-const food = [
+const products = [
   [1083, "Milk, NFS"],
   [1084, "Milk, whole"],
   [1085, "Milk, low sodium, whole"],
@@ -11794,4 +11794,5 @@ const food = [
   [9770, "Industrial oil as ingredient in food"]
 ];
 
-export { food };
+export { products };
+

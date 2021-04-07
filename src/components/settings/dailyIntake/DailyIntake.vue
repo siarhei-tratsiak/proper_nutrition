@@ -1,6 +1,8 @@
 <template>
   <v-card class="ma-2">
-    <v-card-title>Суточное потребление</v-card-title>
+    <v-card-title>
+      {{ $t('intake.title') }}
+    </v-card-title>
 
     <v-card-actions class="d-flex flex-wrap justify-center">
       <SwitchLock :lock="true" />
@@ -10,13 +12,15 @@
       <DefaultButton />
 
       <v-tooltip>
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-icon right v-on="on">mdi-help-circle</v-icon>
         </template>
 
-        <p>
-          Разблокированные <v-icon>mdi-lock-open-variant</v-icon> значения не изменяются при изменении параметров пользователя.
-        </p>
+        <i18n path="intake.tooltip" tag="p">
+          <template #icon>
+            <v-icon>mdi-lock-open-variant</v-icon>
+          </template>
+        </i18n>
       </v-tooltip>
     </v-card-actions>
 
@@ -27,14 +31,14 @@
         hide-default-footer
         hide-default-header
         :items="formattedConstraints"
-        :items-per-page="itemsPerPage"
+        :items-per-page="-1"
         sort-by="name"
       >
-        <template v-slot:[`item.name`]="{ item }">
+        <template #[`item.name`]="{ item }">
           <span class="block">{{ item.name }}:</span>
         </template>
 
-        <template v-slot:[`item.minData`]="{ item }">
+        <template #[`item.minData`]="{ item }">
           <TextField
             class="inline-flex"
             :extremum="item.minData"
@@ -48,7 +52,7 @@
           />
         </template>
 
-        <template v-slot:[`item.maxData`]="{ item }">
+        <template #[`item.maxData`]="{ item }">
           <TextField
             class="inline-flex"
             :extremum="item.maxData"
@@ -62,11 +66,11 @@
           />
         </template>
 
-        <template v-slot:[`item.unit`]="{ item }">
+        <template #[`item.unit`]="{ item }">
           <span class="block">{{ item.unit }}</span>
         </template>
 
-        <template v-slot:[`item.targetData`]="{ item }">
+        <template #[`item.targetData`]="{ item }">
           <TargetButton class="full-width" :targetData="item.targetData" />
         </template>
       </v-data-table>
@@ -76,7 +80,8 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { nutrients } from '@/data/nutrients_ru'
+import { nutrients as nutrientsRU } from '@/data/nutrients_ru'
+import { nutrients as nutrientsEN } from '@/data/nutrients_en'
 import DefaultButton from '@/components/settings/dailyIntake/DefaultButton'
 import FieldCheckbox from '@/components/settings/dailyIntake/FieldCheckbox'
 import SwitchLock from '@/components/settings/dailyIntake/SwitchLock'
@@ -107,14 +112,16 @@ export default {
       { value: 'maxData' },
       { value: 'unit' },
       { value: 'targetData' }
-    ],
-    itemsPerPage: -1
+    ]
   }),
 
   methods: {
     ...mapActions(['updateConstraint']),
 
     _formattedConstraint: function (constraint) {
+      const nutrients = this.$i18n.locale === 'ru'
+        ? nutrientsRU
+        : nutrientsEN
       const nutrient = nutrients.find(
         nutrient => nutrient[0] === constraint.nutrient_id
       )

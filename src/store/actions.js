@@ -1,7 +1,9 @@
 import { dates } from '@/api/dates'
 import { IDBS } from '@/api/indexedDBService'
 import { simplex } from '@/api/simplex'
-import { nutrients } from '@/data/nutrients_ru'
+import { nutrients as nutrientsEN } from '@/data/nutrients_en'
+import { nutrients as nutrientsRU } from '@/data/nutrients_ru'
+import i18n from '@/plugins/i18n'
 import router from '@/router'
 import { service } from '@/store/service'
 
@@ -67,9 +69,13 @@ const actions = {
       { state: lastUser }, { objectName: 'settings' }
     )
     commit('setStateObject', userPayload)
+    i18n.locale = lastUser.language
   },
 
   setAllConstraints ({ dispatch }) {
+    const nutrients = i18n.locale === 'ru'
+      ? nutrientsRU
+      : nutrientsEN
     const nutrientIDs = nutrients.map(nutrient => nutrient[0])
     const constraintsPayload = { nutrientIDs, checkExtremum: true }
     dispatch('setConstraints', constraintsPayload)
@@ -100,6 +106,9 @@ const actions = {
     if (isAddData) {
       await IDBS.addConstraints(state.db, addData)
     }
+    const nutrients = i18n.locale === 'ru'
+      ? nutrientsRU
+      : nutrientsEN
     nutrientIDs = nutrients.map(nutrient => nutrient[0])
     const newConstraints = await IDBS.getNutrientConstraints(
       state.db, userID, nutrientIDs

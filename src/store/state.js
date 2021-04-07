@@ -1,5 +1,6 @@
 const state = {
   constraints: [],
+  days: 1,
   db: {},
   editedProduct: {
     date: undefined,
@@ -11,7 +12,7 @@ const state = {
   nutrients: [],
   period: {
     start: null,
-    name: 'Сегодня',
+    name: '',
     end: null
   },
   products: [],
@@ -22,14 +23,15 @@ const state = {
   selectedProductIDs: [],
   selectedDate: null,
   settings: {
-    sex: '',
-    birthdate: undefined,
-    weight: undefined,
-    height: undefined,
     activity: undefined,
-    goal: '',
+    birthdate: undefined,
     disabled: true,
-    userID: undefined
+    goal: '',
+    height: undefined,
+    language: undefined,
+    sex: '',
+    userID: undefined,
+    weight: undefined
   },
   status: {
     isHorizontal: false,
