@@ -1,10 +1,24 @@
+import { checkArguments, exceptions } from '@/api/exceptions'
+
 const dates = {
   formatDateForPicker: (date) => {
-    const newDate = date ? new Date(date) : new Date()
-    return newDate.toISOString().substr(0, 10)
+    if (date) {
+      try {
+        return new Date(date).toISOString().substr(0, 10)
+      } catch (_) {
+        throw exceptions.notADate(date)
+      }
+    }
+    return new Date(Date.now()).toISOString().substr(0, 10)
   },
 
   getDays: function (start, end) {
+    const exceptionList = [
+      exceptions.startExceedsEnd(start, end),
+      exceptions.notInteger('start', start),
+      exceptions.notInteger('end', end)
+    ]
+    checkArguments(exceptionList)
     const msInDay = this.getMsInDay()
     const days = Math.round((end - start) / msInDay)
     return days
@@ -20,16 +34,9 @@ const dates = {
     return millisecondsInDay
   },
 
-  getMsInYear: function () {
-    const msInDay = this.getMsInDay()
-    const daysInYear = 365.25
-    const msInYear = msInDay * daysInYear
-    return msInYear
-  },
-
   getToday: function () {
     const msInDay = this.getMsInDay()
-    const now = new Date()
+    const now = new Date(Date.now())
     const today = now - (now % msInDay)
     return today
   },
