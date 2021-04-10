@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 import { dates } from '@/api/dates'
-import { exceptions } from '@/api/exceptions'
 
 describe('dates', () => {
   beforeAll(() => {
@@ -17,12 +16,6 @@ describe('dates', () => {
       const result = dates.formatDateForPicker('2021-07-24T12:33:37.000Z')
       expect(result).toBe('2021-07-24')
     })
-
-    test('should return exception if input data is not a date', () => {
-      const date = 'abc'
-      const result = () => dates.formatDateForPicker(date)
-      expect(result).toThrow(exceptions.notADate(date))
-    })
   })
 
   describe('getDays', () => {
@@ -30,36 +23,19 @@ describe('dates', () => {
       const result = dates.getDays(1617667200000, 1617787636300)
       expect(result).toBe(1)
     })
-
-    test('should return exception if start > end', () => {
-      const start = 1617787636300
-      const end = 1617667200000
-      const result = () => dates.getDays(start, end)
-      const expected = exceptions.startExceedsEnd(start, end).exception
-      expect(result).toThrow(expected)
-    })
-
-    test('should return exception if start is not Integer', () => {
-      const start = 'abc'
-      const end = 1617667200000
-      const result = () => dates.getDays(start, end)
-      const expected = exceptions.notInteger('start', start).exception
-      expect(result).toThrow(expected)
-    })
-
-    test('should return exception if end is not Integer', () => {
-      const start = 1617667200000
-      const end = '1617667200000'
-      const result = () => dates.getDays(start, end)
-      const expected = exceptions.notInteger('end', end).exception
-      expect(result).toThrow(expected)
-    })
   })
 
   describe('getMsInDay', () => {
     test('should return 86400000', () => {
       const result = dates.getMsInDay()
       expect(result).toBe(86400000)
+    })
+  })
+
+  describe('getMsInYear', () => {
+    test('should return 31557600000', () => {
+      const result = dates.getMsInYear()
+      expect(result).toBe(31557600000)
     })
   })
 

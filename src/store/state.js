@@ -3,11 +3,11 @@ const state = {
   days: 1,
   db: {},
   editedProduct: {
-    date: undefined,
-    id: undefined,
-    mass: undefined,
-    product_id: undefined,
-    user_id: undefined
+    date: null,
+    id: null,
+    mass: null,
+    product_id: null,
+    user_id: null
   },
   nutrients: [],
   period: {
@@ -23,15 +23,15 @@ const state = {
   selectedProductIDs: [],
   selectedDate: null,
   settings: {
-    activity: undefined,
-    birthdate: undefined,
+    activity: null,
+    birthdate: null,
     disabled: true,
     goal: '',
-    height: undefined,
-    language: undefined,
+    height: null,
+    language: null,
     sex: '',
-    userID: undefined,
-    weight: undefined
+    userID: null,
+    weight: null
   },
   status: {
     isHorizontal: false,

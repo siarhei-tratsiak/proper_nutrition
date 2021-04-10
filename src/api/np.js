@@ -11,25 +11,22 @@ const np = {
   },
 
   identityMatrix: function (size) {
-    const zeros = this.zeros
-    const zerosMatrix = Array.from(Array(size), () => zeros(size))
-    const identityMatrix = zerosMatrix
+    const zeros = () => this.zeros(size)
+    const identityMatrix = Array.from(Array(size), zeros)
     identityMatrix.forEach((row, index) => (row[index] = 1))
     return identityMatrix
   },
 
   less: (array, value) => {
-    _checkLessArguments(array, value)
     const arrayOfboolean = array.map((element) => element < value)
     return arrayOfboolean
   },
 
   minNonMaskedIndex: (array) => {
-    const isMotMasked = (element) => element !== '-'
-    const nonMaskedElements = array.filter(isMotMasked)
-    const min = Math.min.apply(null, nonMaskedElements)
-    const minIndex = (element) => element === min
-    const index = array.findIndex(minIndex)
+    const isNotMasked = (element) => element !== '-'
+    const nonMaskedElements = array.filter(isNotMasked)
+    const min = Math.min(...nonMaskedElements)
+    const index = array.indexOf(min)
     return index
   },
 
@@ -43,32 +40,6 @@ const np = {
   },
 
   zeros: (lenght) => new Array(lenght).fill(0)
-}
-
-function _checkLessArguments (array, value) {
-  const conditionsAndErrors = [
-    {
-      condition: !Array.isArray(array),
-      error: 'First function argument should be an array.'
-    },
-    {
-      condition: !array.every(_isNumeric),
-      error: 'Array must contain only numbers.'
-    },
-    {
-      condition: !_isNumeric(value),
-      error: 'Second function argument should be a number.'
-    }
-  ]
-  conditionsAndErrors.forEach((conditionAndError) => {
-    if (conditionAndError.condition) {
-      throw new TypeError(conditionAndError.error)
-    }
-  })
-}
-
-function _isNumeric (n) {
-  return !isNaN(parseFloat(n)) && isFinite(n)
 }
 
 function _nonMaskedSum (accumulator, currentValue) {
