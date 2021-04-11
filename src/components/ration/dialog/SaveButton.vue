@@ -23,7 +23,7 @@ export default {
         date: this.selectedDate,
         mass: +this.editedProduct.mass
       }
-      const isEdit = typeof this.editedProduct.id !== 'undefined'
+      const isEdit = typeof this.editedProduct.id === 'number'
       if (isEdit) {
         ration.id = this.editedProduct.id
       }
