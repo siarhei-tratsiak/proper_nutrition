@@ -61,9 +61,11 @@ function simplex ({
   if (tableauLastItemByModulo < tolerance) {
     tableau = _shrink(tableau, pseudoVariablesIndexes)
   } else {
-    // Failure to find a feasible starting point
-    status = 2
-    messages[status] = `Phase 1 of the simplex method failed to find a feasible solution. The pseudo-objective function evaluates to ${tableauLastItemByModulo} which exceeds the required tolerance of ${tolerance} for a solution to be considered 'close enough' to zero to be a basic solution. Consider increasing the tolerance to be greater than ${tableauLastItemByModulo}. If this tolerance is unacceptably large the problem may be infeasible.`
+    if (status === 0) {
+      // Failure to find a feasible starting point
+      status = 2
+      messages[status] = `Phase 1 of the simplex method failed to find a feasible solution. The pseudo-objective function evaluates to ${tableauLastItemByModulo} which exceeds the required tolerance of ${tolerance} for a solution to be considered 'close enough' to zero to be a basic solution. Consider increasing the tolerance to be greater than ${tableauLastItemByModulo}. If this tolerance is unacceptably large the problem may be infeasible.`
+    }
   }
 
   const iterationNumber = solveSimplexResult.iterationNumber
