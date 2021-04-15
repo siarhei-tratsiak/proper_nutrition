@@ -58,6 +58,7 @@
     "header": "Products",
     "default": "default",
     "searchLabel": "Search",
+    "sorted": " sorted by {nutrientName} content",
     "tableHeader": "NAME"
   },
   "rationTable": {

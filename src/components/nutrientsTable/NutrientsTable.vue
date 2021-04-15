@@ -29,6 +29,17 @@
         </td>
       </template>
 
+      <template #[`item.name`]="{ item }">
+        <router-link
+          :to="{
+            name: 'ProductsByNutrient',
+            query: { nutrient_id: item.id }
+          }"
+        >
+          {{ item.name }}
+        </router-link>
+      </template>
+
       <template #[`item.value`]="{ item }">
         <ProgressBarCell :nutrient="item"></ProgressBarCell>
       </template>

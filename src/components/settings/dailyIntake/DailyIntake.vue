@@ -35,7 +35,15 @@
         sort-by="name"
       >
         <template #[`item.name`]="{ item }">
-          <span class="block">{{ item.name }}:</span>
+          <router-link
+            class="block"
+            :to="{
+              name: 'ProductsByNutrient',
+              query: { nutrient_id: item.id }
+            }"
+          >
+            {{ item.name }}:
+          </router-link>
         </template>
 
         <template #[`item.minData`]="{ item }">
@@ -126,6 +134,7 @@ export default {
         nutrient => nutrient[0] === constraint.nutrient_id
       )
       return {
+        id: nutrient[0],
         name: nutrient[1],
         minData: {
           id: constraint.id,

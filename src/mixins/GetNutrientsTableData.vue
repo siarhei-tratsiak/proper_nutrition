@@ -76,6 +76,7 @@ export default {
       const value = this._getValue(valuePayload)
       return {
         base,
+        id: nutrientID,
         isMain,
         max: base * maxAbs,
         maxAbs,

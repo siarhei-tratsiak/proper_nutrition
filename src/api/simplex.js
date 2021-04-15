@@ -61,32 +61,32 @@ function simplex ({
   if (tableauLastItemByModulo < tolerance) {
     tableau = _shrink(tableau, pseudoVariablesIndexes)
   } else {
-    if (status === 0) {
-      // Failure to find a feasible starting point
-      status = 2
-      messages[status] = `Phase 1 of the simplex method failed to find a feasible solution. The pseudo-objective function evaluates to ${tableauLastItemByModulo} which exceeds the required tolerance of ${tolerance} for a solution to be considered 'close enough' to zero to be a basic solution. Consider increasing the tolerance to be greater than ${tableauLastItemByModulo}. If this tolerance is unacceptably large the problem may be infeasible.`
-    }
+    // Failure to find a feasible starting point
+    status = 2
+    messages[status] = `Phase 1 of the simplex method failed to find a feasible solution. The pseudo-objective function evaluates to ${tableauLastItemByModulo} which exceeds the required tolerance of ${tolerance} for a solution to be considered 'close enough' to zero to be a basic solution. Consider increasing the tolerance to be greater than ${tableauLastItemByModulo}. If this tolerance is unacceptably large the problem may be infeasible.`
   }
 
-  const iterationNumber = solveSimplexResult.iterationNumber
+  const iterationStart = solveSimplexResult.iterationNumber
   if (status === 0) {
     // Phase 2
     solveSimplexResult = _solveSimplex({
       basis,
+      iterationStart,
       maximumIterations,
       phase: 2,
       tableau,
       tolerance
     })
   }
+  status = solveSimplexResult.status
 
   const solution = _findSolution({ basis, heightA, tableau, widthA })
 
   return {
-    iterationNumber,
+    iterationNumber: solveSimplexResult.iterationNumber,
     message: messages[status],
     solution,
-    status
+    status: solveSimplexResult.status
   }
 }
 
@@ -142,14 +142,33 @@ function _reverseSum (accumulator, row) {
 
 function _solveSimplex ({
   basis,
+  iterationStart = 0,
   maximumIterations = 1000,
   phase = 2,
   tableau,
   tolerance = 1e-9
 }) {
-  let iterationNumber = 0
+  let iterationNumber = iterationStart
   let status = 0
   let complete = false
+  let pivotColumn = 0
+
+  if (phase === 2) {
+    const rowLength = tableau[0].length
+    const pivotRows = np.arange(basis.length, 0)
+      .filter(row => basis[row] > rowLength - 2)
+    const rowIndices = np.arange(rowLength - 1)
+    pivotRows.forEach(pivotRow => {
+      const nonZeroRows = rowIndices
+        .filter(column => Math.abs(tableau[pivotRow][column]) > tolerance)
+      if (nonZeroRows.length) {
+        pivotColumn = nonZeroRows[0]
+        _applyPivot({ tableau, pivotRow, pivotColumn })
+        iterationNumber++
+      }
+    })
+  }
+
   while (!complete) {
     // Find the pivot column
     const pivotColumn = _pivotColumn(tableau, tolerance)

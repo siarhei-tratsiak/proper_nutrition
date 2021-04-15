@@ -38,7 +38,9 @@ const actions = {
       objectName: 'status',
       state: { isResult }
     })
+    // avoid floating-point arithmetic side-effects
     result = result.solution
+      .map(value => +value.toFixed(2))
       .map((productValue, index) => service
         .getProductsData(index, productValue, selectedProductIDs))
       .filter(product => product.mass !== 0)

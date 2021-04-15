@@ -43,7 +43,7 @@ export default {
 
     getValue: function () {
       const value = this.isMin ? this.extremum.min : this.extremum.max
-      return (value === null) ? value : value.toFixed(1)
+      return (value === null) ? value : +value.toFixed(1)
     },
 
     update: function (value) {

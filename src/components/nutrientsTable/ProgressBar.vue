@@ -4,7 +4,7 @@
     :striped="!this.nutrient.isMain"
     v-model="nutrient.value"
   >
-      <strong>{{  nutrient.valueAbs.toFixed(2) }}</strong>
+      <strong>{{ nutrient.valueAbs.toFixed(2) }}</strong>
   </v-progress-linear>
 </template>
 

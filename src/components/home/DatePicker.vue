@@ -106,5 +106,3 @@ export default {
   props: ['isFrom']
 }
 </script>
-
-<style></style>

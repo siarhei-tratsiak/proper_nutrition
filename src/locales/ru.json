@@ -58,6 +58,7 @@
     "header": "Продукты",
     "default": "по умолчанию",
     "searchLabel": "Поиск",
+    "sorted": ", отсортированные по содержанию: {nutrientName}",
     "tableHeader": "НАЗВАНИЕ"
   },
   "rationTable": {

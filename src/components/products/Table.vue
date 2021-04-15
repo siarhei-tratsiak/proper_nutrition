@@ -13,6 +13,8 @@
       :no-results-text="$t('table.noResultsText')"
       :search="productSearch"
       show-select
+      :sort-by="sortBy"
+      sort-desc
       v-model="selected"
     >
       <template #[`item.name`]="{ item }">
@@ -26,6 +28,8 @@
 <script>
 import { IDBS } from '@/api/indexedDBService'
 import { mapActions, mapState } from 'vuex'
+import { nutrientIndices } from '@/data/nutrientIndices'
+import { foodNutrients } from '@/data/foodNutrients'
 
 export default {
   computed: {
@@ -37,6 +41,11 @@ export default {
 
     products: function () {
       const products = IDBS.getProducts(this.$i18n.locale)
+      const nutrientID = +this.$route.query.nutrient_id
+      const isNutrientID = nutrientIndices.includes(nutrientID)
+      if (isNutrientID) {
+        return this.getProductsByNutrient(nutrientID, products)
+      }
       return products.map(product => ({
         id: product[0],
         name: product[1]
@@ -51,11 +60,28 @@ export default {
       set: function (payload) {
         return this.toggleSelected(payload)
       }
+    },
+
+    sortBy: function () {
+      if (this.$route.query.nutrient_id) {
+        return 'nutrientValue'
+      }
+      return ''
     }
   },
 
   methods: {
-    ...mapActions(['toggleSelected'])
+    ...mapActions(['toggleSelected']),
+
+    getProductsByNutrient: function (nutrientID, products) {
+      const nutrientIndex = nutrientIndices.findIndex(id => id === nutrientID)
+      return products.map(product => ({
+        id: product[0],
+        name: product[1],
+        nutrientValue: foodNutrients
+          .find(food => food[0] === product[0])[1][nutrientIndex]
+      }))
+    }
   }
 }
 </script>

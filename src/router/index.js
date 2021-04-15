@@ -1,11 +1,11 @@
+import Home from '@/views/Home.vue'
+import Product from '@/views/Product.vue'
+import Products from '@/views/Products.vue'
+import Ration from '@/views/Ration.vue'
+import Result from '@/views/Result.vue'
+import Settings from '@/views/Settings.vue'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/views/Home.vue'
-import Result from '@/views/Result.vue'
-import Products from '@/views/Products.vue'
-import Product from '@/views/Product.vue'
-import Ration from '@/views/Ration.vue'
-import Settings from '@/views/Settings.vue'
 
 Vue.use(VueRouter)
 
@@ -24,6 +24,12 @@ const routes = [
     path: '/products',
     name: 'Products',
     component: Products
+  },
+  {
+    path: '/products',
+    name: 'ProductsByNutrient',
+    component: Products,
+    props: route => ({ nutrient_id: route.query.nutrientID })
   },
   {
     path: '/product/:id',
