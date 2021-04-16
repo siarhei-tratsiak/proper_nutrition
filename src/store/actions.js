@@ -31,8 +31,10 @@ const actions = {
     let result = simplex({
       restrictionMatrix,
       constraintsVector,
-      objectiveCoefficients
+      objectiveCoefficients,
+      maximumIterations: 2000
     })
+    console.log(result)
     const isResult = !result.status
     commit('setStateObject', {
       objectName: 'status',

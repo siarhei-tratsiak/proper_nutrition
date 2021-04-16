@@ -46,6 +46,7 @@ const fatDailyIntake = {
 
 const nutrientConstraints = [
   [1018, 0, 24],
+  [1051, 1000, 3700],
   [1057, 0, 100],
   [1058, 0, 250],
   [1079, 30, null],

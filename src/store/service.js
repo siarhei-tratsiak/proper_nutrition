@@ -19,6 +19,24 @@ const service = {
     return goalValue
   },
 
+  excludeProductsForZeroMax: (constraints, selectedProductNutrients) => {
+    const zeroConstraint = constraint => constraint.max === 0
+    const nutrientIDs = constraint => constraint.nutrient_id
+    const zeroMaxNutrientIDs = constraints
+      .filter(zeroConstraint)
+      .map(nutrientIDs)
+    const position = nutrientID =>
+      nutrientIndices.findIndex(id => id === nutrientID)
+    const zeroMaxPositions = zeroMaxNutrientIDs.map(position)
+    const zeroNutrients = productNutrient => zeroMaxPositions
+      .every(position => productNutrient[1][position] === 0)
+    return selectedProductNutrients.filter(zeroNutrients)
+  },
+
+  excludeZeroMax: (constraints) => {
+    return constraints.filter(constraint => constraint.max !== 0)
+  },
+
   getConstraintsVector: (constraints, objective) => {
     const constraintsVectorMin = _getConstraintsVectorMin(constraints, objective)
     const constraintsVectorMax = _getConstraintsVectorMax(constraints, objective)

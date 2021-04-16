@@ -71,7 +71,7 @@ export default {
       const { minAbs, maxAbs } = this._getMinimaxAbs(nutrientConstraints)
       const comparison = [minAbs, nutrientValue, maxAbs]
       const base = this._getBase(comparison)
-      const isMain = !!(minAbs || maxAbs)
+      const isMain = minAbs > 0 || typeof maxAbs === 'number'
       const valuePayload = { base, isMain, maxAbs, minAbs, nutrientValue }
       const value = this._getValue(valuePayload)
       return {

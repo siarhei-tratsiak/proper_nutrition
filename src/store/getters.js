@@ -13,9 +13,12 @@ const getters = {
 
   getConditions: (state, getters) => (nutrients) => {
     let selectedProductIDs = state.selectedProductIDs
-    const selectedProductNutrients = service
+    let selectedProductNutrients = service
       .getFilteredNutrients(selectedProductIDs)
-    const constraints = getters._getSimplexConstraints(nutrients)
+    let constraints = getters._getSimplexConstraints(nutrients)
+    selectedProductNutrients = service
+      .excludeProductsForZeroMax(constraints, selectedProductNutrients)
+    constraints = service.excludeZeroMax(constraints)
     const restrictionMatrix = service
       .getRestrictionMatrix(selectedProductNutrients, constraints)
     const objective = constraints.find(

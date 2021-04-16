@@ -60,7 +60,7 @@ function simplex ({
   status = solveSimplexResult.status
   if (tableauLastItemByModulo < tolerance) {
     tableau = _shrink(tableau, pseudoVariablesIndexes)
-  } else {
+  } else if (status === 0) {
     // Failure to find a feasible starting point
     status = 2
     messages[status] = `Phase 1 of the simplex method failed to find a feasible solution. The pseudo-objective function evaluates to ${tableauLastItemByModulo} which exceeds the required tolerance of ${tolerance} for a solution to be considered 'close enough' to zero to be a basic solution. Consider increasing the tolerance to be greater than ${tableauLastItemByModulo}. If this tolerance is unacceptably large the problem may be infeasible.`
@@ -77,8 +77,8 @@ function simplex ({
       tableau,
       tolerance
     })
+    status = solveSimplexResult.status
   }
-  status = solveSimplexResult.status
 
   const solution = _findSolution({ basis, heightA, tableau, widthA })
 
@@ -86,7 +86,7 @@ function simplex ({
     iterationNumber: solveSimplexResult.iterationNumber,
     message: messages[status],
     solution,
-    status: solveSimplexResult.status
+    status
   }
 }
 
@@ -153,6 +153,11 @@ function _solveSimplex ({
   let complete = false
   let pivotColumn = 0
 
+  /* Check if any artificial variables are still in the basis.
+  If yes, check if any coefficients from this row and a column
+  corresponding to one of the non-artificial variable is non-zero.
+  If found, pivot at this term. If not, start phase 2.
+  Do this for all artificial variables in the basis. */
   if (phase === 2) {
     const rowLength = tableau[0].length
     const pivotRows = np.arange(basis.length, 0)
