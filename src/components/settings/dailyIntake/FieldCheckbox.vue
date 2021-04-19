@@ -1,14 +1,15 @@
 <template>
   <v-checkbox
     hide-details
-    off-icon="mdi-lock"
-    on-icon="mdi-lock-open-variant"
+    :off-icon="mdiLock"
+    :on-icon="mdiLockOpenVariant"
     v-model="isChecked"
   ></v-checkbox>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import { mdiLock, mdiLockOpenVariant } from '@mdi/js'
 
 export default {
   computed: {
@@ -24,6 +25,11 @@ export default {
       }
     }
   },
+
+  data: () => ({
+    mdiLock,
+    mdiLockOpenVariant
+  }),
 
   methods: {
     ...mapActions(['updateConstraint'])

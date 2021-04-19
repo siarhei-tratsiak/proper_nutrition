@@ -11,7 +11,7 @@
 
     <v-tooltip top>
       <template #activator="{ on }">
-        <v-icon right v-on="on">mdi-help-circle</v-icon>
+        <v-icon right v-on="on">{{ mdiHelpCircle }}</v-icon>
       </template>
 
       <i18n path="settings.activity.tooltip.low" tag="p">
@@ -37,6 +37,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import { mdiHelpCircle } from '@mdi/js'
 
 export default {
   computed: {
@@ -53,6 +54,10 @@ export default {
       ]
     }
   },
+
+  data: () => ({
+    mdiHelpCircle
+  }),
 
   methods: {
     ...mapActions(['setConstraints', 'setSettings']),

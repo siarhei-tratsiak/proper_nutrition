@@ -1,17 +1,22 @@
 <template>
   <v-btn @click="save" :disabled="!valid">
-    <v-icon>mdi-content-save</v-icon>
+    <v-icon>{{ mdiContentSave }}</v-icon>
   </v-btn>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
 import CloseProductDialog from '@/mixins/CloseProductDialog'
+import { mdiContentSave } from '@mdi/js'
 
 export default {
   computed: {
     ...mapState(['editedProduct', 'selectedDate', 'settings'])
   },
+
+  data: () => ({
+    mdiContentSave
+  }),
 
   methods: {
     ...mapActions(['editRation', 'setRation']),

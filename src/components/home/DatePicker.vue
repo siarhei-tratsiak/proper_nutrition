@@ -12,7 +12,7 @@
         :class="textFieldClass"
         :label="label"
         outlined
-        prepend-icon="mdi-calendar"
+        :prepend-icon="mdiCalendar"
         readonly
         v-bind="attrs"
         v-model="date"
@@ -34,6 +34,7 @@
 <script>
 import { dates } from '@/api/dates'
 import { mapMutations, mapState } from 'vuex'
+import { mdiCalendar } from '@mdi/js'
 
 export default {
 
@@ -52,6 +53,7 @@ export default {
   data: function () {
     return {
       date: dates.formatDateForPicker(),
+      mdiCalendar,
       menu: false,
       nudgeRight: 40
     }

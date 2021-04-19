@@ -17,8 +17,8 @@
             :ref="group ? 'main' : 'additional'"
             small
           >
-            <v-icon v-if="isOpen">mdi-minus</v-icon>
-            <v-icon v-else>mdi-plus</v-icon>
+            <v-icon v-if="isOpen">{{ mdiMinus }}</v-icon>
+            <v-icon v-else>{{ mdiPlus }}</v-icon>
           </v-btn>
 
           {{
@@ -48,6 +48,7 @@
 
 <script>
 import ProgressBarCell from '@/components/nutrientsTable/ProgressBarCell'
+import { mdiMinus, mdiPlus } from '@mdi/js'
 
 export default {
   components: {
@@ -61,6 +62,8 @@ export default {
         { text: this.$t('nutrients.headers.value'), value: 'value' },
         { text: this.$t('nutrients.headers.units'), value: 'units' }
       ],
+      mdiMinus,
+      mdiPlus,
       mobileBreakpoint: '600'
     }
   },

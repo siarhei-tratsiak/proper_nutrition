@@ -7,7 +7,7 @@
       id="run_button"
       :loading="this.status.isLoading"
     >
-      <v-icon :size="size">mdi-room-service</v-icon>
+      <v-icon :size="size">{{ mdiRoomService }}</v-icon>
 
       <template #loader>
         <v-progress-circular indeterminate :size="progressSize" />
@@ -20,6 +20,7 @@
 import { debounce } from 'lodash'
 import { mapActions, mapMutations, mapState } from 'vuex'
 import GetNutrientsBalance from '@/mixins/GetNutrientsBalance.vue'
+import { mdiRoomService } from '@mdi/js'
 
 export default {
   beforeDestroy: function () {
@@ -30,6 +31,7 @@ export default {
     return {
       delayMS: 300,
       listener: debounce(this._onResize, this.delayMS),
+      mdiRoomService,
       progressSize: this._countProgressSize(),
       size: '12vmin'
     }

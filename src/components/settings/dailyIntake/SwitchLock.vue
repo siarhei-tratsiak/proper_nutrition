@@ -3,15 +3,21 @@
     {{ (lock ? "" : $t('intake.un'))+$t('intake.lock') }}
 
     <v-icon right>
-      mdi-lock{{ lock ? "" : "-open-variant" }}
+      {{ lock ? mdiLock : mdiLockOpenVariant }}
     </v-icon>
   </v-btn>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import { mdiLock, mdiLockOpenVariant } from '@mdi/js'
 
 export default {
+  data: () => ({
+    mdiLock,
+    mdiLockOpenVariant
+  }),
+
   methods: {
     ...mapActions(['switchLock'])
   },

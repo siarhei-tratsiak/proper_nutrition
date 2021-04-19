@@ -13,12 +13,12 @@
 
       <v-tooltip>
         <template #activator="{ on }">
-          <v-icon right v-on="on">mdi-help-circle</v-icon>
+          <v-icon right v-on="on">{{ mdiHelpCircle }}</v-icon>
         </template>
 
         <i18n path="intake.tooltip" tag="p">
           <template #icon>
-            <v-icon>mdi-lock-open-variant</v-icon>
+            <v-icon>mdiLockOpenVariant</v-icon>
           </template>
         </i18n>
       </v-tooltip>
@@ -95,6 +95,7 @@ import FieldCheckbox from '@/components/settings/dailyIntake/FieldCheckbox'
 import SwitchLock from '@/components/settings/dailyIntake/SwitchLock'
 import TargetButton from '@/components/settings/dailyIntake/TargetButton'
 import TextField from '@/components/settings/dailyIntake/TextField'
+import { mdiHelpCircle, mdiLockOpenVariant } from '@mdi/js'
 
 export default {
   components: {
@@ -120,7 +121,9 @@ export default {
       { value: 'maxData' },
       { value: 'unit' },
       { value: 'targetData' }
-    ]
+    ],
+    mdiHelpCircle,
+    mdiLockOpenVariant
   }),
 
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    append-icon="mdi-magnify"
+    :append-icon="mdiMagnify"
     dense
     hide-details
     :label="$t('products.searchLabel')"
@@ -12,6 +12,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex'
+import { mdiMagnify } from '@mdi/js'
 
 export default {
   computed: {
@@ -30,7 +31,8 @@ export default {
 
   data: () => ({
     delayMS: 500,
-    inputTime: 0
+    inputTime: 0,
+    mdiMagnify
   }),
 
   methods: {

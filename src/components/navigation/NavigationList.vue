@@ -28,6 +28,13 @@
 
 <script>
 import { mapState } from 'vuex'
+import {
+  mdiHome,
+  mdiHamburger,
+  mdiFormatListChecks,
+  mdiCalendarMonth,
+  mdiCog
+} from '@mdi/js'
 
 export default {
   computed: {
@@ -55,27 +62,27 @@ export default {
       return [
         {
           path: 'Home',
-          icon: 'mdi-home',
+          icon: mdiHome,
           title: this.$t('menu.main')
         },
         {
           path: 'Result',
-          icon: 'mdi-hamburger',
+          icon: mdiHamburger,
           title: this.$t('menu.result')
         },
         {
           path: 'Products',
-          icon: 'mdi-format-list-checks',
+          icon: mdiFormatListChecks,
           title: this.$t('menu.products')
         },
         {
           path: 'Ration',
-          icon: 'mdi-calendar-month',
+          icon: mdiCalendarMonth,
           title: this.$t('menu.ration')
         },
         {
           path: 'Settings',
-          icon: 'mdi-cog',
+          icon: mdiCog,
           title: this.$t('menu.settings')
         }
       ]
