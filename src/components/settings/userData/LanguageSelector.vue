@@ -13,6 +13,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import IndexLocalization from '@/mixins/IndexLocalization'
 
 export default {
   computed: {
@@ -32,7 +33,10 @@ export default {
     setLanguage: function (language) {
       this.setSettings({ language })
       this.$i18n.locale = language
+      this.localize(language)
     }
-  }
+  },
+
+  mixins: [IndexLocalization]
 }
 </script>

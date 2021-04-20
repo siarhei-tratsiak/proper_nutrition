@@ -11,10 +11,17 @@
 import { mapActions } from 'vuex'
 
 import Navigation from '@/components/navigation/Navigation'
+import IndexLocalization from '@/mixins/IndexLocalization'
 
 export default {
   components: {
     Navigation
+  },
+
+  computed: {
+    language: function () {
+      return this.$i18n.locale
+    }
   },
 
   created: function () {
@@ -25,6 +32,14 @@ export default {
     ...mapActions(['initData'])
   },
 
-  name: 'App'
+  mixins: [IndexLocalization],
+
+  name: 'App',
+
+  watch: {
+    language: function (language) {
+      this.localize(language)
+    }
+  }
 }
 </script>

@@ -3,10 +3,18 @@ module.exports = {
   transpileDependencies: ['vuetify'],
 
   chainWebpack: function (config) {
-    config.module
+    config
+      .module
       .rule('js')
       .exclude.add(path.resolve('src/data/products.js'))
       .add(path.resolve('src/data/foodNutrients.js'))
+
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].title = 'Правильное Питание'
+        return args
+      })
   },
 
   pluginOptions: {
