@@ -14,7 +14,10 @@ export default {
     ...mapState(['constraints', 'period', 'products', 'productsList', 'rationForPeriod']),
 
     rationProductIDs: function () {
-      return this.rationForPeriod.map((product) => product.id)
+      const onlyUnique = (value, index, self) => self.indexOf(value) === index
+      return this.rationForPeriod
+        .map(product => product.id)
+        .filter(onlyUnique)
     }
   },
 

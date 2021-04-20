@@ -48,7 +48,7 @@ export default {
       )
       const summedNutrientValues = nutrientValuesTotal.length
         ? nutrientValuesTotal.reduce(this._rowsSum)
-        : np.zeros(65)
+        : np.zeros(nutrientIndices.length)
       return summedNutrientValues
     },
 
@@ -75,19 +75,17 @@ export default {
         product => product.id === productID
       )
       const resultProductValue = findedProduct ? findedProduct.mass : 0
-      const findedRation = this.rationForPeriod.find(
-        product => product.id === productID
-      )
-      const rationProductValue = findedRation ? findedRation.value : 0
+      const filterProducts = product => product.id === productID
+      const sumProducts = (sum, product) => sum + product.value
+      const findedRation = this.rationForPeriod
+        .filter(filterProducts)
+        .reduce(sumProducts, 0)
+      const rationProductValue = findedRation || 0
       return resultProductValue + rationProductValue
     },
 
     _getProductIDs: function () {
       return this.products.map(product => product.id)
-    },
-
-    _getRationProductIDs: function () {
-      return this.rationForPeriod.map(product => product.id)
     },
 
     _rowsSum: function (acc, nutrientValues) {
