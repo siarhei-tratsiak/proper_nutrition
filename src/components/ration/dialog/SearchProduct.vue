@@ -28,7 +28,11 @@ import { debounce } from 'lodash'
 
 export default {
   computed: {
-    ...mapState(['editedProduct']),
+    ...mapState(['editedProduct', 'status']),
+
+    isOpened: function () {
+      return this.status.productDialogIsOpened
+    },
 
     select: {
       get: function () {
@@ -43,6 +47,10 @@ export default {
         this.setStateObject(editedProduct)
       }
     }
+  },
+
+  created: function () {
+    this._setProductID()
   },
 
   data: function () {
@@ -72,6 +80,11 @@ export default {
       const re = new RegExp(escapeProductName.toLowerCase(), 'g')
       const products = IDBS.getProducts(this.$i18n.locale)
       return products.filter(product => re.test(product[1].toLowerCase()))
+    },
+
+    _setProductID: function () {
+      const productID = +this.$route.params.id
+      this.select = productID
     }
   },
 
@@ -80,6 +93,12 @@ export default {
   watch: {
     search: function () {
       this.debouncedGetAnswer()
+    },
+
+    isOpened: function () {
+      if (this.isOpened) {
+        this._setProductID()
+      }
     }
   }
 }

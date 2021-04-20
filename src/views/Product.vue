@@ -1,8 +1,15 @@
 <template>
   <v-card>
-    <v-card-title>{{ productName }}</v-card-title>
+    <v-card-title>
+      {{ productName }}
+
+      <v-spacer />
+
+      <AddProductButton />
+    </v-card-title>
 
     <NutrientsTable :nutrients='nutrients()' />
+    <ProductDialog />
   </v-card>
 </template>
 
@@ -11,10 +18,14 @@ import { foodNutrients } from '@/data/foodNutrients.js'
 import { IDBS } from '@/api/indexedDBService'
 import GetNutrietsTableData from '@/mixins/GetNutrientsTableData'
 import NutrientsTable from '@/components/nutrientsTable/NutrientsTable'
+import AddProductButton from '@/components/ration/AddProductButton'
+import ProductDialog from '@/components/ration/dialog/ProductDialog'
 
 export default {
   components: {
-    NutrientsTable
+    AddProductButton,
+    NutrientsTable,
+    ProductDialog
   },
 
   computed: {
