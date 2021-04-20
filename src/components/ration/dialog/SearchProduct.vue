@@ -6,10 +6,18 @@
       hide-no-data
       :items="items"
       :label="label"
+      :menu-props="{ offsetOverflow: false }"
       :rules="[rules.required]"
       :search-input.sync="search"
       v-model="select"
-    ></v-autocomplete>
+    >
+      <template #item="{ item }">
+        <!-- for correct style display -->
+        <v-list-item-content>
+          <v-list-item-title v-html="item.text"></v-list-item-title>
+        </v-list-item-content>
+      </template>
+    </v-autocomplete>
   </v-col>
 </template>
 
@@ -76,3 +84,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .v-list-item__title {
+    white-space: normal !important;
+  }
+</style>
