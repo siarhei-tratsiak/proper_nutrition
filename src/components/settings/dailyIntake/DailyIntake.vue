@@ -47,31 +47,31 @@
         </template>
 
         <template #[`item.minData`]="{ item }">
-          <TextField
-            class="inline-flex"
-            :extremum="item.minData"
-            :isMin="true"
-          />
+          <div class="d-flex">
+            <TextField
+              :extremum="item.minData"
+              :isMin="true"
+            />
 
-          <FieldCheckbox
-            class="inline-flex margin-left"
-            :mutableData="item.minData"
-            mutableFieldName="min_mutable"
-          />
+            <FieldCheckbox
+              :mutableData="item.minData"
+              mutableFieldName="min_mutable"
+            />
+          </div>
         </template>
 
         <template #[`item.maxData`]="{ item }">
-          <TextField
-            class="inline-flex"
-            :extremum="item.maxData"
-            :isMin="false"
-          />
+          <div class="d-flex">
+            <TextField
+              :extremum="item.maxData"
+              :isMin="false"
+            />
 
-          <FieldCheckbox
-            class="inline-flex margin-left"
-            :mutableData="item.maxData"
-            mutableFieldName="max_mutable"
-          />
+            <FieldCheckbox
+              :mutableData="item.maxData"
+              mutableFieldName="max_mutable"
+            />
+          </div>
         </template>
 
         <template #[`item.unit`]="{ item }">
@@ -172,18 +172,6 @@ export default {
 
 .full-width {
   width: 100%;
-}
-
-.inline-flex {
-  display: inline-flex;
-}
-
-.margin-bottom {
-  margin-bottom: 30px;
-}
-
-.margin-left {
-  margin-left: -32px;
 }
 
 td {

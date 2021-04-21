@@ -6,6 +6,7 @@
       :label="$t('settings.height.label')"
       :rules="rules"
       :suffix="$t('settings.height.suffix')"
+      type="number"
       :value="settings.height"
     ></v-text-field>
   </v-form>

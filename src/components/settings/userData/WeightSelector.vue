@@ -6,6 +6,7 @@
       :label="$t('settings.weight.label')"
       :rules="rules"
       :suffix="$t('settings.weight.suffix')"
+      type="number"
       :value="settings.weight"
     ></v-text-field>
   </v-form>

@@ -15,6 +15,7 @@
                 <v-text-field
                   :label="$t('dialog.mass')"
                   :rules="Object.values(rules)"
+                  type="number"
                   v-model="product.mass"
                 ></v-text-field>
               </v-col>

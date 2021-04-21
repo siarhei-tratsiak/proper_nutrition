@@ -8,6 +8,7 @@
       filled
       :label="isMin ? $t('intake.label.from') : $t('intake.label.to')"
       :rules="rules"
+      type="number"
       :value="getValue()"
     ></v-text-field>
   </v-form>
