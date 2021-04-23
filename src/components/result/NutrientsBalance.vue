@@ -1,7 +1,10 @@
 <template>
   <v-card>
     <v-card-title>
-      {{ $t('result.nutrientsHeader') }}
+      {{
+        $t('result.nutrientsHeader',
+          { recommendations: $t('result.recommendations') })
+      }}
     </v-card-title>
 
     <NutrientsTable :nutrients='nutrients()'/>
@@ -10,7 +13,7 @@
 
 <script>
 import GetNutrientsBalance from '@/mixins/GetNutrientsBalance'
-import NutrientsTable from '@/components/nutrientsTable/NutrientsTable'
+import NutrientsTable from '@/components/common/nutrientsTable/NutrientsTable'
 
 export default {
   components: {

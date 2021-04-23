@@ -1,5 +1,5 @@
 <template>
-  <v-form v-model="valid">
+  <v-form class="flex-grow-1" v-model="valid">
     <v-text-field
       @change="update"
       class="ma-1"
@@ -60,9 +60,3 @@ export default {
   props: ['extremum', 'isMin']
 }
 </script>
-
-<style scoped>
-.v-text-field {
-  width: calc(100% - 8px);
-}
-</style>

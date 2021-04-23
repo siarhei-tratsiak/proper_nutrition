@@ -15,7 +15,7 @@ const state = {
     name: '',
     end: null
   },
-  products: [],
+  resultProducts: [],
   productSearch: '',
   productsList: [],
   ration: [],

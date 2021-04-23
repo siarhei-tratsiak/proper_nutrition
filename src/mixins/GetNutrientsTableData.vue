@@ -3,7 +3,7 @@ import { mapGetters, mapState } from 'vuex'
 import { nutrientIndices } from '@/data/nutrientIndices'
 import { nutrients as nutrientsRU } from '@/data/nutrients_ru'
 import { nutrients as nutrientsEN } from '@/data/nutrients_en'
-import ProgressBarCell from '@/components/nutrientsTable/ProgressBarCell'
+import ProgressBarCell from '@/components/common/nutrientsTable/ProgressBarCell'
 
 export default {
   components: { ProgressBarCell },
@@ -11,7 +11,7 @@ export default {
   computed: {
     ...mapGetters(['getReducedConstraints']),
 
-    ...mapState(['constraints', 'period', 'products', 'productsList', 'rationForPeriod']),
+    ...mapState(['constraints', 'period', 'productsList', 'rationForPeriod']),
 
     rationProductIDs: function () {
       const onlyUnique = (value, index, self) => self.indexOf(value) === index
@@ -102,8 +102,8 @@ export default {
       .findIndex(nutrientID => nutrientID === usedNutrientID),
 
     _getBase: function (comparison) {
-      const maxAbs = Math.max(...comparison)
-      const base = maxAbs === 0 ? 0 : 100 / maxAbs
+      const maximumAbs = Math.max(...comparison)
+      const base = maximumAbs === 0 ? 0 : 100 / maximumAbs
       return base
     },
 

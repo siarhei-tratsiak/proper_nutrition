@@ -41,11 +41,11 @@ const actions = {
     })
     // avoid floating-point arithmetic side-effects
     result = result.solution
-      .map(value => +value.toFixed(2))
+      // .map(value => +value.toFixed(2))
       .map((productValue, index) => service
         .getProductsData(index, productValue, selectedProductIDs))
       .filter(product => product.mass !== 0)
-    const payload = { name: 'products', value: result }
+    const payload = { name: 'resultProducts', value: result }
     commit('setState', payload)
     commit('setStateObject', {
       objectName: 'status',

@@ -16,8 +16,8 @@ import ResultProductsList from '@/components/result/ResultProductsList'
 export default {
   components: {
     Alert,
-    ResultProductsList,
-    NutrientsBalance
+    NutrientsBalance,
+    ResultProductsList
   },
 
   mixins: [ReadinessCheck]

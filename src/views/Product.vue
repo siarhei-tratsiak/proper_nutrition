@@ -17,9 +17,9 @@
 import { foodNutrients } from '@/data/foodNutrients.js'
 import { IDBS } from '@/api/indexedDBService'
 import GetNutrietsTableData from '@/mixins/GetNutrientsTableData'
-import NutrientsTable from '@/components/nutrientsTable/NutrientsTable'
-import AddProductButton from '@/components/ration/AddProductButton'
-import ProductDialog from '@/components/ration/dialog/ProductDialog'
+import NutrientsTable from '@/components/common/nutrientsTable/NutrientsTable'
+import AddProductButton from '@/components/common/AddProductButton'
+import ProductDialog from '@/components/common/dialog/ProductDialog'
 
 export default {
   components: {

@@ -12,12 +12,9 @@ import { cloneDeep } from 'lodash'
 const getters = {
 
   getConditions: (state, getters) => (nutrients) => {
-    let selectedProductIDs = state.selectedProductIDs
-    let selectedProductNutrients = service
-      .getFilteredNutrients(selectedProductIDs)
     let constraints = getters._getSimplexConstraints(nutrients)
-    selectedProductNutrients = service
-      .excludeProductsForZeroMax(constraints, selectedProductNutrients)
+    const selectedProductNutrients = service
+      .excludeProductsForZeroMax(constraints, state.selectedProductIDs)
     constraints = service.excludeZeroMax(constraints)
     const restrictionMatrix = service
       .getRestrictionMatrix(selectedProductNutrients, constraints)
@@ -27,7 +24,7 @@ const getters = {
     const constraintsVector = service.getConstraintsVector(constraints, objective)
     const objectiveCoefficients = service
       .getObjectiveCoefficients(selectedProductNutrients, objective)
-    selectedProductIDs = service
+    const selectedProductIDs = service
       .getSelectedProductIDs(selectedProductNutrients)
     return {
       restrictionMatrix,
@@ -197,7 +194,7 @@ const getters = {
   },
 
   getResultProducts: state => () =>
-    state.products.map(product => ({
+    state.resultProducts.map(product => ({
       id: product.id,
       name: product.name,
       mass: service.roundToTenth(product.mass)

@@ -18,7 +18,7 @@
 
         <i18n path="intake.tooltip" tag="p">
           <template #icon>
-            <v-icon>mdiLockOpenVariant</v-icon>
+            <v-icon>{{ mdiLockOpenVariant }}</v-icon>
           </template>
         </i18n>
       </v-tooltip>
@@ -30,6 +30,7 @@
         :headers="headers"
         hide-default-footer
         hide-default-header
+        id="daily-intake"
         :items="formattedConstraints"
         :items-per-page="-1"
         sort-by="name"
@@ -176,5 +177,38 @@ export default {
 
 td {
   padding: 0px 4px !important;
+}
+</style>
+
+<style>
+#daily-intake .v-data-table__mobile-table-row {
+  display: grid;
+  grid-template-areas:
+    "name unit extr"
+    "min min min"
+    "max max max";
+  grid-template-columns: 2fr 1fr 1fr;
+}
+
+#daily-intake .v-data-table__mobile-row:nth-of-type(1) {
+  grid-area: name;
+}
+
+#daily-intake .v-data-table__mobile-row:nth-of-type(2) {
+  grid-area: min;
+}
+
+#daily-intake .v-data-table__mobile-row:nth-of-type(3) {
+  border-bottom: thin solid rgba(0, 0, 0, 0.12);
+  grid-area: max;
+}
+
+#daily-intake .v-data-table__mobile-row:nth-of-type(4) {
+  grid-area: unit;
+}
+
+#daily-intake .v-data-table__mobile-row:nth-of-type(5) {
+  border-bottom: none !important;
+  grid-area: extr;
 }
 </style>

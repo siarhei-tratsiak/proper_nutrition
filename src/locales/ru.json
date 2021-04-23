@@ -31,14 +31,16 @@
       "name": "Название",
       "mass": "Масса, г"
     },
-    "nutrientsHeader": "Баланс нутриентов в рационе с учетом рекомендаций:"
+    "recommendations": " с учетом рекомендаций",
+    "nutrientsHeader": "Баланс нутриентов в рационе{recommendations}:"
   },
   "table": {
     "all": "Все",
     "noDataText": "Данные недоступны",
     "noResultsText": "Совпадающих записей не найдено",
     "rowsPerPage": "Записей на странице:",
-    "pageText": "{0}-{1} из {2}"
+    "pageText": "{0}-{1} из {2}",
+    "sortBy": "Сортировать по"
   },
   "nutrients": {
     "group": {

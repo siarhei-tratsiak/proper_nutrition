@@ -7,7 +7,7 @@ import GetNutrietsTableData from '@/mixins/GetNutrientsTableData'
 
 export default {
   computed: {
-    ...mapState(['days', 'products', 'rationForPeriod', 'selectedProductIDs'])
+    ...mapState(['days', 'resultProducts', 'rationForPeriod', 'selectedProductIDs'])
   },
 
   created: function () {
@@ -31,7 +31,7 @@ export default {
     _getNutrientValues: function () {
       const nutrientsCount = nutrientIndices.length
       let nutrientValues = np.zeros(nutrientsCount)
-      const isMultipleProducts = this.products.length ||
+      const isMultipleProducts = this.resultProducts.length ||
         this.rationForPeriod.length
       if (isMultipleProducts) {
         nutrientValues = this._forMultipleProducts()
@@ -71,7 +71,7 @@ export default {
     },
 
     _getProductValue: function (productID) {
-      const findedProduct = this.products.find(
+      const findedProduct = this.resultProducts.find(
         product => product.id === productID
       )
       const resultProductValue = findedProduct ? findedProduct.mass : 0
@@ -85,7 +85,7 @@ export default {
     },
 
     _getProductIDs: function () {
-      return this.products.map(product => product.id)
+      return this.resultProducts.map(product => product.id)
     },
 
     _rowsSum: function (acc, nutrientValues) {

@@ -31,14 +31,16 @@
       "name": "Name",
       "mass": "Mass, g"
     },
-    "nutrientsHeader": "Balance of nutrients in the diet, taking into account the recommendations:"
+    "recommendations": ", taking into account the recommendations",
+    "nutrientsHeader": "Balance of nutrients in the diet{recommendations}:"
   },
   "table": {
     "all": "All",
     "noDataText": "No data available",
     "noResultsText": "No matching records found",
     "rowsPerPage": "Rows per page:",
-    "pageText": "{0}-{1} of {2}"
+    "pageText": "{0}-{1} of {2}",
+    "sortBy": "Sort by"
   },
   "nutrients": {
     "group": {

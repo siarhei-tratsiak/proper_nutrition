@@ -19,7 +19,9 @@ const service = {
     return goalValue
   },
 
-  excludeProductsForZeroMax: (constraints, selectedProductNutrients) => {
+  excludeProductsForZeroMax: function (constraints, selectedProductIDs) {
+    const selectedProductNutrients = this
+      .getFilteredNutrients(selectedProductIDs)
     const zeroConstraint = constraint => constraint.max === 0
     const nutrientIDs = constraint => constraint.nutrient_id
     const zeroMaxNutrientIDs = constraints
@@ -46,10 +48,9 @@ const service = {
 
   getConstraintsWithRation: (nutrients, constraint, days) => {
     const nutrientID = constraint.nutrient_id
-    const nutrientIndex = nutrientIndices.findIndex(
-      nutrientIndex => nutrientIndex === nutrientID
-    )
-    const nutrientValue = nutrients[nutrientIndex].valueAbs
+    const byNutrientID = nutrient => nutrient.id === nutrientID
+    const nutrient = nutrients.find(byNutrientID)
+    const nutrientValue = nutrient.valueAbs
     const constraints = [constraint.min, constraint.max]
     const constraintsWithRation = constraints.map(
       constraint => _constraintForRation(constraint, days, nutrientValue)

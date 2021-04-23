@@ -1,18 +1,18 @@
 <template lang="html">
   <v-card>
-    <Header />
-    <Table />
+    <ProductsHeader />
+    <ProductsTable />
   </v-card>
 </template>
 
 <script>
-import Header from '@/components/products/Header'
-import Table from '@/components/products/Table'
+import ProductsHeader from '@/components/products/ProductsHeader'
+import ProductsTable from '@/components/products/ProductsTable'
 
 export default {
   components: {
-    Header,
-    Table
+    ProductsHeader,
+    ProductsTable
   }
 }
 </script>

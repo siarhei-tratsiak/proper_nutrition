@@ -3,6 +3,7 @@
     <v-card-title>{{ $t('result.title') }}</v-card-title>
 
     <v-data-table
+      :header-props="{'sort-by-text': $t('table.sortBy')}"
       :headers="headers"
       hideDefaultFooter
       id="result-products-list"
@@ -42,3 +43,11 @@ export default {
   }
 }
 </script>
+
+<style>
+  #result-products-list
+  .v-data-table__mobile-row:nth-of-type(1)
+  .v-data-table__mobile-row__header {
+    display: none;
+  }
+</style>
