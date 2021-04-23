@@ -90,7 +90,7 @@ export default {
     grid-template-areas:
       "name unit"
       "bar bar";
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 3fr 1fr;
   }
 
   .nutrients-table .v-data-table__mobile-row:nth-of-type(1) {

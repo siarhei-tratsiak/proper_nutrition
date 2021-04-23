@@ -1,11 +1,13 @@
 <template>
-  <v-date-picker
-    first-day-of-week="1"
-    full-width
-    :locale="$i18n.locale"
-    no-title
-    v-model="picker"
-  />
+  <v-card class="ma-1">
+    <v-date-picker
+      first-day-of-week="1"
+      full-width
+      :locale="$i18n.locale"
+      no-title
+      v-model="picker"
+    />
+  </v-card>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-2">
+  <v-card class="ma-1">
     <v-card-title>
       {{ $t('intake.title') }}
     </v-card-title>
@@ -190,8 +190,18 @@ td {
   grid-template-columns: 2fr 1fr 1fr;
 }
 
+#daily-intake .v-data-table__mobile-row {
+  padding: 0 8px;
+}
+
 #daily-intake .v-data-table__mobile-row:nth-of-type(1) {
   grid-area: name;
+}
+
+#daily-intake
+.v-data-table__mobile-row:nth-of-type(1)
+.block {
+  text-align: left !important;
 }
 
 #daily-intake .v-data-table__mobile-row:nth-of-type(2) {

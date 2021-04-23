@@ -43,9 +43,8 @@ export default {
       const isHome = this.$route.name === 'Home'
       const usedfoodNutrients = foodNutrients.filter(foodNutrientRecord =>
         this._usedfoodNutrients(foodNutrientRecord, isHome))
-      const nutrientValuesTotal = usedfoodNutrients.map(
-        this._getNutrientValuesTotal
-      )
+      const nutrientValuesTotal = usedfoodNutrients
+        .map(this._getNutrientValuesTotal)
       const summedNutrientValues = nutrientValuesTotal.length
         ? nutrientValuesTotal.reduce(this._rowsSum)
         : np.zeros(nutrientIndices.length)

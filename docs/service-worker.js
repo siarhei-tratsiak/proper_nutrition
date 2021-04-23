@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.be7c9331785ed1734c2f4b3e2acc8944.js"
+  "/precache-manifest.f6030c447b42e9438014258f92abfa8a.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "proper-nutrition"});

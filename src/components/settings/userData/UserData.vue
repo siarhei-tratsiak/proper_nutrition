@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-2">
+  <v-card class="ma-1">
     <v-card-title>
       {{ $t('settings.title') }}
     </v-card-title>

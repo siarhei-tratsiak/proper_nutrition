@@ -43,3 +43,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .v-data-table__mobile-row__cell {
+    margin: 0;
+  }
+</style>

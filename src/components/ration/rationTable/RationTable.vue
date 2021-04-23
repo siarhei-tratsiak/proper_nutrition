@@ -1,27 +1,29 @@
 <template>
-  <v-data-table
-    class="ration-table"
-    :header-props="{'sort-by-text': $t('table.sortBy')}"
-    :headers="headers"
-    hide-default-footer
-    :items="ration"
-    :items-per-page="-1"
-    :no-data-text="$t('table.noDataText')"
-  >
-    <template #top>
-      <RationTableTop />
-    </template>
+  <v-card class="ma-1">
+    <v-data-table
+      class="ration-table"
+      :header-props="{'sort-by-text': $t('table.sortBy')}"
+      :headers="headers"
+      hide-default-footer
+      :items="ration"
+      :items-per-page="-1"
+      :no-data-text="$t('table.noDataText')"
+    >
+      <template #top>
+        <RationTableTop />
+      </template>
 
-    <template #[`item.product_name`]="{ item }">
-      <router-link :to="{ name: 'Product', params: { id: item.product_id } }">
-        {{ item.product_name }}
-      </router-link>
-    </template>
+      <template #[`item.product_name`]="{ item }">
+        <router-link :to="{ name: 'Product', params: { id: item.product_id } }">
+          {{ item.product_name }}
+        </router-link>
+      </template>
 
-    <template #[`item.actions`]="{ item }">
-      <RationTableActions :item='item' />
-    </template>
-  </v-data-table>
+      <template #[`item.actions`]="{ item }">
+        <RationTableActions :item='item' />
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script>
