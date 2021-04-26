@@ -1,5 +1,5 @@
 <template>
-  <v-btn class="ma-2" @click="switchLock(lock)" depressed>
+  <v-btn class="ma-2" @click="switchLock(lock)">
     {{ (lock ? "" : $t('intake.un'))+$t('intake.lock') }}
 
     <v-icon right>

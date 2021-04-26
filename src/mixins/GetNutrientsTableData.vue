@@ -1,5 +1,5 @@
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapState } from 'vuex'
 import { nutrientIndices } from '@/data/nutrientIndices'
 import { nutrients as nutrientsRU } from '@/data/nutrients_ru'
 import { nutrients as nutrientsEN } from '@/data/nutrients_en'
@@ -9,8 +9,6 @@ export default {
   components: { ProgressBarCell },
 
   computed: {
-    ...mapGetters(['getReducedConstraints']),
-
     ...mapState(['constraints', 'period', 'productsList', 'rationForPeriod']),
 
     rationProductIDs: function () {
@@ -25,7 +23,7 @@ export default {
     nutrients: function () {
       const usedNutrients = this._getUsedNutrients()
       const nutrientValues = this._getNutrientValues()
-      const reducedConstraints = this.getReducedConstraints()
+      const reducedConstraints = this._getReducedConstraints()
       const nutrients = this._getNutrients(
         usedNutrients,
         reducedConstraints,
@@ -71,7 +69,8 @@ export default {
       const usedNutrientID = payload.usedNutrient[0]
       const rowIndex = this._findIndex(usedNutrientID)
       const nutrientValue = payload.nutrientValues[rowIndex]
-      const { minAbs, maxAbs } = this._getMinimaxAbs(nutrientConstraints)
+      const minAbs = nutrientConstraints[1]
+      const maxAbs = nutrientConstraints[2]
       const comparison = [minAbs, nutrientValue, maxAbs]
       const base = this._getBase(comparison)
       const isMain = minAbs > 0 || typeof maxAbs === 'number'
@@ -94,7 +93,7 @@ export default {
 
     _findConstraintWithID: function (reducedConstraints, nutrientID) {
       return reducedConstraints.find(
-        (constraint) => constraint[0] === nutrientID
+        constraint => constraint[0] === nutrientID
       )
     },
 

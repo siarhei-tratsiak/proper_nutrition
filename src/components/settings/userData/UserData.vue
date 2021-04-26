@@ -4,7 +4,7 @@
       {{ $t('settings.title') }}
     </v-card-title>
 
-    <v-card-text>
+    <v-card-text class="align-stretch d-flex flex-column">
       <v-card-subtitle>
         {{ $t('settings.user') }}
       </v-card-subtitle>
@@ -26,6 +26,10 @@
       </v-card-subtitle>
 
       <LanguageSelector />
+
+      <BackUp />
+
+      <Restore />
     </v-card-text>
   </v-card>
 </template>
@@ -33,9 +37,11 @@
 <script>
 import ActivitySelector from '@/components/settings/userData/ActivitySelector'
 import AgeSelector from '@/components/settings/userData/AgeSelector'
+import BackUp from '@/components/settings/userData/BackUp'
 import GoalSelector from '@/components/settings/userData/GoalSelector'
 import HeightSelector from '@/components/settings/userData/HeightSelector'
 import LanguageSelector from '@/components/settings/userData/LanguageSelector'
+import Restore from '@/components/settings/userData/Restore'
 import SexSelector from '@/components/settings/userData/SexSelector'
 import WeightSelector from '@/components/settings/userData/WeightSelector'
 
@@ -43,9 +49,11 @@ export default {
   components: {
     ActivitySelector,
     AgeSelector,
+    BackUp,
     GoalSelector,
     HeightSelector,
     LanguageSelector,
+    Restore,
     SexSelector,
     WeightSelector
   }

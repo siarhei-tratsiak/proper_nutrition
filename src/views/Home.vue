@@ -2,12 +2,13 @@
   <div
     class="accent-2 align-center d-flex flex-column green"
     id="background"
+    v-if="isReady"
   >
     <p class="align-center d-flex flex-grow-1 text-center">
       {{ $t('runButtonInstructions[0]') }}
     </p>
 
-    <RunButton v-if="isReady" />
+    <RunButton />
 
     <p class="align-center d-flex flex-grow-1 text-center">
       {{ $t('runButtonInstructions[1]') }}

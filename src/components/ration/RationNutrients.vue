@@ -13,7 +13,7 @@ import NutrientsTable from '@/components/common/nutrientsTable/NutrientsTable'
 import { nutrientIndices } from '@/data/nutrientIndices'
 import { np } from '@/api/np'
 import { foodNutrients } from '@/data/foodNutrients'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import GetNutrientsTableData from '@/mixins/GetNutrientsTableData'
 
 export default {
@@ -37,6 +37,8 @@ export default {
   },
 
   methods: {
+    ...mapGetters(['getReducedConstraints']),
+
     _getNutrientValues: function () {
       const usedfoodNutrients = foodNutrients.filter(this._usedfoodNutrients)
       const nutrientValuesTotal = usedfoodNutrients
@@ -79,12 +81,9 @@ export default {
       )
     },
 
-    _getMinimaxAbs: function (nutrientConstraints) {
-      const minAbs = nutrientConstraints[1]
-      const maxAbs = nutrientConstraints[2]
-        ? nutrientConstraints[2]
-        : null
-      return { minAbs, maxAbs }
+    _getReducedConstraints: function () {
+      const days = 1
+      return this.getReducedConstraints()(days)
     }
   },
 

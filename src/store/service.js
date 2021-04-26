@@ -75,8 +75,9 @@ const service = {
 
   getObjectiveCoefficients: (selectedProductNutrients, objective) => {
     const objectivePosition = _getNutrientPosition(objective.nutrient_id)
+    const multiplier = objective.target === 0 ? 1 : -1
     return selectedProductNutrients
-      .map(product => -product[1][objectivePosition])
+      .map(product => multiplier * product[1][objectivePosition])
   },
 
   getProductsData: (index, productValue, selectedProductIDs) => {

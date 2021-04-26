@@ -32,11 +32,11 @@ export default {
   grid-template-areas:
     "calendar nutrients"
     "ration nutrients";
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 3fr;
   grid-template-rows: auto 1fr;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1200px) {
   #ration {
     grid-template-areas:
       "calendar"

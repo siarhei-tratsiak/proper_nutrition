@@ -35,7 +35,7 @@ const getters = {
   },
 
   _getSimplexConstraints: (state) => (nutrients) => {
-    const days = state.days
+    const days = dates.getDays(state.period.start, state.period.end)
     const constraints = cloneDeep(state.constraints)
     return constraints.map(constraint => {
       [constraint.min, constraint.max] = service.getConstraintsWithRation(
@@ -185,11 +185,11 @@ const getters = {
     return payloadSet
   },
 
-  getReducedConstraints: state => () => {
+  getReducedConstraints: (state) => (days) => {
     return state.constraints.map(constraint => [
       constraint.nutrient_id,
-      constraint.min,
-      constraint.max
+      constraint.min * days,
+      constraint.max === null ? null : constraint.max * days
     ])
   },
 

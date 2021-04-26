@@ -41,7 +41,6 @@ const actions = {
     })
     // avoid floating-point arithmetic side-effects
     result = result.solution
-      // .map(value => +value.toFixed(2))
       .map((productValue, index) => service
         .getProductsData(index, productValue, selectedProductIDs))
       .filter(product => product.mass !== 0)
@@ -73,6 +72,18 @@ const actions = {
     )
     commit('setStateObject', userPayload)
     i18n.locale = lastUser.language
+  },
+
+  makeBackUp ({ state }) {
+    IDBS.makeBackUp(state.db)
+  },
+
+  async restoreDB ({ state, commit }, file) {
+    if (file) {
+      const db = await IDBS.restoreDB(state.db, file)
+      const payload = { name: 'db', value: db }
+      commit('setState', payload)
+    }
   },
 
   setAllConstraints ({ dispatch }) {

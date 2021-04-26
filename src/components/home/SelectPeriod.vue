@@ -21,7 +21,7 @@
 <script>
 import { dates } from '@/api/dates'
 import DatePicker from '@/components/home/DatePicker'
-import { mapMutations, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   components: { DatePicker },
@@ -39,6 +39,7 @@ export default {
         const start = this._getStart(name)
         const payload = { objectName: 'period', state: { start, end, name } }
         this.setStateObject(payload)
+        this.setRationForPeriod()
       }
     },
 
@@ -63,16 +64,21 @@ export default {
   },
 
   created: function () {
-    const start = dates.getToday()
-    const end = dates.getTomorrow()
-    const payload = {
-      objectName: 'period',
-      state: { start, end, name: this.periods[0] }
+    const isNoPeriod = this.period.name === ''
+    if (isNoPeriod) {
+      const start = dates.getToday()
+      const end = dates.getTomorrow()
+      const payload = {
+        objectName: 'period',
+        state: { start, end, name: this.periods[0] }
+      }
+      this.setStateObject(payload)
+      this.setRationForPeriod()
     }
-    this.setStateObject(payload)
   },
 
   methods: {
+    ...mapActions(['setRationForPeriod']),
     ...mapMutations(['setStateObject']),
 
     _getStart: function (intervalName) {

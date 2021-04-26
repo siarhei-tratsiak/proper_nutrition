@@ -4,6 +4,8 @@ import { products as productsRU } from '@/data/products_ru'
 import { selected } from '@/data/selected'
 import i18n from '@/plugins/i18n'
 import Dexie from 'dexie'
+import { exportDB, importDB, peakImportFile } from 'dexie-export-import'
+import download from 'downloadjs'
 
 const IDBS = {
   addConstraints: (db, constraints) => db.constraints.bulkAdd(constraints),
@@ -69,6 +71,11 @@ const IDBS = {
     return db
   },
 
+  makeBackUp: async (db) => {
+    const blob = await exportDB(db)
+    download(blob, 'proper-nutrition.json', 'application/json')
+  },
+
   modifyConstraints: (db, userID, payload) => {
     db.constraints
       .where('user_id')
@@ -82,6 +89,24 @@ const IDBS = {
       .anyOf(selectedIDs)
       .and(filter => filter.user_id === userID)
       .modify({ selected: isSelected })
+  },
+
+  restoreDB: async (db, blob) => {
+    const importMeta = await peakImportFile(blob)
+    const dbName = importMeta.data.databaseName
+    const tables = importMeta.data.tables.map(table => table.name)
+    const tablesList = [
+      'constraints',
+      'filters',
+      'rations',
+      'users'
+    ]
+    const areTablesMatch = tables
+      .every(tableName => tablesList.includes(tableName))
+    if (dbName === 'ProperNutritionDB' && areTablesMatch) {
+      await db.delete()
+      return await importDB(blob)
+    }
   },
 
   updateConstraint: (db, constraint, nutrientMinMaxValue) => {

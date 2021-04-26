@@ -1,5 +1,5 @@
 <template>
-  <v-btn @click="click" :color="text ? 'primary' : ''" depressed>
+  <v-btn @click="click" :color="text ? 'primary' : ''">
     {{ text }}
   </v-btn>
 </template>

@@ -8,6 +8,7 @@
 import { mapActions, mapState } from 'vuex'
 import CloseProductDialog from '@/mixins/CloseProductDialog'
 import { mdiContentSave } from '@mdi/js'
+import { dates } from '@/api/dates'
 
 export default {
   computed: {
@@ -19,7 +20,7 @@ export default {
   }),
 
   methods: {
-    ...mapActions(['editRation', 'setRation']),
+    ...mapActions(['editRation', 'setRation', 'setRationForPeriod']),
 
     save: function () {
       const ration = {
@@ -34,7 +35,10 @@ export default {
       }
       this.editRation(ration)
       this.close()
-      this.setRation(this.selectedDate)
+      const isProduct = this.$route.name === 'Product'
+      const date = isProduct ? dates.getToday() : this.selectedDate
+      this.setRation(date)
+      this.setRationForPeriod()
     }
   },
 

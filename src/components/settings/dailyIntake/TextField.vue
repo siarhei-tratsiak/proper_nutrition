@@ -44,13 +44,13 @@ export default {
 
     getValue: function () {
       const value = this.isMin ? this.extremum.min : this.extremum.max
-      return (value === null) ? value : +value.toFixed(1)
+      return value ? +value.toFixed(1) : value
     },
 
     update: function (value) {
       if (this.valid) {
         const payload = { id: this.extremum.id }
-        const extremum = value === '' ? value : +value
+        const extremum = value === '' ? null : +value
         payload.value = this.isMin ? { min: extremum } : { max: extremum }
         this.updateConstraint(payload)
       }

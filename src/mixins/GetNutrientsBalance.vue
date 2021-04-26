@@ -1,13 +1,15 @@
 <script>
 import { foodNutrients } from '@/data/foodNutrients'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { np } from '@/api/np'
 import { nutrientIndices } from '@/data/nutrientIndices'
 import GetNutrietsTableData from '@/mixins/GetNutrientsTableData'
+import { dates } from '@/api/dates'
 
 export default {
+
   computed: {
-    ...mapState(['days', 'resultProducts', 'rationForPeriod', 'selectedProductIDs'])
+    ...mapState(['days', 'period', 'resultProducts', 'rationForPeriod', 'selectedProductIDs'])
   },
 
   created: function () {
@@ -16,23 +18,15 @@ export default {
 
   methods: {
     ...mapActions(['setRationForPeriod']),
+    ...mapGetters(['getReducedConstraints']),
 
     // do not move to GetNutrietsTableData
     // these functions may differ in parent components
-    _getMinimaxAbs: function (nutrientConstraints) {
-      const days = this.days
-      const minAbs = nutrientConstraints[1] * days
-      const maxAbs = nutrientConstraints[2]
-        ? nutrientConstraints[2] * days
-        : null
-      return { minAbs, maxAbs }
-    },
 
     _getNutrientValues: function () {
       const nutrientsCount = nutrientIndices.length
       let nutrientValues = np.zeros(nutrientsCount)
-      const isMultipleProducts = this.resultProducts.length ||
-        this.rationForPeriod.length
+      const isMultipleProducts = this.$route.name !== 'Product'
       if (isMultipleProducts) {
         nutrientValues = this._forMultipleProducts()
       }
@@ -70,10 +64,10 @@ export default {
     },
 
     _getProductValue: function (productID) {
-      const findedProduct = this.resultProducts.find(
+      const resultProduct = this.resultProducts.find(
         product => product.id === productID
       )
-      const resultProductValue = findedProduct ? findedProduct.mass : 0
+      const resultProductValue = resultProduct ? resultProduct.mass : 0
       const filterProducts = product => product.id === productID
       const sumProducts = (sum, product) => sum + product.value
       const findedRation = this.rationForPeriod
@@ -85,6 +79,11 @@ export default {
 
     _getProductIDs: function () {
       return this.resultProducts.map(product => product.id)
+    },
+
+    _getReducedConstraints: function () {
+      const days = dates.getDays(this.period.start, this.period.end)
+      return this.getReducedConstraints()(days)
     },
 
     _rowsSum: function (acc, nutrientValues) {

@@ -126,7 +126,9 @@
       "label": "Language:",
       "ru": "Russian",
       "en": "English"
-    }
+    },
+    "backup": "backup",
+    "restore": "restore"
   },
   "intake": {
     "title": "Daily intake",

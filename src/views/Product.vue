@@ -20,6 +20,7 @@ import GetNutrietsTableData from '@/mixins/GetNutrientsTableData'
 import NutrientsTable from '@/components/common/nutrientsTable/NutrientsTable'
 import AddProductButton from '@/components/common/AddProductButton'
 import ProductDialog from '@/components/common/dialog/ProductDialog'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -44,11 +45,7 @@ export default {
   },
 
   methods: {
-    _getMinimaxAbs: function (nutrientConstraints) {
-      const minAbs = nutrientConstraints[1]
-      const maxAbs = nutrientConstraints[2]
-      return { minAbs, maxAbs }
-    },
+    ...mapGetters(['getReducedConstraints']),
 
     _getNutrientValues: function () {
       const foodNutrientWithCurrentID = foodNutrients.find(
@@ -61,6 +58,11 @@ export default {
     _foodNutrientWithCurrentID: function (foodNutrientRecord) {
       const foodNutrientProductID = foodNutrientRecord[0]
       return this.productID === foodNutrientProductID
+    },
+
+    _getReducedConstraints: function () {
+      const days = 1
+      return this.getReducedConstraints()(days)
     }
   },
 

@@ -1,5 +1,5 @@
 <template>
-  <v-btn class="ma-2" @click="setAllConstraints" depressed>
+  <v-btn class="ma-2" @click="setAllConstraints">
     {{ $t('intake.default') }}
   </v-btn>
 </template>
