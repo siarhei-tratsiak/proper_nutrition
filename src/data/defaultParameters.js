@@ -1,8 +1,8 @@
 const defaultUser = {
   sex: 'male',
-  birthdate: 585014400000, // 16.07.1988
-  weight: 68,
-  height: 174,
+  birthdate: 631152000000, // 01.01.1990
+  weight: 62,
+  height: 169,
   activity: 1,
   goal: 1,
   language: _getLocale()
