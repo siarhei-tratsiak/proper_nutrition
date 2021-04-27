@@ -9,11 +9,12 @@
     </div>
 
     <v-select
-      @input="input"
       :items="periods"
+      item-text="name"
+      item-value="id"
       :label="label"
       solo
-      :value="interval"
+      v-model="interval"
     ></v-select>
   </div>
 </template>
@@ -31,13 +32,15 @@ export default {
 
     interval: {
       get: function () {
-        return this.period.name
+        const id = this.period.id
+        const period = this.periods.find(period => period.id === id)
+        return period
       },
 
-      set: function (name) {
+      set: function (id) {
         const end = dates.getTomorrow()
-        const start = this._getStart(name)
-        const payload = { objectName: 'period', state: { start, end, name } }
+        const start = this._getStart(id)
+        const payload = { objectName: 'period', state: { start, end, id } }
         this.setStateObject(payload)
         this.setRationForPeriod()
       }
@@ -49,28 +52,28 @@ export default {
 
     periods: function () {
       return [
-        this.$t('periods.today'),
-        this.$t('periods.monday'),
-        this.$t('periods.sevenDays'),
-        this.$t('periods.fromTheFirst'),
-        this.$t('periods.thirtyDays'),
-        this.$t('periods.other')
+        { id: 0, name: this.$t('periods.today') },
+        { id: 1, name: this.$t('periods.monday') },
+        { id: 2, name: this.$t('periods.sevenDays') },
+        { id: 3, name: this.$t('periods.fromTheFirst') },
+        { id: 4, name: this.$t('periods.thirtyDays') },
+        { id: 5, name: this.$t('periods.other') }
       ]
     },
 
     showDatePicker: function () {
-      return this.interval === this.$t('periods.other')
+      return this.period.id === 5
     }
   },
 
   created: function () {
-    const isNoPeriod = this.period.name === ''
+    const isNoPeriod = this.period.id === null
     if (isNoPeriod) {
       const start = dates.getToday()
       const end = dates.getTomorrow()
       const payload = {
         objectName: 'period',
-        state: { start, end, name: this.periods[0] }
+        state: { start, end, id: this.periods[0].id }
       }
       this.setStateObject(payload)
       this.setRationForPeriod()
@@ -81,22 +84,22 @@ export default {
     ...mapActions(['setRationForPeriod']),
     ...mapMutations(['setStateObject']),
 
-    _getStart: function (intervalName) {
+    _getStart: function (periodID) {
       const msInDay = dates.getMsInDay()
       const now = new Date()
       const today = dates.getToday()
       let start = today
-      switch (intervalName) {
-        case this.$t('periods.monday'):
+      switch (periodID) {
+        case 1:
           start = this._getMonday(now, today, msInDay)
           break
-        case this.$t('periods.sevenDays'):
+        case 2:
           start = this._getWeekAgo(today, msInDay)
           break
-        case this.$t('periods.fromTheFirst'):
+        case 3:
           start = this._getFirstDayOfMonth(now, today, msInDay)
           break
-        case this.$t('periods.thirtyDays'):
+        case 4:
           start = this._getMonthAgo(today, msInDay)
       }
       return start
@@ -122,10 +125,6 @@ export default {
     _getMonthAgo: function (today, msInDay) {
       const monthAgo = today - 29 * msInDay
       return monthAgo
-    },
-
-    input: function (interval) {
-      this.interval = interval
     }
   }
 }

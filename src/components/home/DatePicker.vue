@@ -23,7 +23,6 @@
     <v-date-picker
       :allowed-dates="allowedDates"
       first-day-of-week="1"
-      @input="input"
       :locale="$i18n.locale"
       no-title
       v-model="date"
@@ -33,13 +32,27 @@
 
 <script>
 import { dates } from '@/api/dates'
-import { mapMutations, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import { mdiCalendar } from '@mdi/js'
 
 export default {
 
   computed: {
     ...mapState(['period']),
+
+    date: {
+      get: function () {
+        const end = this.period.end - dates.getMsInDay()
+        const date = this.isFrom ? this.period.start : end
+        return dates.formatDateForPicker(date)
+      },
+      set: function (date) {
+        const period = this._getPeriod(date)
+        const payload = { objectName: 'period', state: period }
+        this.setStateObject(payload)
+        this.setRationForPeriod()
+      }
+    },
 
     label: function () {
       return this.isFrom ? this.$t('datePicker.from') : this.$t('datePicker.to')
@@ -52,7 +65,6 @@ export default {
 
   data: function () {
     return {
-      date: dates.formatDateForPicker(),
       mdiCalendar,
       menu: false,
       nudgeRight: 40
@@ -60,6 +72,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(['setRationForPeriod']),
     ...mapMutations(['setStateObject']),
 
     allowedDates: function (date) {
@@ -86,14 +99,8 @@ export default {
       return isDateNotLess
     },
 
-    input: function (date) {
-      const period = this._getPeriod(date)
-      const payload = { objectName: 'period', state: period }
-      this.setStateObject(payload)
-    },
-
     _getPeriod: function (date) {
-      const period = { name: this.$t('periods.other') }
+      const period = { id: 5 }
       const parsedDate = Date.parse(date)
       if (this.isFrom) {
         period.start = parsedDate

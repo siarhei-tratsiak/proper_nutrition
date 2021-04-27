@@ -1,9 +1,9 @@
 <template>
     <v-alert
       type="warning"
-      v-if='!status.isResult'
+      v-if='status.resultStatus !== 0'
     >
-      {{ $t('alert') }}
+      {{ message }}
     </v-alert>
 </template>
 
@@ -12,7 +12,15 @@ import { mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['status'])
+    ...mapState(['status']),
+
+    message: function () {
+      if (this.status.resultStatus === null) {
+        return this.$t('alert')
+      } else {
+        return `${this.$t('alert')}${this.$t('advice')}`
+      }
+    }
   }
 }
 </script>

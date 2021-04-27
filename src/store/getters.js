@@ -1,4 +1,5 @@
 import { dates } from '@/api/dates'
+import { IDBS } from '@/api/indexedDBService'
 import {
   carbohydratesDailyIntake,
   fatDailyIntake,
@@ -6,6 +7,7 @@ import {
   nutrientConstraintsBySex,
   proteinDailyIntake
 } from '@/data/defaultParameters'
+import i18n from '@/plugins/i18n'
 import { service } from '@/store/service'
 import { cloneDeep } from 'lodash'
 
@@ -15,13 +17,13 @@ const getters = {
     let constraints = getters._getSimplexConstraints(nutrients)
     const selectedProductNutrients = service
       .excludeProductsForZeroMax(constraints, state.selectedProductIDs)
-    constraints = service.excludeZeroMax(constraints)
-    const restrictionMatrix = service
-      .getRestrictionMatrix(selectedProductNutrients, constraints)
     const objective = constraints.find(
       constraint => constraint.target !== 2
     )
-    const constraintsVector = service.getConstraintsVector(constraints, objective)
+    constraints = service.excludeZeroMax(constraints)
+    const restrictionMatrix = service
+      .getRestrictionMatrix(selectedProductNutrients, constraints)
+    const constraintsVector = service.getConstraintsVector(constraints)
     const objectiveCoefficients = service
       .getObjectiveCoefficients(selectedProductNutrients, objective)
     const selectedProductIDs = service
@@ -193,12 +195,13 @@ const getters = {
     ])
   },
 
-  getResultProducts: state => () =>
-    state.resultProducts.map(product => ({
-      id: product.id,
-      name: product.name,
-      mass: service.roundToTenth(product.mass)
-    }))
+  getResultProducts: state => () => {
+    const products = IDBS.getProducts(i18n.locale)
+    const resultProducts = state.resultProducts
+      .map(product => service.getProductObject(product, products))
+    return resultProducts
+  }
+
 }
 
 export { getters }

@@ -34,12 +34,11 @@ const actions = {
       objectiveCoefficients,
       maximumIterations: 2000
     })
-    const isResult = !result.status
+    const resultStatus = result.status
     commit('setStateObject', {
       objectName: 'status',
-      state: { isResult }
+      state: { resultStatus }
     })
-    // avoid floating-point arithmetic side-effects
     result = result.solution
       .map((productValue, index) => service
         .getProductsData(index, productValue, selectedProductIDs))

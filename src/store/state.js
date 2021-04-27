@@ -12,7 +12,7 @@ const state = {
   nutrients: [],
   period: {
     start: null,
-    name: '',
+    id: null,
     end: null
   },
   resultProducts: [],
@@ -36,7 +36,7 @@ const state = {
   status: {
     isHorizontal: false,
     isLoading: false,
-    isResult: false,
+    resultStatus: null,
     productDialogIsOpened: false,
     selected: false
   }

@@ -1,7 +1,5 @@
-import { IDBS } from '@/api/indexedDBService'
 import { foodNutrients } from '@/data/foodNutrients'
 import { nutrientIndices } from '@/data/nutrientIndices'
-import i18n from '@/plugins/i18n'
 
 const service = {
   arraysDifference: (array1, array2) =>
@@ -39,9 +37,9 @@ const service = {
     return constraints.filter(constraint => constraint.max !== 0)
   },
 
-  getConstraintsVector: (constraints, objective) => {
-    const constraintsVectorMin = _getConstraintsVectorMin(constraints, objective)
-    const constraintsVectorMax = _getConstraintsVectorMax(constraints, objective)
+  getConstraintsVector: (constraints) => {
+    const constraintsVectorMin = _getConstraintsVectorMin(constraints)
+    const constraintsVectorMax = _getConstraintsVectorMax(constraints)
     const constraintsVector = constraintsVectorMin.concat(constraintsVectorMax)
     return constraintsVector
   },
@@ -82,11 +80,17 @@ const service = {
 
   getProductsData: (index, productValue, selectedProductIDs) => {
     const id = selectedProductIDs[index]
-    const products = IDBS.getProducts(i18n.locale)
-    const product = products.find(product => product[0] === +id)
-    const name = product[1]
     const mass = productValue * 100
-    return { id, name, mass }
+    return { id, mass }
+  },
+
+  getProductObject: (product, products) => {
+    const id = product.id
+    return {
+      id,
+      name: products.find(product => product[0] === id)[1],
+      mass: service.roundToTenth(product.mass)
+    }
   },
 
   getRestrictionMatrix: (productNutrients, constraints) => {
@@ -117,7 +121,7 @@ const service = {
   },
 
   // it can't be getter because of async
-  getSelectedProducts: async (db) => {
+  /* getSelectedProducts: async (db) => {
     const selectedFilters = await IDBS.getSelectedFilters(db)
     const selectedFiltersIDs = selectedFilters.map(filter => filter.product_id)
     const products = IDBS.getProducts(i18n.locale)
@@ -125,7 +129,7 @@ const service = {
       selectedFiltersIDs.includes(product[0])
     )
     return selectedProducts
-  },
+  }, */
 
   isNoExtremum: (constraints) => {
     const extremumIndex = constraints.findIndex(
@@ -168,16 +172,15 @@ function _constraintForRation (constraint, days, nutrientValue) {
   }
 }
 
-function _getConstraintsVectorMin (constraints, objective) {
+function _getConstraintsVectorMin (constraints) {
   const filteredConstraints = constraints
     .filter(constraint => constraint.min !== 0) // удалить, если масса продуктов будет отрицательной
   return filteredConstraints.map(constraint => -constraint.min)
 }
 
-function _getConstraintsVectorMax (constraints, objective) {
-  const filteredConstraints = constraints.filter(
-    constraint => constraint.max !== null
-  )
+function _getConstraintsVectorMax (constraints) {
+  const filteredConstraints = constraints
+    .filter(constraint => constraint.max !== null)
   return filteredConstraints.map(constraint => constraint.max)
 }
 

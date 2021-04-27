@@ -241,11 +241,9 @@ function _dataToRecords (table) {
 function _rationWhereClause (rations, userID, start, end) {
   let whereClause = rations
   if (end) {
-    const includeLower = true
-    const includeUpper = true
     whereClause = rations
       .where(['user_id', 'date'])
-      .between([userID, start], [userID, end], includeLower, includeUpper)
+      .between([userID, start], [userID, end])
   } else {
     whereClause = rations
       .where({ user_id: userID, date: start })
