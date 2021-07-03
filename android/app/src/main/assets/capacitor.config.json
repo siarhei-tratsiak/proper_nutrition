@@ -1,0 +1,6 @@
+{
+	"appId": "com.propernutrition.app",
+	"appName": "Proper Nutrition",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}

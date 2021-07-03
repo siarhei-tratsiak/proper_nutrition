@@ -11,6 +11,9 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
+    "@capacitor/android": "^3.0.2",
+    "@capacitor/cli": "^3.0.2",
+    "@capacitor/core": "^3.0.2",
     "core-js": "^3.6.5",
     "dexie": "^3.0.1",
     "dexie-export-import": "^1.0.0",
