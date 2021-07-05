@@ -5,9 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "coverage": "vue-cli-service test:unit --coverage",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
+    "coverage": "vue-cli-service test:unit --coverage",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
@@ -34,12 +34,13 @@
     "@vue/cli-plugin-eslint": "~4.4.0",
     "@vue/cli-plugin-pwa": "~4.4.0",
     "@vue/cli-plugin-router": "~4.4.0",
-    "@vue/cli-plugin-unit-jest": "^3.12.1",
+    "@vue/cli-plugin-unit-jest": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.4.0",
     "@vue/cli-service": "^4.5.12",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/test-utils": "^1.0.3",
     "babel-eslint": "^10.1.0",
+    "babel-plugin-rewire": "^1.2.0",
     "eslint": "^7.7.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-google": "^0.14.0",
