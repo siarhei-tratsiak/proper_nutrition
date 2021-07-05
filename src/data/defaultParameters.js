@@ -10,10 +10,11 @@ const defaultUser = {
   language: _getLocale()
 }
 
+const availableLanguages = ['ru', 'en']
+
 async function _getLocale () {
   const langCode = await Device.getLanguageCode()
   const shortLangCode = langCode.value.slice(0, 2)
-  const availableLanguages = ['ru', 'en']
   let selectedLanguage = availableLanguages[1]
   if (availableLanguages.includes(shortLangCode)) {
     selectedLanguage = shortLangCode
