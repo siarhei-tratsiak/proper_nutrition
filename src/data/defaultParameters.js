@@ -1,3 +1,5 @@
+import { Device } from '@capacitor/device'
+
 const defaultUser = {
   sex: 'male',
   birthdate: 631152000000, // 01.01.1990
@@ -8,13 +10,14 @@ const defaultUser = {
   language: _getLocale()
 }
 
-function _getLocale () {
-  const browserLanguages = navigator.languages
+async function _getLocale () {
+  const langCode = await Device.getLanguageCode()
+  const shortLangCode = langCode.value.slice(0, 2)
   const availableLanguages = ['ru', 'en']
-  const intersection = browserLanguages.filter(
-    language => availableLanguages.includes(language)
-  )
-  const selectedLanguage = intersection.length === 0 ? 'en' : intersection[0]
+  let selectedLanguage = availableLanguages[1]
+  if (availableLanguages.includes(shortLangCode)) {
+    selectedLanguage = shortLangCode
+  }
   return selectedLanguage
 }
 

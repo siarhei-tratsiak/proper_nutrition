@@ -65,7 +65,7 @@ const IDBS = {
     .toArray(),
 
   initDatabase: async () => {
-    const tables = _getTables()
+    const tables = await _getTables()
     const db = _createDB(tables)
     await _fillMissingRecords(db, tables)
     return db
@@ -126,12 +126,12 @@ const IDBS = {
   }
 }
 
-function _getTables () {
+async function _getTables () {
   const constraintsColumnsNames = ['++id', 'user_id', 'nutrient_id', 'min', 'min_mutable', 'max', 'max_mutable', 'target', '[user_id+nutrient_id]']
   const filtersColumnsNames = ['++id', 'product_id', 'user_id', 'selected', 'favored', '[user_id+favored]', '[user_id+product_id]']
   const rationsColumnsNames = ['++id', 'user_id', 'date', 'product_id', 'mass', '[user_id+date]']
   const userColumnsNames = _getUserColumnsNames()
-  const userData = _getUserData()
+  const userData = await _getUserData()
   const tables = [
     {
       name: 'constraints',
@@ -171,8 +171,8 @@ function _getUserColumnsNames () {
   return userColumnsNames
 }
 
-function _getUserData () {
-  const defaultUserValues = [Object.values(defaultUser)]
+async function _getUserData () {
+  const defaultUserValues = [await Promise.all(Object.values(defaultUser))]
   return defaultUserValues
 }
 
