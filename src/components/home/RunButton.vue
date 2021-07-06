@@ -1,5 +1,5 @@
 <template>
-  <div class="align-center d-flex flex-grow-1 justify-center">
+  <div class="align-center d-flex justify-center">
     <v-btn
       @click="click"
       color="primary"

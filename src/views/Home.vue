@@ -39,4 +39,8 @@ export default {
 #background {
   height: 100%;
 }
+
+p {
+  margin: 0;
+}
 </style>
