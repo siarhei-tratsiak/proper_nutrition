@@ -24,3 +24,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .v-alert {
+    margin: 8px;
+  }
+</style>
