@@ -5,12 +5,12 @@
       color="primary"
       fab
       id="run_button"
-      :loading="this.status.isLoading"
+      :loading="status.isLoading"
     >
       <v-icon :size="size">{{ mdiRoomService }}</v-icon>
 
       <template #loader>
-        <v-progress-circular indeterminate :size="progressSize" />
+        <v-icon color="white" :size="size">{{ mdiTimerSand }}</v-icon>
       </template>
     </v-btn>
   </div>
@@ -20,7 +20,7 @@
 import { debounce } from 'lodash'
 import { mapActions, mapMutations, mapState } from 'vuex'
 import GetNutrientsBalance from '@/mixins/GetNutrientsBalance.vue'
-import { mdiRoomService } from '@mdi/js'
+import { mdiRoomService, mdiTimerSand } from '@mdi/js'
 
 export default {
   beforeDestroy: function () {
@@ -32,6 +32,7 @@ export default {
       delayMS: 300,
       listener: debounce(this._onResize, this.delayMS),
       mdiRoomService,
+      mdiTimerSand,
       progressSize: this._countProgressSize(),
       size: '12vmin'
     }
@@ -53,7 +54,9 @@ export default {
       }
       this.setStateObject(payload)
       this.setDays()
-      this.getSolution(this.nutrients())
+      setTimeout(() => {
+        this.getSolution(this.nutrients())
+      }, 0) // allows loader to be shown
     },
 
     _countProgressSize: () => {
