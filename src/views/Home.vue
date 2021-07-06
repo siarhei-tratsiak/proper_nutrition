@@ -41,6 +41,7 @@ export default {
 }
 
 p {
-  margin: 0;
+  margin: 0 0.5em;
+  text-transform: uppercase;
 }
 </style>
