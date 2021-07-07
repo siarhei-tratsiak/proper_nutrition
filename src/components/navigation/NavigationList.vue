@@ -29,6 +29,7 @@
 <script>
 import { mapState } from 'vuex'
 import {
+  mdiHelpBox,
   mdiHome,
   mdiHamburger,
   mdiFormatListChecks,
@@ -84,6 +85,11 @@ export default {
           path: 'Settings',
           icon: mdiCog,
           title: this.$t('menu.settings')
+        },
+        {
+          path: 'Help',
+          icon: mdiHelpBox,
+          title: this.$t('menu.help')
         }
       ]
     }
