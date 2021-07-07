@@ -24,7 +24,7 @@
       </v-tooltip>
     </v-card-actions>
 
-    <v-card-text>
+    <v-card-text class="pa-2">
       <v-data-table
         dense
         :headers="headers"
@@ -182,20 +182,21 @@ td {
 
 <style>
 #daily-intake .v-data-table__mobile-table-row {
+  border-bottom: thin solid rgba(0, 0, 0, 0.12);
   display: grid;
   grid-template-areas:
-    "name unit extr"
-    "min min min"
-    "max max max";
-  grid-template-columns: 2fr 1fr 1fr;
+    "name name unit extr"
+    "min min max max";
+  grid-template-columns: repeat(4, 1fr);
 }
 
 #daily-intake .v-data-table__mobile-row {
-  padding: 0 8px;
+  padding: 0;
 }
 
 #daily-intake .v-data-table__mobile-row:nth-of-type(1) {
   grid-area: name;
+  padding: 0 4px;
 }
 
 #daily-intake
@@ -209,7 +210,6 @@ td {
 }
 
 #daily-intake .v-data-table__mobile-row:nth-of-type(3) {
-  border-bottom: thin solid rgba(0, 0, 0, 0.12);
   grid-area: max;
 }
 
@@ -217,8 +217,16 @@ td {
   grid-area: unit;
 }
 
+#daily-intake .v-data-table__mobile-row .block {
+  text-align: left;
+}
+
 #daily-intake .v-data-table__mobile-row:nth-of-type(5) {
   border-bottom: none !important;
   grid-area: extr;
+}
+
+#daily-intake .v-data-table__mobile-row__cell {
+  margin: 0;
 }
 </style>
