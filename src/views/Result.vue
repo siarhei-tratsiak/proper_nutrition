@@ -2,7 +2,6 @@
   <div>
     <Alert />
     <ResultProductsList />
-    <br />
     <NutrientsBalance v-if="isReady" />
   </div>
 </template>

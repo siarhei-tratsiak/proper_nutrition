@@ -1,5 +1,6 @@
 <template>
     <v-alert
+      class="ma-1"
       type="warning"
       v-if='status.resultStatus !== 0'
     >
@@ -51,9 +52,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  .v-alert {
-    margin: 8px;
-  }
-</style>

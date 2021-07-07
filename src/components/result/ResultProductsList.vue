@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-card>
+  <v-card class="ma-1">
     <v-card-title>{{ $t('result.title') }}</v-card-title>
 
     <v-data-table
