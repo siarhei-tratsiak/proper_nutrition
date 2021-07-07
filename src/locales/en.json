@@ -24,8 +24,8 @@
     "ration": "Ration",
     "settings": "Settings"
   },
-  "alert": "No solution found. ",
-  "advice": "Try selecting different foods, changing settings, or eliminating foods that contain more nutrients than you need per day.",
+  "noRecommendations": "No recommendations.",
+  "advice": "Not all recommendations are followed. Try selecting different products {products}, changing settings {settings}, or exclude from the diet {ration} foods that contain more nutrients than you need per day.",
   "result": {
     "title": "Products for consumption for the selected period:",
     "headers": {
