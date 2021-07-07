@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="500px" v-model="dialog">
+  <v-dialog content-class="add-product-dialog" max-width="500px" v-model="dialog">
     <v-card>
       <v-card-title>
         <span class="headline">{{ headlineText }}</span>
@@ -107,3 +107,9 @@ export default {
   mixins: [CloseProductDialog]
 }
 </script>
+
+<style>
+  .add-product-dialog {
+    align-self: flex-start;
+  }
+</style>
