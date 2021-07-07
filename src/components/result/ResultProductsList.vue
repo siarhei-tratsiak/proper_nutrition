@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-card>
+  <v-card class="ma-1">
     <v-card-title>{{ $t('result.title') }}</v-card-title>
 
     <v-data-table
@@ -9,6 +9,7 @@
       id="result-products-list"
       :items="items"
       :itemsPerPage="itemsPerPage"
+      mobile-breakpoint="0"
       :no-data-text="$t('table.noDataText')"
     >
       <template #item.name="{ item }">
@@ -45,9 +46,10 @@ export default {
 </script>
 
 <style>
-  #result-products-list
-  .v-data-table__mobile-row:nth-of-type(1)
-  .v-data-table__mobile-row__header {
-    display: none;
+  @media (max-width: 480px) {
+    #result-products-list tr td:last-of-type {
+      width: 0.1%;
+      white-space: nowrap;
+    }
   }
 </style>

@@ -1,25 +1,53 @@
 <template>
     <v-alert
+      class="ma-1"
       type="warning"
       v-if='status.resultStatus !== 0'
     >
-      {{ message }}
+      <template v-if='status.resultStatus === null'>
+        {{ $t('noRecommendations') }}
+      </template>
+
+      <i18n path="advice" tag="span" v-else>
+        <template v-slot:products>
+          <router-link :to="{ name: 'Products' }">
+            <v-icon >{{ mdiFormatListChecks }}</v-icon>
+          </router-link>
+        </template>
+
+        <template v-slot:settings>
+          <router-link :to="{ name: 'Settings' }">
+            <v-icon >{{ mdiCog }}</v-icon>
+          </router-link>
+        </template>
+
+        <template v-slot:ration>
+          <router-link :to="{ name: 'Ration' }">
+            <v-icon >{{ mdiCalendarMonth }}</v-icon>
+          </router-link>
+        </template>
+      </i18n>
     </v-alert>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import {
+  mdiCalendarMonth,
+  mdiCog,
+  mdiFormatListChecks
+} from '@mdi/js'
 
 export default {
   computed: {
-    ...mapState(['status']),
+    ...mapState(['status'])
+  },
 
-    message: function () {
-      if (this.status.resultStatus === null) {
-        return this.$t('alert')
-      } else {
-        return `${this.$t('alert')}${this.$t('advice')}`
-      }
+  data: function () {
+    return {
+      mdiCalendarMonth,
+      mdiCog,
+      mdiFormatListChecks
     }
   }
 }
