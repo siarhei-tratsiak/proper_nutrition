@@ -49,7 +49,7 @@ const actions = {
       objectName: 'status',
       state: { isLoading: false }
     })
-    router.push('Result')
+    router.push('/result')
   },
 
   async initData ({ commit, dispatch }) {

@@ -1,3 +1,4 @@
+import Help from '@/views/Help.vue'
 import Home from '@/views/Home.vue'
 import Product from '@/views/Product.vue'
 import Products from '@/views/Products.vue'
@@ -12,6 +13,10 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    redirect: { name: 'Home' }
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home
   },
@@ -45,6 +50,11 @@ const routes = [
     path: '/settings',
     name: 'Settings',
     component: Settings
+  },
+  {
+    path: '/help',
+    name: 'Help',
+    component: Help
   }
 ]
 

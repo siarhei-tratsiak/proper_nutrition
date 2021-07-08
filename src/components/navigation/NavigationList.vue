@@ -7,10 +7,10 @@
   >
     <v-list-item
       :class="horizontalDependencies.listItemClasses"
-      :key="menuItem.path"
+      :key="index"
       :style="horizontalDependencies.listitemStyle"
       :to="{ name: menuItem.path }"
-      v-for="menuItem in menuItems"
+      v-for="(menuItem, index) in menuItems"
     >
       <v-list-item-icon :class="horizontalDependencies.iconClass">
         <v-icon>{{ menuItem.icon }}</v-icon>
@@ -29,6 +29,7 @@
 <script>
 import { mapState } from 'vuex'
 import {
+  mdiHelpBox,
   mdiHome,
   mdiHamburger,
   mdiFormatListChecks,
@@ -84,6 +85,11 @@ export default {
           path: 'Settings',
           icon: mdiCog,
           title: this.$t('menu.settings')
+        },
+        {
+          path: 'Help',
+          icon: mdiHelpBox,
+          title: this.$t('menu.help')
         }
       ]
     }
