@@ -224,6 +224,7 @@ td {
 #daily-intake .v-data-table__mobile-row:nth-of-type(5) {
   border-bottom: none !important;
   grid-area: extr;
+  margin-right: 4px;
 }
 
 #daily-intake .v-data-table__mobile-row__cell {
