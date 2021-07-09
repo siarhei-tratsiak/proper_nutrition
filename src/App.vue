@@ -9,6 +9,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { App } from '@capacitor/app'
 
 import Navigation from '@/components/navigation/Navigation'
 import IndexLocalization from '@/mixins/IndexLocalization'
@@ -26,10 +27,19 @@ export default {
 
   created: function () {
     this.initData()
+    this.listenBackButton()
   },
 
   methods: {
-    ...mapActions(['initData'])
+    ...mapActions(['initData']),
+
+    backButtonListener: function () {
+      this.$router.go(-1)
+    },
+
+    listenBackButton: function () {
+      App.addListener('backButton', this.backButtonListener)
+    }
   },
 
   mixins: [IndexLocalization],
