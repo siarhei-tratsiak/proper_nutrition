@@ -68,6 +68,7 @@ const IDBS = {
     const tables = await _getTables()
     const db = _createDB(tables)
     await _fillMissingRecords(db, tables)
+    _makeStoragePersisted()
     return db
   },
 
@@ -236,6 +237,24 @@ function _dataToRecords (table) {
   }
   const records = table.data.map(dataToRecord)
   return records
+}
+
+function _makeStoragePersisted () {
+  _isStoragePersisted().then(async isPersisted => {
+    if (!isPersisted) {
+      await _persist()
+    }
+  })
+}
+
+async function _isStoragePersisted () {
+  return await navigator.storage && navigator.storage.persisted &&
+    navigator.storage.persisted()
+}
+
+async function _persist () {
+  return await navigator.storage && navigator.storage.persist &&
+    navigator.storage.persist()
 }
 
 function _rationWhereClause (rations, userID, start, end) {
