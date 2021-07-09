@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-1">
+  <v-card class="ma-1" id="user-data_card">
     <v-card-title>
       {{ $t('settings.title') }}
     </v-card-title>
@@ -27,6 +27,8 @@
 
       <LanguageSelector />
 
+      <Alert />
+
       <BackUp />
 
       <Restore />
@@ -37,6 +39,7 @@
 <script>
 import ActivitySelector from '@/components/settings/userData/ActivitySelector'
 import AgeSelector from '@/components/settings/userData/AgeSelector'
+import Alert from '@/components/settings/userData/Alert'
 import BackUp from '@/components/settings/userData/BackUp'
 import GoalSelector from '@/components/settings/userData/GoalSelector'
 import HeightSelector from '@/components/settings/userData/HeightSelector'
@@ -49,6 +52,7 @@ export default {
   components: {
     ActivitySelector,
     AgeSelector,
+    Alert,
     BackUp,
     GoalSelector,
     HeightSelector,
@@ -59,3 +63,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  #user-data_card {
+    max-width: 400px;
+  }
+</style>

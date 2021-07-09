@@ -129,6 +129,7 @@
       "ru": "Russian",
       "en": "English"
     },
+    "alert": "The app does not collect or transfer your personal data. They are only stored on your device. Don't forget to make backups.",
     "backup": "backup",
     "restore": "restore"
   },
