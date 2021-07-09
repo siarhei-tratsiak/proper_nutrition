@@ -34,7 +34,12 @@ export default {
     ...mapActions(['initData']),
 
     backButtonListener: function () {
-      this.$router.go(-1)
+      const isHomeRoute = this.$route.name === 'Home'
+      if (isHomeRoute) {
+        App.exitApp()
+      } else {
+        this.$router.back()
+      }
     },
 
     listenBackButton: function () {
