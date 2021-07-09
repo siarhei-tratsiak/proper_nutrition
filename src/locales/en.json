@@ -142,5 +142,13 @@
       "from": "from:",
       "to": "to:"
     }
-  }
+  },
+  "help": [
+    "Specify your parameters in the settings {settings}. {img} The limits of daily consumption depend on them.",
+    "You can unlock the input fields in the daily intake table and enter your own preferences. {img} Unlocked fields do not automatically change when settings are changed.",
+    "You can specify one of the nutrients in the daily intake table as the desired maximum or minimum. {img} The application will take this into account when calculating recommendations.",
+    "In the Ration tab {ration}, add the foods you ate. {img}",
+    "On the Products tab {products}, mark the products among which you want to search for recommendations. {img}",
+    "On the Home tab {home}, click the button. {img}"
+  ]
 }
