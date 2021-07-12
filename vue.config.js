@@ -1,5 +1,9 @@
 const path = require('path')
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production'
+    ? './'
+    : '/',
+
   transpileDependencies: ['vuetify'],
 
   chainWebpack: function (config) {
@@ -12,7 +16,7 @@ module.exports = {
     config
       .plugin('html')
       .tap(args => {
-        args[0].title = 'Правильное Питание'
+        args[0].title = 'Simplex Food'
         return args
       })
   },

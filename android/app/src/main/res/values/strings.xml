@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Proper Nutrition</string>
-    <string name="title_activity_main">Proper Nutrition</string>
-    <string name="package_name">com.propernutrition.app</string>
-    <string name="custom_url_scheme">com.propernutrition.app</string>
+    <string name="app_name">Simplex Food</string>
+    <string name="title_activity_main">Simplex Food</string>
+    <string name="package_name">com.simplexfood.app</string>
+    <string name="custom_url_scheme">com.simplexfood.app</string>
 </resources>
