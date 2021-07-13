@@ -3,6 +3,8 @@ import { products as productsEN } from '@/data/products_en'
 import { products as productsRU } from '@/data/products_ru'
 import { selected } from '@/data/selected'
 import i18n from '@/plugins/i18n'
+import { Device } from '@capacitor/device'
+import { Directory, Encoding, Filesystem } from '@capacitor/filesystem'
 import Dexie from 'dexie'
 import { exportDB, importDB, peakImportFile } from 'dexie-export-import'
 import download from 'downloadjs'
@@ -74,7 +76,13 @@ const IDBS = {
 
   makeBackUp: async (db) => {
     const blob = await exportDB(db)
-    download(blob, 'proper-nutrition.json', 'application/json')
+    const info = await Device.getInfo()
+    if (info.platform === 'web') {
+      _makeBackUpWeb(blob)
+    } else {
+      const uri = await _makeBackUpAndroid(blob)
+      console.log(uri)
+    }
   },
 
   modifyConstraints: (db, userID, payload) => {
@@ -104,6 +112,7 @@ const IDBS = {
     ]
     const areTablesMatch = tables
       .every(tableName => tablesList.includes(tableName))
+    console.log(areTablesMatch)
     if (dbName === 'ProperNutritionDB' && areTablesMatch) {
       await db.delete()
       return await importDB(blob)
@@ -245,6 +254,21 @@ function _makeStoragePersisted () {
       await _persist()
     }
   })
+}
+
+function _makeBackUpWeb (blob) {
+  download(blob, 'proper-nutrition.json', 'application/json')
+}
+
+async function _makeBackUpAndroid (blob) {
+  const text = await blob.text()
+  const uri = await Filesystem.writeFile({
+    path: 'simplex-food.json',
+    data: text,
+    directory: Directory.Documents,
+    encoding: Encoding.UTF8
+  })
+  return uri
 }
 
 async function _isStoragePersisted () {
