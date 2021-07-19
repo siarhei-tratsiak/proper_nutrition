@@ -151,5 +151,14 @@
     "In the Ration tab {ration}, add the foods you ate. {img}",
     "On the Products tab {products}, mark the products among which you want to search for recommendations. {img}",
     "On the Home tab {home}, click the button. {img}"
-  ]
+  ],
+  "snackbar": {
+    "message": [
+      "Data restored from backup {reload}",
+      "Failed to recover data",
+      "The backup is saved in {uri}",
+      ". Exit the application and login again"
+    ],
+    "exit": "exit"
+  }
 }

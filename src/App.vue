@@ -1,9 +1,12 @@
 <template>
   <v-app>
     <Navigation />
+
     <v-content>
       <router-view />
     </v-content>
+
+    <Snackbar />
   </v-app>
 </template>
 
@@ -12,11 +15,13 @@ import { mapActions } from 'vuex'
 import { App } from '@capacitor/app'
 
 import Navigation from '@/components/navigation/Navigation'
+import Snackbar from '@/components/common/Snackbar'
 import IndexLocalization from '@/mixins/IndexLocalization'
 
 export default {
   components: {
-    Navigation
+    Navigation,
+    Snackbar
   },
 
   computed: {

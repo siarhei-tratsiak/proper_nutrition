@@ -81,7 +81,7 @@ const IDBS = {
       _makeBackUpWeb(blob)
     } else {
       const uri = await _makeBackUpAndroid(blob)
-      console.log(uri)
+      return uri
     }
   },
 
@@ -102,20 +102,21 @@ const IDBS = {
 
   restoreDB: async (db, blob) => {
     const importMeta = await peakImportFile(blob)
-    const dbName = importMeta.data.databaseName
-    const tables = importMeta.data.tables.map(table => table.name)
-    const tablesList = [
-      'constraints',
-      'filters',
-      'rations',
-      'users'
-    ]
-    const areTablesMatch = tables
-      .every(tableName => tablesList.includes(tableName))
-    console.log(areTablesMatch)
-    if (dbName === 'ProperNutritionDB' && areTablesMatch) {
-      await db.delete()
-      return await importDB(blob)
+    if (importMeta.data) {
+      const dbName = importMeta.data.databaseName
+      const tables = importMeta.data.tables.map(table => table.name)
+      const tablesList = [
+        'constraints',
+        'filters',
+        'rations',
+        'users'
+      ]
+      const areTablesMatch = tables
+        .every(tableName => tablesList.includes(tableName))
+      if (dbName === 'ProperNutritionDB' && areTablesMatch) {
+        await db.delete()
+        return await importDB(blob)
+      }
     }
   },
 

@@ -33,6 +33,11 @@ const state = {
     userID: null,
     weight: null
   },
+  snackbar: {
+    isActionExit: false,
+    isOpened: false,
+    message: null
+  },
   status: {
     isHorizontal: false,
     isLoading: false,

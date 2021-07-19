@@ -6,6 +6,7 @@ import { nutrients as nutrientsRU } from '@/data/nutrients_ru'
 import i18n from '@/plugins/i18n'
 import router from '@/router'
 import { service } from '@/store/service'
+import { Device } from '@capacitor/device'
 
 const actions = {
   deleteRation ({ state }, id) {
@@ -73,15 +74,34 @@ const actions = {
     i18n.locale = lastUser.language
   },
 
-  makeBackUp ({ state }) {
-    IDBS.makeBackUp(state.db)
+  async makeBackUp ({ state, commit }) {
+    const uri = await IDBS.makeBackUp(state.db)
+    if (uri) {
+      const snackbarPayload = {
+        objectName: 'snackbar',
+        state: {
+          isOpened: true,
+          message: i18n.t('snackbar.message[2]', { uri: uri.uri })
+        }
+      }
+      commit('setStateObject', snackbarPayload)
+    }
   },
 
-  async restoreDB ({ state, commit }, file) {
+  async restoreDB ({ state, commit, dispatch }, file) {
     if (file) {
       const db = await IDBS.restoreDB(state.db, file)
-      const payload = { name: 'db', value: db }
-      commit('setState', payload)
+      if (db) {
+        const dbPayload = { name: 'db', value: db }
+        commit('setState', dbPayload)
+        dispatch('_setSnackbarMessage')
+      } else {
+        const snackbarPayload = {
+          objectName: 'snackbar',
+          state: { isOpened: true, message: i18n.t('snackbar.message[1]') }
+        }
+        commit('setStateObject', snackbarPayload)
+      }
     }
   },
 
@@ -134,6 +154,28 @@ const actions = {
     if (payload.checkExtremum) {
       dispatch('_checkExtremum', newConstraints)
     }
+  },
+
+  async _setSnackbarMessage ({ state, commit }) {
+    const info = await Device.getInfo()
+    const isWeb = info.platform === 'web'
+    let reload = ''
+    let isActionExit = false
+    if (isWeb) {
+      location.reload()
+    } else {
+      reload = i18n.t('snackbar.message[3]')
+      isActionExit = true
+    }
+    const snackbarPayload = {
+      objectName: 'snackbar',
+      state: {
+        isActionExit,
+        isOpened: true,
+        message: i18n.t('snackbar.message[0]', { reload })
+      }
+    }
+    commit('setStateObject', snackbarPayload)
   },
 
   _updateConstraint ({ state }, payload) {
