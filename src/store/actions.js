@@ -75,13 +75,20 @@ const actions = {
   },
 
   async makeBackUp ({ state, commit }) {
-    const uri = await IDBS.makeBackUp(state.db)
-    if (uri) {
+    let message = ''
+    try {
+      const uri = await IDBS.makeBackUp(state.db)
+      if (uri) {
+        message = i18n.t('snackbar.message[2]', { uri: uri.uri })
+      }
+    } catch (error) {
+      message = error.toString()
+    } finally {
       const snackbarPayload = {
         objectName: 'snackbar',
         state: {
           isOpened: true,
-          message: i18n.t('snackbar.message[2]', { uri: uri.uri })
+          message
         }
       }
       commit('setStateObject', snackbarPayload)

@@ -36,7 +36,7 @@ const state = {
   snackbar: {
     isActionExit: false,
     isOpened: false,
-    message: null
+    message: ''
   },
   status: {
     isHorizontal: false,
