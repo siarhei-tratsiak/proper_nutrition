@@ -261,19 +261,13 @@ function _makeBackUpWeb (blob) {
 
 async function _makeBackUpAndroid (blob) {
   const text = await blob.text()
-  let permissionStatus = await Filesystem.checkPermissions()
-  if (permissionStatus.publicStorage !== 'granted') {
-    permissionStatus = await Filesystem.requestPermission()
-    if (permissionStatus.publicStorage !== 'granted') {
-      const uri = await Filesystem.writeFile({
-        path: 'simplex-food.json',
-        data: text,
-        directory: Directory.Documents,
-        encoding: Encoding.UTF8
-      })
-      return uri
-    }
-  }
+  const uri = await Filesystem.writeFile({
+    path: 'simplex-food.json',
+    data: text,
+    directory: Directory.Documents,
+    encoding: Encoding.UTF8
+  })
+  return uri
 }
 
 async function _isStoragePersisted () {
