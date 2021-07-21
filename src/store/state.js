@@ -15,11 +15,12 @@ const state = {
     id: null,
     end: null
   },
-  resultProducts: [],
+  platform: '',
   productSearch: '',
   productsList: [],
   ration: [],
   rationForPeriod: [],
+  resultProducts: [],
   selectedProductIDs: [],
   selectedDate: null,
   settings: {

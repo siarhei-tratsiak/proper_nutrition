@@ -3,7 +3,6 @@ import { products as productsEN } from '@/data/products_en'
 import { products as productsRU } from '@/data/products_ru'
 import { selected } from '@/data/selected'
 import i18n from '@/plugins/i18n'
-import { Device } from '@capacitor/device'
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem'
 import Dexie from 'dexie'
 import { exportDB, importDB, peakImportFile } from 'dexie-export-import'
@@ -74,10 +73,9 @@ const IDBS = {
     return db
   },
 
-  makeBackUp: async (db) => {
+  makeBackUp: async (db, platform) => {
     const blob = await exportDB(db)
-    const info = await Device.getInfo()
-    if (info.platform === 'web') {
+    if (platform === 'web') {
       _makeBackUpWeb(blob)
     } else {
       const uri = await _makeBackUpAndroid(blob)

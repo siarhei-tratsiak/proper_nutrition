@@ -77,7 +77,7 @@ const actions = {
   async makeBackUp ({ state, commit }) {
     let message = ''
     try {
-      const uri = await IDBS.makeBackUp(state.db)
+      const uri = await IDBS.makeBackUp(state.db, state.platform)
       if (uri) {
         message = i18n.t('snackbar.message[2]', { uri: uri.uri })
       }
@@ -163,9 +163,8 @@ const actions = {
     }
   },
 
-  async _setSnackbarMessage ({ state, commit }) {
-    const info = await Device.getInfo()
-    const isWeb = info.platform === 'web'
+  _setSnackbarMessage ({ state, commit }) {
+    const isWeb = state.platform === 'web'
     let reload = ''
     let isActionExit = false
     if (isWeb) {
@@ -219,6 +218,13 @@ const actions = {
     commit('setState',
       { name: 'selectedProductIDs', value: selectedProductIDs })
     commit('setStateObject', { objectName: 'status', state: { selected: true } })
+  },
+
+  async setPlatform ({ state, commit }) {
+    const info = await Device.getInfo()
+    const platform = info.platform
+    const platformPayload = { name: 'platform', value: platform }
+    commit('setState', platformPayload)
   },
 
   async setRation ({ state, commit }, date) {

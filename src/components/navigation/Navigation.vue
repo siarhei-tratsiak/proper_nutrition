@@ -9,11 +9,16 @@
 import { debounce } from 'lodash'
 import LeftMenu from '@/components/navigation/LeftMenu.vue'
 import TopMenu from '@/components/navigation/TopMenu.vue'
-import { mapMutations, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
+  created: function () {
+    this.setPlatform()
+  },
+
   beforeDestroy: function () {
     window.removeEventListener('resize', this.listener)
+    window.removeEventListener('orientationchange', this.listener)
   },
 
   components: {
@@ -22,7 +27,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['status'])
+    ...mapState(['platform', 'status'])
   },
 
   data: function () {
@@ -35,10 +40,15 @@ export default {
   },
 
   methods: {
+    ...mapActions(['setPlatform']),
+
     ...mapMutations(['setStateObject']),
 
     _checkHorizontal: function () {
-      const isHorizontal = window.innerWidth > window.innerHeight
+      let isHorizontal = window.innerWidth > window.innerHeight
+      if (this.platform === 'android') {
+        isHorizontal = window.screen.orientation.type.includes('landscape')
+      }
       const orientationChanged = isHorizontal !== this.status.isHorizontal
       if (orientationChanged) {
         const payload = { objectName: 'status', state: { isHorizontal } }
@@ -58,8 +68,11 @@ export default {
 
   mounted: function () {
     this._onResize()
-    window.addEventListener('resize', this.listener)
+    if (this.platform === 'android') {
+      window.addEventListener('orientationchange', this.listener)
+    } else {
+      window.addEventListener('resize', this.listener)
+    }
   }
-
 }
 </script>
