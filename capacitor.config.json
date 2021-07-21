@@ -1,6 +1,6 @@
 {
   "appId": "com.simplexfood.app",
   "appName": "Simplex Food",
-  "bundledWebRuntime": false,
+  "bundledWebRuntime": true,
   "webDir": "dist"
 }
