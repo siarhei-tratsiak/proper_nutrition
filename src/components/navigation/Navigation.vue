@@ -18,7 +18,6 @@ export default {
 
   beforeDestroy: function () {
     window.removeEventListener('resize', this.listener)
-    window.removeEventListener('orientationchange', this.listener)
   },
 
   components: {
@@ -27,7 +26,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['platform', 'status'])
+    ...mapState(['status'])
   },
 
   data: function () {
@@ -45,10 +44,7 @@ export default {
     ...mapMutations(['setStateObject']),
 
     _checkHorizontal: function () {
-      let isHorizontal = window.innerWidth > window.innerHeight
-      if (this.platform === 'android') {
-        isHorizontal = window.screen.orientation.type.includes('landscape')
-      }
+      const isHorizontal = window.innerWidth > window.innerHeight
       const orientationChanged = isHorizontal !== this.status.isHorizontal
       if (orientationChanged) {
         const payload = { objectName: 'status', state: { isHorizontal } }
@@ -68,11 +64,7 @@ export default {
 
   mounted: function () {
     this._onResize()
-    if (this.platform === 'android') {
-      window.addEventListener('orientationchange', this.listener)
-    } else {
-      window.addEventListener('resize', this.listener)
-    }
+    window.addEventListener('resize', this.listener)
   }
 }
 </script>

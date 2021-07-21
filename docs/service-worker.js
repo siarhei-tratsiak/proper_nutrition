@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.8158e995ad35e344a7baedfb61cbd4d3.js"
+  "precache-manifest.b06ec66566f6c5bf839bed2aa70623a9.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "simplex-food"});
