@@ -21,7 +21,7 @@
     "capacitor-resources": "^2.0.5",
     "cordova-plugin-screen-orientation": "^3.0.2",
     "core-js": "^3.6.5",
-    "dexie": "^3.0.1",
+    "dexie": "^3.2.2",
     "dexie-export-import": "^1.0.0",
     "downloadjs": "^1.4.7",
     "lodash": "^4.17.21",
