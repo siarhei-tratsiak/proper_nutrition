@@ -1,5 +1,5 @@
 <template>
-  home
+  ration
 </template>
 
 <script>

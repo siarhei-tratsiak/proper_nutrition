@@ -1,19 +1,54 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import {
+  createRouter,
+  createWebHashHistory,
+  RouteRecordRaw
+} from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    redirect: { name: 'Home' }
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/home',
+    name: 'Home',
+    component: () => import('@/views/HomeView.vue')
+  },
+  {
+    path: '/result',
+    name: 'Result',
+    component: () => import('@/views/ResultView.vue')
+  },
+  {
+    path: '/products',
+    name: 'Products',
+    component: () => import('@/views/ProductsView.vue')
+  },
+  {
+    path: '/products',
+    name: 'ProductsByNutrient',
+    component: () => import('@/views/ProductsView.vue'),
+    props: route => ({ nutrient_id: route.query.nutrientID })
+  },
+  {
+    path: '/product/:id',
+    name: 'Product',
+    component: () => import('@/views/ProductView.vue')
+  },
+  {
+    path: '/ration',
+    name: 'Ration',
+    component: () => import('@/views/RationView.vue')
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('@/views/SettingsView.vue')
+  },
+  {
+    path: '/help',
+    name: 'Help',
+    component: () => import('@/views/HelpView.vue')
   }
 ]
 

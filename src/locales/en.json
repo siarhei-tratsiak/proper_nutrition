@@ -1,0 +1,164 @@
+{
+  "title": "Simplex Food",
+  "runButtonInstructions": [
+    "PRESS THE BUTTON",
+    "TO GET RECOMMENDATIONS FOR THE PERIOD:"
+  ],
+  "datePicker": {
+    "from": "From",
+    "to": "To"
+  },
+  "periodLabel": "Period",
+  "periods": {
+    "today": "Today",
+    "monday": "From Monday",
+    "sevenDays": "7 days",
+    "fromTheFirst": "From the 1st",
+    "thirtyDays": "30 days",
+    "other": "Other"
+  },
+  "menu": {
+    "main": "Home",
+    "result": "Result",
+    "products": "Products",
+    "ration": "Ration",
+    "settings": "Settings",
+    "help": "Help"
+  },
+  "noRecommendations": "No recommendations.",
+  "advice": "Not all recommendations are followed. Try selecting different products {products}, changing settings {settings}, or exclude from the diet {ration} foods that contain more nutrients than you need per day.",
+  "result": {
+    "title": "Products for consumption for the selected period:",
+    "headers": {
+      "name": "Name",
+      "mass": "Mass, g"
+    },
+    "recommendations": ", taking into account the recommendations",
+    "nutrientsHeader": "Balance of nutrients in the diet{recommendations}:"
+  },
+  "table": {
+    "all": "All",
+    "noDataText": "No data available",
+    "noResultsText": "No matching records found",
+    "rowsPerPage": "Rows per page:",
+    "pageText": "{0}-{1} of {2}",
+    "sortBy": "Sort by"
+  },
+  "nutrients": {
+    "group": {
+      "main": "main",
+      "additional": "additional"
+    },
+    "headers": {
+      "name": "nutrient",
+      "value": "in 100 g of product",
+      "units": "units"
+    }
+  },
+  "extremum": {
+    "min": "min",
+    "max": "max"
+  },
+  "products": {
+    "header": "Products",
+    "default": "default",
+    "searchLabel": "Search",
+    "sorted": " sorted by {nutrientName} content",
+    "tableHeader": "NAME"
+  },
+  "rationTable": {
+    "headers": {
+      "product": "Product",
+      "mass": "Mass, g",
+      "actions": "Actions"
+    },
+    "title": "Ration: {date}"
+  },
+  "dialog": {
+    "headline": {
+      "add": "Add",
+      "edit": "Edit",
+      "product": "{action} product"
+    },
+    "searchProductLabel": "Product",
+    "mass": "Mass, g"
+  },
+  "rules": {
+    "required": "Required",
+    "lessMin": "Less than the minimum",
+    "numeric": "Not a number",
+    "positive": "Not more than 0"
+  },
+  "settings": {
+    "title": "Settings",
+    "user": "USER:",
+    "application": "APPLICATION:",
+    "sex": {
+      "title": "Sex:",
+      "male": "Male",
+      "female": "Female"
+    },
+    "birthdate": "Birthdate:",
+    "weight": {
+      "label": "Weight:",
+      "suffix": "kg"
+    },
+    "height": {
+      "label": "Height:",
+      "suffix": "sm"
+    },
+    "activity": {
+      "label": "Activity:",
+      "low": "low",
+      "medium": "medium",
+      "high": "high",
+      "tooltip": {
+        "low": "{low} - office worker doing little or no exercise;",
+        "medium": "{medium} - a builder or a person running an hour a day;",
+        "high": "{high} - agricultural worker (not mechanized) or a person who swims two hours a day."
+      }
+    },
+    "goal": {
+      "label": "Goal:",
+      "lose": "lose weight",
+      "keep": "keep weight",
+      "gain": "gain weight"
+    },
+    "language": {
+      "label": "Language:",
+      "ru": "Russian",
+      "en": "English"
+    },
+    "alert": "The app does not collect or transfer your personal data. They are only stored on your device. Don't forget to make backups.",
+    "backup": "backup",
+    "restore": "restore"
+  },
+  "intake": {
+    "title": "Daily intake",
+    "tooltip": "Unlocked {icon} values do not change when user preferences are changed.",
+    "un": "un",
+    "lock": "lock everything",
+    "default": "default",
+    "label": {
+      "from": "from:",
+      "to": "to:"
+    }
+  },
+  "help": [
+    "Specify your parameters in the settings {settings}. {img} The limits of daily consumption depend on them.",
+    "You can unlock the input fields in the daily intake table and enter your own preferences. {img} Unlocked fields do not automatically change when settings are changed.",
+    "You can specify one of the nutrients in the daily intake table as the desired maximum or minimum. {img} The application will take this into account when calculating recommendations.",
+    "In the Ration tab {ration}, add the foods you ate. {img}",
+    "On the Products tab {products}, mark the products among which you want to search for recommendations. {img}",
+    "On the Home tab {home}, click the button. {img}"
+  ],
+  "snackbar": {
+    "message": [
+      "Data restored from backup {reload}",
+      "Failed to recover data",
+      "The backup is saved in {uri}",
+      ". Exit the application and login again"
+    ],
+    "exit": "exit"
+  }
+}

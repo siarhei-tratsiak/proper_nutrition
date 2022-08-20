@@ -1,0 +1,55 @@
+[
+    {
+        "name": "Home",
+        "path": "/home",
+        "component": "@/views/HomeView.vue",
+        "icon": "mdi-home",
+        "title": "menu.main"
+    },
+    {
+        "name": "Result",
+        "path": "/result",
+        "component": "@/views/ResultView.vue",
+        "icon": "mdi-hamburger",
+        "title": "menu.result"
+    },
+    {
+        "name": "Products",
+        "path": "/products",
+        "component": "@/views/ProductsView.vue",
+        "icon": "mdi-format-list-checks",
+        "title": "menu.products"
+    },
+    {
+        "name": "ProductsByNutrient",
+        "path": "/products",
+        "component": "@/views/ProductsView.vue",
+        "props": "nutrientId"
+    },
+    {
+        "name": "Product",
+        "path": "/product/:id",
+        "component": "@/views/ProductView.vue"
+    },
+    {
+        "name": "Ration",
+        "path": "/ration",
+        "component": "@/views/RationView.vue",
+        "icon": "mdi-calendar-month",
+        "title": "menu.ration"
+    },
+    {
+        "name": "Settings",
+        "path": "/settings",
+        "component": "@/views/SettingsView.vue",
+        "icon": "mdi-cog",
+        "title": "menu.settings"
+    },
+    {
+        "name": "Help",
+        "path": "/help",
+        "component": "@/views/HelpView.vue",
+        "icon": "mdi-help-box",
+        "title": "menu.help"
+    }
+]

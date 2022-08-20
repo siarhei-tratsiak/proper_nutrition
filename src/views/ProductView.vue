@@ -1,5 +1,5 @@
 <template>
-  home
+  product
 </template>
 
 <script>

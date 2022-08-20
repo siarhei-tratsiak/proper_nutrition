@@ -1,5 +1,5 @@
 <template>
-  home
+  result
 </template>
 
 <script>
