@@ -35,6 +35,8 @@ import { IPagesService, IMenuItem } from '@/services/pages/pages.types'
 import { PagesService } from '@/services/pages/pages'
 import { useStatusStore } from '@/store/status/status'
 import { IHorizontalDependencies } from './NavList.types'
+import pages from '@/data/pages.json'
+import { useI18n } from 'vue-i18n'
 
 const horizontalDependencies = computed((): IHorizontalDependencies => {
   const statusStore = useStatusStore()
@@ -58,9 +60,12 @@ const horizontalDependencies = computed((): IHorizontalDependencies => {
   return statusStore.isVertical ? vertical : horizontal
 })
 
-const pagesService: IPagesService = new PagesService()
+const menuItems = computed((): IMenuItem[] => {
+  const { t } = useI18n()
+  const pagesService: IPagesService = new PagesService(pages, t)
 
-const menuItems = computed((): IMenuItem[] => pagesService.getMenuItems())
+  return pagesService.getMenuItems()
+})
 </script>
 
 <style>
