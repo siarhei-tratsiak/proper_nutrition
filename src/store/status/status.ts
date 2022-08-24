@@ -5,5 +5,12 @@ import { IStatusStore } from './status.types'
 export const useStatusStore = defineStore('status', (): IStatusStore => {
   const isVertical = ref(false)
 
-  return { isVertical }
+  function setIsVertical (value: boolean) {
+    isVertical.value = value
+  }
+
+  return {
+    isVertical,
+    setIsVertical
+  }
 })

@@ -33,8 +33,8 @@
 import { computed } from 'vue'
 import { IPagesService, IMenuItem } from '@/services/pages/pages.types'
 import { PagesService } from '@/services/pages/pages'
-import { useStatusStore } from '@/store/status'
-import { IHorizontalDependencies } from './NavigationList.types'
+import { useStatusStore } from '@/store/status/status'
+import { IHorizontalDependencies } from './NavList.types'
 
 const horizontalDependencies = computed((): IHorizontalDependencies => {
   const statusStore = useStatusStore()
