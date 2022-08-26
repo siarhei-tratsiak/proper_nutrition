@@ -1,5 +1,6 @@
 <template>
   <v-list
+    class="nav-list"
     :class="horizontalDependencies.listClasses"
     color="primary"
     dense
@@ -41,7 +42,7 @@ import { useI18n } from 'vue-i18n'
 const horizontalDependencies = computed((): IHorizontalDependencies => {
   const statusStore = useStatusStore()
 
-  const horizontal = {
+  const horizontal: IHorizontalDependencies = {
     iconClass: '',
     listClasses: '',
     listItemClasses: '',
@@ -49,7 +50,7 @@ const horizontalDependencies = computed((): IHorizontalDependencies => {
     titleClass: 'd-md-flex'
   }
 
-  const vertical = {
+  const vertical: IHorizontalDependencies = {
     iconClass: 'dense-icon',
     listClasses: 'd-flex justify-center flex-grow-1',
     listItemClasses: 'mb-0 mr-1 flex-grow-0',
@@ -68,8 +69,11 @@ const menuItems = computed((): IMenuItem[] => {
 })
 </script>
 
-<style>
-.dense-icon {
-  margin-right: 0 !important;
+<style scoped>
+.nav-list {
+  overflow-x: hidden;
+}
+>>> .dense-icon {
+  margin-right: 0;
 }
 </style>

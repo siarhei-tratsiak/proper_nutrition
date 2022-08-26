@@ -9,8 +9,16 @@ export const useStatusStore = defineStore('status', (): IStatusStore => {
     isVertical.value = value
   }
 
+  const isLoading = ref(false)
+
+  function setIsLoading (value: boolean) {
+    isLoading.value = value
+  }
+
   return {
+    isLoading,
     isVertical,
+    setIsLoading,
     setIsVertical
   }
 })

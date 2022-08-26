@@ -1,32 +1,35 @@
 <template>
   <component
     :is="component"
-    :isMiniVariant="isMiniVariant"
+    permanent
+    :rail="isMiniVariant"
+    rail-width="56"
   >
-    <NavigationList />
+    <NavList />
   </component>
 </template>
 
 <script lang="ts" setup>
-import NavigationList from '@/components/nav/navList/NavList.vue'
-import { computed, onMounted } from 'vue'
+import NavList from '@/components/nav/navList/NavList.vue'
+import { computed, onMounted, ref } from 'vue'
 import { useStatusStore } from '@/store/status/status'
 import { debounce } from 'lodash'
+import { VAppBar, VNavigationDrawer } from 'vuetify/lib/components'
 
 const statusStore = useStatusStore()
 
-let isMiniVariant = false
+const isMiniVariant = ref(false)
 const viewportBreakpoint = 960
 const delayMS = 300
 
 const component = computed(() =>
-  statusStore.isVertical ? 'v-app-bar' : 'v-navigation-drawer'
+  statusStore.isVertical ? VAppBar : VNavigationDrawer
 )
 
 onMounted(() => {
   function onResize () {
     function setMini () {
-      isMiniVariant = window.innerWidth < viewportBreakpoint
+      isMiniVariant.value = window.innerWidth < viewportBreakpoint
     }
 
     function onOrientationChange () {
@@ -47,5 +50,4 @@ onMounted(() => {
   onResize()
   window.addEventListener('resize', listener)
 })
-
 </script>
