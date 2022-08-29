@@ -1,13 +1,11 @@
-<template>
-  products
+<template lang="html">
+  <v-card>
+    <ProductsHeader />
+    <ProductsTable />
+  </v-card>
 </template>
 
-<script>
-export default {
-
-}
+<script lang='ts' setup>
+import ProductsHeader from '@/components/products/ProductsHeader.vue'
+import ProductsTable from '@/components/products/ProductsTable.vue'
 </script>
-
-<style>
-
-</style>
