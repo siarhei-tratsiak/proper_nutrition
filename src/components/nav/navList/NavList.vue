@@ -39,6 +39,9 @@ import { IHorizontalDependencies } from './NavList.types'
 import pages from '@/data/pages.json'
 import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
+const pagesService: IPagesService = new PagesService(pages, t)
+
 const horizontalDependencies = computed((): IHorizontalDependencies => {
   const statusStore = useStatusStore()
 
@@ -62,9 +65,6 @@ const horizontalDependencies = computed((): IHorizontalDependencies => {
 })
 
 const menuItems = computed((): IMenuItem[] => {
-  const { t } = useI18n()
-  const pagesService: IPagesService = new PagesService(pages, t)
-
   return pagesService.getMenuItems()
 })
 </script>

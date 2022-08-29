@@ -1,0 +1,8 @@
+[
+  { "id": 0, "name": "periods.today" },
+  { "id": 1, "name": "periods.monday" },
+  { "id": 2, "name": "periods.sevenDays" },
+  { "id": 3, "name": "periods.fromTheFirst" },
+  { "id": 4, "name": "periods.thirtyDays" },
+  { "id": 5, "name": "periods.other" }
+]

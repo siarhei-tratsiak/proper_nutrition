@@ -1,10 +1,14 @@
-export default class DatesService {
-  private readonly start: number
-  private readonly end: number
+import intervals from '@/data/intervals.json'
+
+export default class IntervalService {
+  private start: number
+  private end: number
+  private intervals: Array<{ id: number, name: string }>
 
   constructor (start: number, end: number) {
     this.start = start
     this.end = end
+    this.intervals = intervals
   }
 
   getDays () {

@@ -30,11 +30,13 @@
 /* import { onBeforeUnmount, onMounted } from 'vue'
 import { debounce } from 'lodash' */
 import { useStatusStore } from '@/store/status/status'
-import { usePeriodStore } from '@/store/period/period'
+import { useIntervalStore } from '@/store/interval/interval'
 
 /* const delayMS = 300
 const listener = debounce(onResize, delayMS) */
 const statusStore = useStatusStore()
+const periodStore = useIntervalStore()
+
 const size = '12vmin'
 
 /* onMounted(() => {
@@ -58,8 +60,6 @@ function countProgressSize () {
 } */
 
 function click () {
-  const periodStore = usePeriodStore()
-
   statusStore.setIsLoading(true)
   periodStore.setDays()
   setTimeout(() => {
