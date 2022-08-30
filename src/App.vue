@@ -8,22 +8,16 @@
   </v-app>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
+<script lang="ts" setup>
 import NavBar from '@/components/nav/NavBar.vue'
+import { useI18n } from 'vue-i18n'
+import { watch } from 'vue'
 
-export default defineComponent({
-  name: 'App',
+const { locale, t } = useI18n()
 
-  components: {
-    NavBar
-  },
-
-  data () {
-    return {
-      //
-    }
-  }
+watch(locale, (newLocale) => {
+  document.documentElement.lang = newLocale
+  document.title = t('title')
 })
+
 </script>

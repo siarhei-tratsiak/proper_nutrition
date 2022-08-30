@@ -10,11 +10,11 @@ export default class NutrientService {
   constructor (locale: string) {
     const nutrients = locale === 'ru' ? nutrientsRU : nutrientsEN
 
-    this.nutrients = nutrients.map(nutrient => ({
-      id: +nutrient[0],
-      name: `${nutrient[1]}`,
-      unit: `${nutrient[2]}`
-    }))
+    this.nutrients = nutrients.map(nutrient => new Nutrient(
+      +nutrient[0],
+      `${nutrient[1]}`,
+      `${nutrient[2]}`
+    ))
   }
 
   getNutrientName (nutrientId: LocationQueryValue | LocationQueryValue[]) {

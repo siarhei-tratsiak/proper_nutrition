@@ -1,12 +1,8 @@
 <template>
-  <v-card-title>
+  <v-card-title class="products-header">
     {{ header }}
 
-    <v-spacer></v-spacer>
-
     <DefaultButton />
-
-    <v-spacer></v-spacer>
 
     <ProductsSearch />
   </v-card-title>
@@ -32,5 +28,11 @@ const header = computed(() => {
   return t('products.header') +
     (nutrientName ? t('products.sorted', { nutrientName }) : '')
 })
-
 </script>
+
+<style>
+.products-header {
+  display: flex;
+  justify-content: space-between;
+}
+</style>
