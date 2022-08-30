@@ -1,0 +1,3 @@
+<template>
+  ProductsSearch
+</template>
