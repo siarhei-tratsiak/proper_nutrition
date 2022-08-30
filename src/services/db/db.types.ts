@@ -1,5 +1,5 @@
 export interface Constraints {
-  id: number;
+  id?: number;
   nutrientId: number;
   min: number;
   minMutable: number;
@@ -8,14 +8,13 @@ export interface Constraints {
 }
 
 export interface Filters {
-  id: number;
+  id?: number;
   productId: number;
   selected: boolean;
-  favored: boolean;
 }
 
 export interface Rations {
-  id: number;
+  id?: number;
   date: string;
   productId: number;
   mass: number;
