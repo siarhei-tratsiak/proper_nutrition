@@ -1,4 +1,4 @@
-export interface Constraints {
+export interface IConstraint {
   id?: number;
   nutrientId: number;
   min: number;
@@ -7,13 +7,13 @@ export interface Constraints {
   maxMutable: number;
 }
 
-export interface Filters {
+export interface IFilter {
   id?: number;
   productId: number;
   selected: boolean;
 }
 
-export interface Rations {
+export interface IRation {
   id?: number;
   date: string;
   productId: number;

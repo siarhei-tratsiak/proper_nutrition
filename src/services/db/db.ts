@@ -1,12 +1,11 @@
 import Dexie, { Table } from 'dexie'
-import { Constraints, Filters, Rations } from './db.types'
-import selected from '@/data/selected'
-import ProductsService from '@/services/products/products'
+import { IConstraint, IFilter, IRation } from './db.types'
+import { initSelected, toggleSelected } from './filters'
 
 export class DbService extends Dexie {
-  constraints!: Table<Constraints>;
-  filters!: Table<Filters>;
-  rations!: Table<Rations>;
+  constraints!: Table<IConstraint>;
+  filters!: Table<IFilter>;
+  rations!: Table<IRation>;
 
   constructor () {
     super('ProperNutritionDB')
@@ -17,30 +16,8 @@ export class DbService extends Dexie {
     })
   }
 
-  async initSelected () {
-    const isNoFilters = !await this.filters.count()
-
-    if (isNoFilters) {
-      this.addFilters()
-    }
-  }
-
-  private addFilters () {
-    const productsService = new ProductsService()
-    const productIds = productsService.getProductIds()
-    const selectedRecords = productIds.map(
-      productId => this.getSelectedRecord(productId)
-    )
-
-    this.filters.bulkAdd(selectedRecords)
-  }
-
-  private getSelectedRecord (productId: number) {
-    return {
-      productId: productId,
-      selected: selected.includes(productId)
-    }
-  }
+  initSelected = initSelected
+  toggleSelected = toggleSelected
 }
 
 export const dbService = new DbService()
