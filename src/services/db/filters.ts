@@ -1,59 +1,62 @@
-import { DbService } from './db'
+import Db from '@/entities/db/db'
 import selected from '@/data/selected'
 import ProductsService from '@/services/products/products'
-import { IFilter } from './db.types'
+import { IFilter } from '@/entities/db/db.types'
 
-export async function initSelected (this: DbService) {
-  const isNoFilters = !await this.filters.count()
+export default class FiltersService extends Db {
+  async initSelected () {
+    const isNoFilters = !await this.filters.count()
 
-  if (isNoFilters) {
-    addFilters.call(this)
+    if (isNoFilters) {
+      this.addFilters()
+    }
   }
-}
 
-export async function toggleSelected (this: DbService) {
-  const defaultSelectedRecords = getDefaultSelectedRecords()
-  const defaultSelectedRecordIds = defaultSelectedRecords.map(getProductId)
+  async toggleSelected () {
+    const defaultSelectedRecords = this.getDefaultSelectedRecords()
+    const defaultSelectedRecordIds = defaultSelectedRecords
+      .map(this.getProductId)
 
-  const selectedRecords = await this.filters
-    .where('selected').equals(1)
-    // .and(record => !defaultSelectedRecordIds.includes(record.productId))
-    .toArray()
-  const unselectedRecords = await this.filters
-    .where({ selected: false })
-    .and(record => defaultSelectedRecordIds.includes(record.productId))
-    .toArray()
-  const userChangedRecords = [...selectedRecords, ...unselectedRecords]
+    const selectedRecords = await this.filters
+      .where('selected').equals(1)
+      .and(record => !defaultSelectedRecordIds.includes(record.productId))
+      .toArray()
+    const unselectedRecords = await this.filters
+      .where('selected').equals(0)
+      .and(record => defaultSelectedRecordIds.includes(record.productId))
+      .toArray()
+    const userChangedRecords = [...selectedRecords, ...unselectedRecords]
 
-  userChangedRecords.forEach(record => this.filters.update(record.id || 0, {
-    productId: record.productId,
-    selected: !record.selected
-  }))
-}
+    userChangedRecords.forEach(record => this.filters.update(record.id || 0, {
+      productId: record.productId,
+      selected: !record.selected
+    }))
+  }
 
-function getProductId (record: IFilter) {
-  return record.productId
-}
+  private getProductId (record: IFilter) {
+    return record.productId
+  }
 
-function addFilters (this: DbService) {
-  const defaultSelectedRecords = getDefaultSelectedRecords()
+  private addFilters () {
+    const defaultSelectedRecords = this.getDefaultSelectedRecords()
 
-  this.filters.bulkAdd(defaultSelectedRecords)
-}
+    this.filters.bulkAdd(defaultSelectedRecords)
+  }
 
-function getDefaultSelectedRecords () {
-  const productsService = new ProductsService()
-  const productIds = productsService.getProductIds()
-  const selectedRecords = productIds.map(
-    productId => getSelectedRecord(productId)
-  )
+  private getDefaultSelectedRecords () {
+    const productsService = new ProductsService()
+    const productIds = productsService.getProductIds()
+    const selectedRecords = productIds.map(
+      productId => this.getSelectedRecord(productId)
+    )
 
-  return selectedRecords
-}
+    return selectedRecords
+  }
 
-function getSelectedRecord (productId: number) {
-  return {
-    productId: productId,
-    selected: selected.includes(productId)
+  private getSelectedRecord (productId: number) {
+    return {
+      productId: productId,
+      selected: +selected.includes(productId)
+    }
   }
 }

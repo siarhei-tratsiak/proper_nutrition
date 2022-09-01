@@ -10,12 +10,12 @@ export interface IConstraint {
 export interface IFilter {
   id?: number;
   productId: number;
-  selected: boolean;
+  selected: number;
 }
 
 export interface IRation {
   id?: number;
-  date: string;
+  date: number;
   productId: number;
   mass: number;
 }
