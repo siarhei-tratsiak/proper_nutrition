@@ -7,7 +7,7 @@ export default class Db extends Dexie {
   protected rations!: Table<IRation>;
 
   constructor () {
-    super('ProperNutritionDB')
+    super('SmartFood')
     this.version(1).stores({
       constraints: '++id, nutrientId, min, minMutable, max, maxMutable',
       filters: '++id, productId, selected',

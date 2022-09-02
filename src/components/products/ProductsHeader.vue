@@ -2,7 +2,12 @@
   <v-card-title class="products-header">
     {{ header }}
 
+    <!-- the spacers don't allow the search field to grow -->
+    <v-spacer />
+
     <DefaultButton />
+
+    <v-spacer />
 
     <ProductsSearch />
   </v-card-title>
